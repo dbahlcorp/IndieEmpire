@@ -16,6 +16,16 @@ artifacts/balance-2026-09-07/*
 !artifacts/balance-2026-09-07/report_*.txt
 !artifacts/balance-2026-09-07/platforms_before_2050.json
 
+# Godot re-imports the balance CSVs as translation resources on open; the binary
+# .translation files and .csv.import remaps beside them are regenerated scratch.
+artifacts/balance-2026-09-07/csv/**/*.translation
+artifacts/balance-2026-09-07/csv/**/*.csv.import
+
+# Verification artifact folders keep their screenshots and logs; the per-image
+# .import remaps and per-run editor settings regenerate on import.
+artifacts/**/*.png.import
+**/Godot/editor_settings-*.tres
+
 # Isolated Godot user directories created by headless test runs: per-run saves,
 # engine logs and shader caches. Machine-local scratch rather than project
 # content, and the shader-cache paths are long enough that git on Windows

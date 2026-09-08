@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=4 format=3]
 [ext_resource path="res://scenes/studio/StudioScreen.gd" type="Script" id="1"]
-[ext_resource path="res://scenes/ui/NavBar.tscn" type="PackedScene" id="2"]
-[ext_resource path="res://scenes/ui/ClockBar.tscn" type="PackedScene" id="3"]
-[ext_resource path="res://scripts/ui/OfficeFloorView.gd" type="Script" id="4"]
+[ext_resource path="res://scenes/ui/ClockBar.tscn" type="PackedScene" id="2"]
+[ext_resource path="res://scripts/ui/OfficeFloorView.gd" type="Script" id="3"]
 
 [node name="StudioScreen" type="Control"]
 layout_mode = 3
@@ -13,176 +12,271 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
 
-[node name="Margin" type="MarginContainer" parent="."]
+[node name="OfficeArt" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 2
+script = ExtResource("3")
+
+[node name="CompanyHUD" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="CompanyLabel" type="Label" parent="CompanyHUD"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "STUDIO"
+text_overrun_behavior = 3
+theme_override_font_sizes/font_size = 24
+
+[node name="CashLabel" type="Label" parent="CompanyHUD"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "$10K"
+theme_override_font_sizes/font_size = 24
+
+[node name="Audience" type="HBoxContainer" parent="CompanyHUD"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="FansLabel" type="Label" parent="CompanyHUD/Audience"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0 fans"
+theme_override_font_sizes/font_size = 13
+
+[node name="ReputationLabel" type="Label" parent="CompanyHUD/Audience"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0 reputation"
+theme_override_font_sizes/font_size = 13
+
+[node name="BurnLabel" type="Label" parent="CompanyHUD"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Monthly costs"
+theme_override_font_sizes/font_size = 13
+autowrap_mode = 2
+
+[node name="ClockBar" parent="." instance=ExtResource("2")]
+unique_name_in_owner = true
+layout_mode = 0
+
+[node name="Projects" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+theme_override_constants/separation = 6
+
+[node name="BottomDock" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+theme_override_constants/separation = 8
+
+[node name="OfficeText" type="Label" parent="BottomDock"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "BEDROOM"
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 14
+
+[node name="AttentionButton" type="Button" parent="BottomDock"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "STUDIO NEEDS ATTENTION"
+
+[node name="DockActions" type="HBoxContainer" parent="BottomDock"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="MenuButton" type="Button" parent="BottomDock/DockActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 62)
+layout_mode = 2
+text = "STUDIO MENU"
+theme_override_font_sizes/font_size = 15
+
+[node name="DevelopButton" type="Button" parent="BottomDock/DockActions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "DEVELOP GAME"
+theme_override_font_sizes/font_size = 17
+
+[node name="ManagementOverlay" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 16.0
-offset_top = 20.0
-offset_right = -16.0
-offset_bottom = -16.0
 
-[node name="VBox" type="VBoxContainer" parent="Margin"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="ClockBar" parent="Margin/VBox" instance=ExtResource("3")]
-layout_mode = 2
-
-[node name="CompanyLabel" type="Label" parent="Margin/VBox"]
+[node name="Shade" type="ColorRect" parent="ManagementOverlay"]
 unique_name_in_owner = true
-layout_mode = 2
-text = "STUDIO"
-theme_override_font_sizes/font_size = 24
-text_overrun_behavior = 3
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.03, 0.09, 0.1, 0.7)
 
-[node name="HUD" type="HBoxContainer" parent="Margin/VBox"]
-layout_mode = 2
-
-[node name="CashLabel" type="Label" parent="Margin/VBox/HUD"]
+[node name="MenuPanel" type="PanelContainer" parent="ManagementOverlay"]
 unique_name_in_owner = true
+layout_mode = 0
+
+[node name="Inset" type="MarginContainer" parent="ManagementOverlay/MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="MenuBody" type="VBoxContainer" parent="ManagementOverlay/MenuPanel/Inset"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MenuHeader" type="HBoxContainer" parent="ManagementOverlay/MenuPanel/Inset/MenuBody"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "STUDIO MENU"
 theme_override_font_sizes/font_size = 24
-text = "$10K"
 
-[node name="Audience" type="VBoxContainer" parent="Margin/VBox/HUD"]
-layout_mode = 2
-theme_override_constants/separation = 0
-
-[node name="FansLabel" type="Label" parent="Margin/VBox/HUD/Audience"]
+[node name="CloseMenuButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuHeader"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(70, 48)
 layout_mode = 2
-horizontal_alignment = 2
-theme_override_font_sizes/font_size = 13
-text = "0 fans"
+text = "CLOSE"
 
-[node name="ReputationLabel" type="Label" parent="Margin/VBox/HUD/Audience"]
+[node name="MenuScroll" type="ScrollContainer" parent="ManagementOverlay/MenuPanel/Inset/MenuBody"]
 unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 2
-theme_override_font_sizes/font_size = 13
-text = "0 reputation"
-
-[node name="BurnLabel" type="Label" parent="Margin/VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 2
-theme_override_font_sizes/font_size = 13
-text = "Monthly costs / Runway"
-
-[node name="Scroll" type="ScrollContainer" parent="Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 follow_focus = true
 
-[node name="Content" type="VBoxContainer" parent="Margin/VBox/Scroll"]
+[node name="MenuContent" type="VBoxContainer" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-[node name="Projects" type="VBoxContainer" parent="Margin/VBox/Scroll/Content"]
+[node name="Actions" type="GridContainer" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent"]
 unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="OfficeArt" type="Control" parent="Margin/VBox/Scroll/Content"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 290)
-layout_mode = 2
-mouse_filter = 2
-script = ExtResource("4")
-
-[node name="OfficeText" type="Label" parent="Margin/VBox/Scroll/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-autowrap_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "BEDROOM  /  1 PERSON"
-
-[node name="Actions" type="GridContainer" parent="Margin/VBox/Scroll/Content"]
 layout_mode = 2
 columns = 2
 theme_override_constants/h_separation = 8
 theme_override_constants/v_separation = 8
 
-[node name="OfficeButton" type="Button" parent="Margin/VBox/Scroll/Content/Actions"]
+[node name="OfficeButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "OFFICE"
 
-[node name="TeamsButton" type="Button" parent="Margin/VBox/Scroll/Content/Actions"]
+[node name="TeamsButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "TEAMS"
 
-[node name="ContractsButton" type="Button" parent="Margin/VBox/Scroll/Content/Actions"]
+[node name="StaffButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "STAFF"
+
+[node name="HiringButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "HIRE"
+
+[node name="ContractsButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "CONTRACTS"
 
-[node name="FinanceButton" type="Button" parent="Margin/VBox/Scroll/Content/Actions"]
+[node name="FinanceButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "FINANCES"
 
-[node name="WarningLabel" type="Label" parent="Margin/VBox/Scroll/Content"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 2
-theme_override_font_sizes/font_size = 15
-
-[node name="EventButton" type="Button" parent="Margin/VBox/Scroll/Content"]
+[node name="GamesButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "GAMES"
+
+[node name="MarketButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "MARKET"
+
+[node name="EngineButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ENGINE LAB"
+
+[node name="CompanyButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "COMPANY"
+
+[node name="WarningLabel" type="Label" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent"]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+
+[node name="EventButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "STUDIO EVENT"
 autowrap_mode = 2
-
-[node name="PostmortemButton" type="Button" parent="Margin/VBox/Scroll/Content"]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 52)
+
+[node name="PostmortemButton" type="Button" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "POSTMORTEM"
 autowrap_mode = 2
+custom_minimum_size = Vector2(0, 52)
 
-[node name="SalesHeading" type="Label" parent="Margin/VBox/Scroll/Content"]
+[node name="SalesHeading" type="Label" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "ON THE MARKET"
-theme_type_variation = &"SectionHeading"
-theme_override_font_sizes/font_size = 14
+autowrap_mode = 2
 
-[node name="ReleasePanel" type="Label" parent="Margin/VBox/Scroll/Content"]
+[node name="ReleasePanel" type="Label" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent"]
 unique_name_in_owner = true
 layout_mode = 2
-autowrap_mode = 2
-theme_override_font_sizes/font_size = 14
 text = "No games on sale."
-
-[node name="RunwayLabel" type="Label" parent="Margin/VBox/Scroll/Content"]
-unique_name_in_owner = true
-layout_mode = 2
 autowrap_mode = 2
-theme_override_font_sizes/font_size = 14
-text = "RUNWAY"
 
-[node name="DevelopButton" type="Button" parent="Margin/VBox"]
+[node name="RunwayLabel" type="Label" parent="ManagementOverlay/MenuPanel/Inset/MenuBody/MenuScroll/MenuContent"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-text = "DEVELOP GAME"
-theme_override_font_sizes/font_size = 19
-
-[node name="NavBar" parent="Margin/VBox" instance=ExtResource("2")]
-layout_mode = 2
+text = "RUNWAY"
+autowrap_mode = 2

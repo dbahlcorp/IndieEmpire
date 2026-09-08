@@ -1,5 +1,34 @@
 # Studio and development layout — September 8, 2026
 
+## Latest revision: studio as the play surface
+
+Following the user's [Steam reference](https://store.steampowered.com/app/239820/Game_Dev_Tycoon/),
+the Studio is now a full-screen room with floating controls, not a scrolling
+dashboard. Desktop opens at 1280 × 800; portrait remains supported through an
+expanding 430 × 932 base viewport.
+
+Company status sits upper left, clock and project cards upper right, with Studio
+Menu and Develop/Projects along the bottom. A visible attention action surfaces
+pending events, postmortems, staff matters and financial trouble. The Studio
+Menu opens over a dimmed live room and exposes Office, Teams, Staff, Hiring,
+Contracts, Finances, Games, Market, Engine Lab and Company. It pauses time and
+restores the previous clock state when closed. Close, outside click and Escape
+dismiss it; keyboard Tab stays inside the open menu.
+
+Management pages are centered at a maximum 520 logical pixels on wide screens,
+with the studio artwork dimmed behind them. They retain their existing navigation
+back to Studio. The main play surface has no permanent five-tab bar.
+
+Validation: SurfaceCheck passed 57 checks each in desktop and portrait renders,
+covering room/control bounds, menu destinations, opening/closing and clock-state
+restoration. CashRunwayTest passed 23 checks and PhaseD passed 66. Final render
+logs contain no script errors or resource-leak warnings; sandbox certificate-store
+messages remain environmental. Artifacts are in
+[studio-surface-2026-09-08](../artifacts/studio-surface-2026-09-08/).
+
+The following notes describe the earlier same-day iteration that preceded this
+full-screen studio revision.
+
 Reference: [Game Dev Tycoon screenshots](https://www.mobygames.com/game/82820/game-dev-tycoon/screenshots/),
 including the mobile studio screenshot. The reference places the office in the
 center, project progress above it, and compact company status around the edges.

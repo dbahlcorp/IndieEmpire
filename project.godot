@@ -13,9 +13,10 @@ boot_splash/use_filter=true
 [display]
 window/size/viewport_width=430
 window/size/viewport_height=932
-window/size/window_width_override=430
-window/size/window_height_override=932
+window/size/window_width_override=1280
+window/size/window_height_override=800
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [autoload]
 
@@ -59,3 +60,4 @@ environment/defaults/default_clear_color=Color(0.913725, 0.823529, 0.666667, 1)
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
+

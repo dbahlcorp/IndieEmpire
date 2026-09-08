@@ -6,6 +6,7 @@ extends Control
 ## breaks, and return to a seated work pose. This is presentation-only: it reads
 ## employee/project state but never changes the management simulation.
 
+const ROOM_RENDERER := preload("res://scripts/ui/StudioRoomRenderer.gd")
 const WALK_SPEED := 0.115
 const ARRIVAL_DISTANCE := 0.008
 const BODY_COLORS := [
@@ -39,6 +40,7 @@ const REACTION_COLORS := {
     "cheer": Color("#e26b91")
 }
 
+var floor_plan: Dictionary = {}
 var office_id := "bedroom"
 var office_texture: Texture2D
 var workstation_textures: Dictionary = {}
@@ -76,12 +78,16 @@ func set_office(value: String) -> void:
     if resolved == office_id and office_texture != null and not actors.is_empty():
         return
     office_id = resolved
+    floor_plan = OfficeLayout.get_layout(office_id)
     office_texture = OfficeArtwork.texture(office_id)
-    foreground_texture = OfficeArtwork.foreground_texture(office_id)
+    foreground_texture = null # The old full-room mask hid walking employees.
     atmosphere_texture = OfficeArtwork.atmosphere_texture(office_id)
     rebuild()
 
 func rebuild() -> void:
+    var previous: Dictionary = {}
+    for existing in actors:
+        previous[(existing["employee"] as Employee).id] = existing
     actors.clear()
     var layout := OfficeLayout.get_layout(office_id)
     var desks: Array = layout.get("desks", [])
@@ -90,12 +96,18 @@ func rebuild() -> void:
         var employee: Employee = employees[index]
         if employee.is_away():
             continue
+        if previous.has(employee.id):
+            var existing: Dictionary = previous[employee.id]
+            if existing["desk"] == desks[index]:
+                existing["employee"] = employee
+                actors.append(existing)
+                continue
         var rng := RandomNumberGenerator.new()
         rng.seed = employee.portrait_seed if employee.portrait_seed != 0 else absi(hash(employee.id))
         var actor := {
             "employee": employee,
             "desk": desks[index],
-            "position": layout.get("entrance", Vector2(0.8, 0.8)),
+            "position": desks[index] if previous.is_empty() else layout["entrance"],
             "route": [],
             "state": "walking",
             "arrival_state": "seated",
@@ -115,7 +127,10 @@ func rebuild() -> void:
             "rng": rng
         }
         actors.append(actor)
-        _route_actor(actor, desks[index], "seated")
+        if previous.is_empty():
+            _arrive(actor)
+        else:
+            _route_actor(actor, desks[index], "seated")
     queue_redraw()
 
 func _on_week_ticked(_year: int, _month: int, _week: int) -> void:
@@ -185,14 +200,13 @@ func _sync_availability() -> void:
     var visible_ids: Array[String] = []
     for actor in actors:
         visible_ids.append((actor["employee"] as Employee).id)
-    var active_ids: Array[String] = []
-    for employee in EmployeeManager.active_employees():
-        if not employee.is_away():
-            active_ids.append(employee.id)
-    if visible_ids != active_ids.slice(0, visible_ids.size()) or visible_ids.size() != mini(
-            active_ids.size(), OfficeLayout.desk_count(office_id)):
+    var expected_ids: Array[String] = []
+    var employees := EmployeeManager.active_employees()
+    for index in mini(employees.size(), OfficeLayout.desk_count(office_id)):
+        if not employees[index].is_away():
+            expected_ids.append(employees[index].id)
+    if visible_ids != expected_ids:
         rebuild()
-
 func _process(delta: float) -> void:
     if GameClock.paused:
         return
@@ -406,18 +420,9 @@ func _end_interaction(actor: Dictionary) -> void:
         return
 
 func _route_actor(actor: Dictionary, destination: Vector2, arrival_state: String) -> void:
-    var layout := OfficeLayout.get_layout(office_id)
-    var hub: Vector2 = layout.get("hub", Vector2(0.5, 0.7))
-    var route: Array[Vector2] = []
-    var position: Vector2 = actor["position"]
-    # Desk-to-desk and desk-to-break travel always enters the clear floor first.
-    if position.distance_to(hub) > 0.035 and destination.distance_to(position) > 0.06:
-        route.append(hub)
-    route.append(destination)
-    actor["route"] = route
+    actor["route"] = OfficeLayout.route(actor["position"], destination, floor_plan)
     actor["state"] = "walking"
     actor["arrival_state"] = arrival_state
-
 func _arrive(actor: Dictionary) -> void:
     var rng: RandomNumberGenerator = actor["rng"]
     actor["state"] = actor["arrival_state"]
@@ -470,51 +475,33 @@ func _employee_is_working(employee: Employee) -> bool:
     return contract != null and contract.team_id == employee.assigned_team
 
 func _draw() -> void:
-    if office_texture == null or size.x <= 0.0 or size.y <= 0.0:
+    if floor_plan.is_empty() or size.x <= 0.0 or size.y <= 0.0:
         return
     var art_rect := _art_rect()
-    draw_texture_rect(office_texture, art_rect, false, OfficeCustomizationManager.art_tint())
-    _draw_mixed_remodel(art_rect)
-    _draw_workstation_upgrades(art_rect)
-    _draw_customization_accent(art_rect)
-    var ordered := actors.duplicate()
-    ordered.sort_custom(func(a, b): return (a["position"] as Vector2).y < (b["position"] as Vector2).y)
-    # A soft contact shadow sits below every actor. It moves with their feet,
-    # grounding walk cycles on the painted floor before any furniture masks
-    # are applied above them.
-    for actor in ordered:
-        _draw_actor_shadow(actor, art_rect)
-    for actor in ordered:
-        _draw_actor(actor, art_rect)
-    # Furniture fronts sit above seated bodies and make actors feel embedded in
-    # the painted room instead of pasted on top of it.
-    if foreground_texture != null:
-        draw_texture_rect(foreground_texture, art_rect, false)
-    var remodel_foreground := OfficeCustomizationManager.foreground_texture()
-    if remodel_foreground != null:
-        draw_texture_rect(remodel_foreground, art_rect, false)
-    # Light rays, screen bloom and dust are the final layer. Keeping this above
-    # both people and furniture lets the whole room share one atmosphere.
-    if atmosphere_texture != null:
-        var base_alpha: float = float({
-            "bedroom": 0.13,
-            "shared_workspace": 0.10,
-            "small_office": 0.09,
-            "professional_studio": 0.09,
-            "large_studio_floor": 0.075
-        }.get(office_id, 0.09))
-        var pulse := 0.96 + sin(elapsed * 0.55) * 0.04
-        draw_texture_rect(
-            atmosphere_texture, art_rect, false,
-            Color(1.0, 1.0, 1.0, float(base_alpha) * pulse))
-    var remodel_atmosphere := OfficeCustomizationManager.atmosphere_texture()
-    if remodel_atmosphere != null:
-        draw_texture_rect(remodel_atmosphere, art_rect, false)
-    # Output stays above furniture and lighting so it remains readable across
-    # classic, cozy, eco, neon, and walnut remodel combinations.
+    ROOM_RENDERER.floor_and_walls(self, art_rect, floor_plan)
+    var drawables: Array[Dictionary] = []
+    for prop in floor_plan["props"]:
+        drawables.append({"kind": "furniture", "item": prop, "depth": OfficeLayout.project(Vector2(prop["cell"]) + Vector2(0.5, 0.5), floor_plan["dimensions"]).y})
+    var desk_cells: Array = floor_plan["desk_cells"]
+    var employees := EmployeeManager.active_employees()
+    for index in desk_cells.size():
+        var cell: Vector2i = desk_cells[index]
+        var texture: Texture2D = null
+        if index < employees.size():
+            texture = workstation_textures.get(employees[index].workstation_tier) as Texture2D
+        drawables.append({"kind": "furniture", "item": {"kind": "desk", "cell": cell}, "texture": texture,
+            "depth": OfficeLayout.project(Vector2(cell) + Vector2(0.5, 0.5), floor_plan["dimensions"]).y})
+    for actor in actors:
+        drawables.append({"kind": "person", "actor": actor, "depth": (actor["position"] as Vector2).y})
+    drawables.sort_custom(func(a, b): return float(a["depth"]) < float(b["depth"]))
+    for item in drawables:
+        if item["kind"] == "person":
+            _draw_actor_shadow(item["actor"], art_rect)
+            _draw_actor(item["actor"], art_rect)
+        else:
+            ROOM_RENDERER.furniture(self, art_rect, floor_plan, item["item"], item.get("texture"))
     _draw_work_bubbles(art_rect)
     _draw_reactions(art_rect)
-
 func _draw_reactions(art_rect: Rect2) -> void:
     var room_scale := maxf(art_rect.size.y / 512.0, 0.28)
     for actor_index in actors.size():
@@ -830,7 +817,8 @@ func _art_rect() -> Rect2:
 func _draw_actor(actor: Dictionary, art_rect: Rect2) -> void:
     var normalized: Vector2 = actor["position"]
     var feet := art_rect.position + normalized * art_rect.size
-    var scale := maxf(art_rect.size.y / 512.0, 0.28)
+    var dimensions: Vector2i = floor_plan["dimensions"]
+    var scale := art_rect.size.y * 2.5 / float(dimensions.x + dimensions.y) / 92.0
     var sprite_size := 92.0 * scale
     var bob := 0.0
     if actor["state"] == "walking":
@@ -883,10 +871,12 @@ func _draw_actor(actor: Dictionary, art_rect: Rect2) -> void:
 func _draw_actor_shadow(actor: Dictionary, art_rect: Rect2) -> void:
     var normalized: Vector2 = actor["position"]
     var feet := art_rect.position + normalized * art_rect.size
-    var scale := maxf(art_rect.size.y / 512.0, 0.28)
+    var dimensions: Vector2i = floor_plan["dimensions"]
+    var scale := art_rect.size.y * 2.5 / float(dimensions.x + dimensions.y) / 92.0
     var radius := (11.0 if actor["state"] == "seated" else 14.0) * scale
     var alpha := 0.14 if actor["state"] == "walking" else 0.18
     draw_set_transform(feet + Vector2(0.0, -1.5 * scale), 0.0, Vector2(1.0, 0.34))
     draw_circle(Vector2.ZERO, radius, Color(0.10, 0.075, 0.055, alpha))
     draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
 

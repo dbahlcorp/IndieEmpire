@@ -160,8 +160,13 @@ func _style_scene(root: Node) -> void:
     backdrop.menu_mode = root.name == "MainMenuScreen"
     control.add_child(backdrop)
     control.move_child(backdrop, 0)
+    _add_studio_context(control)
     _apply_mobile_safe_area(control)
     _style_tree(control)
+    if control.name != "StudioScreen":
+        _fit_management_screen(control)
+        if not control.resized.is_connected(_fit_management_screen.bind(control)):
+            control.resized.connect(_fit_management_screen.bind(control))
 
 func _apply_mobile_safe_area(root: Control) -> void:
     var margin := root.get_node_or_null("Margin") as MarginContainer
@@ -216,3 +221,60 @@ func _style_label(label: Label) -> void:
         label.theme_type_variation = &"ClockLabel"
     elif node_name in ["DateLabel", "VersionLabel", "HintLabel"]:
         label.theme_type_variation = &"MutedLabel"
+
+func _fit_management_screen(root: Control) -> void:
+    var margin := root.get_node_or_null("Margin") as MarginContainer
+    if margin == null:
+        return
+    if not margin.has_meta("portrait_offsets"):
+        margin.set_meta("portrait_offsets", Vector2(margin.offset_left, margin.offset_right))
+    var original: Vector2 = margin.get_meta("portrait_offsets")
+    if root.get_viewport_rect().size.x > 700:
+        margin.anchor_left = 0.5
+        margin.anchor_right = 0.5
+        margin.offset_left = -260
+        margin.offset_right = 260
+    else:
+        margin.anchor_left = 0.0
+        margin.anchor_right = 1.0
+        margin.offset_left = original.x
+        margin.offset_right = original.y
+    var paper := root.get_node_or_null("ManagementPaper") as Panel
+    if paper != null:
+        paper.anchor_left = margin.anchor_left
+        paper.anchor_right = margin.anchor_right
+        paper.anchor_top = 0.0
+        paper.anchor_bottom = 1.0
+        paper.offset_left = margin.offset_left - 12
+        paper.offset_right = margin.offset_right + 12
+        paper.offset_top = maxf(8, margin.offset_top - 12)
+        paper.offset_bottom = minf(-8, margin.offset_bottom + 12)
+
+func _add_studio_context(root: Control) -> void:
+    if root.name in ["StudioScreen", "MainMenuScreen", "NewCompanyScreen", "BootScreen", "GameOverScreen"]:
+        return
+    if not SaveManager.has_active_company or root.get_node_or_null("Margin") == null:
+        return
+    var room := TextureRect.new()
+    room.texture = OfficeArtwork.texture(GameState.office_id)
+    room.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    room.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    room.name = "StudioContext"
+    room.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    room.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    root.add_child(room)
+    root.move_child(room, 1)
+    var shade := ColorRect.new()
+    shade.name = "StudioShade"
+    shade.color = Color(0.03, 0.09, 0.10, 0.6)
+    shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    root.add_child(shade)
+    root.move_child(shade, 2)
+    var paper := Panel.new()
+    paper.name = "ManagementPaper"
+    paper.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    paper.add_theme_stylebox_override("panel", _box(PAPER, PANEL_EDGE, 16, 2))
+    root.add_child(paper)
+    root.move_child(paper, 3)
+

@@ -1,102 +1,89 @@
 class_name OfficeLayout
 extends RefCounted
 
-## Normalized physical anchors authored against the 3:2 office illustrations.
-## Every tier has one desk per capacity slot, an entrance, a clear central hub,
-## and a few break destinations. Actors route via the hub so they do not cut
-## directly across desk clusters.
-
+## One source of truth for floor geometry, furniture occupancy and navigation.
+## World positions are cell centers; projected positions are normalized to 3:2 art.
 const LAYOUTS := {
-    "bedroom": {
-        "entrance": Vector2(0.82, 0.83),
-        "hub": Vector2(0.56, 0.72),
-        "desks": [Vector2(0.39, 0.62)],
-        "social": [Vector2(0.56, 0.73), Vector2(0.31, 0.53)]
-    },
-    "shared_workspace": {
-        "entrance": Vector2(0.84, 0.82),
-        "hub": Vector2(0.56, 0.70),
-        "desks": [
-            Vector2(0.31, 0.64), Vector2(0.45, 0.55), Vector2(0.73, 0.68)
-        ],
-        "social": [Vector2(0.55, 0.74), Vector2(0.78, 0.54), Vector2(0.35, 0.49)]
-    },
-    "small_office": {
-        "entrance": Vector2(0.83, 0.83),
-        "hub": Vector2(0.53, 0.69),
-        "desks": [
-            Vector2(0.18, 0.67), Vector2(0.31, 0.75), Vector2(0.42, 0.49),
-            Vector2(0.68, 0.79), Vector2(0.87, 0.68)
-        ],
-        "social": [Vector2(0.52, 0.57), Vector2(0.75, 0.46), Vector2(0.54, 0.72)]
-    },
-    "professional_studio": {
-        "entrance": Vector2(0.88, 0.84),
-        "hub": Vector2(0.54, 0.64),
-        "desks": [
-            Vector2(0.25, 0.49), Vector2(0.34, 0.49),
-            Vector2(0.18, 0.65), Vector2(0.28, 0.66),
-            Vector2(0.39, 0.77), Vector2(0.53, 0.86),
-            Vector2(0.66, 0.68), Vector2(0.77, 0.64)
-        ],
-        "social": [Vector2(0.54, 0.58), Vector2(0.46, 0.59), Vector2(0.72, 0.39)]
-    },
-    "large_studio_floor": {
-        "entrance": Vector2(0.88, 0.84),
-        "hub": Vector2(0.54, 0.58),
-        "desks": [
-            Vector2(0.25, 0.43), Vector2(0.32, 0.43),
-            Vector2(0.20, 0.61), Vector2(0.29, 0.61),
-            Vector2(0.37, 0.70), Vector2(0.46, 0.70),
-            Vector2(0.54, 0.72), Vector2(0.62, 0.72),
-            Vector2(0.68, 0.59), Vector2(0.76, 0.59),
-            Vector2(0.32, 0.74), Vector2(0.58, 0.78)
-        ],
-        "social": [
-            Vector2(0.50, 0.51), Vector2(0.59, 0.51),
-            Vector2(0.79, 0.39), Vector2(0.77, 0.73)
-        ]
-    },
-    # The two largest floors share the Large Studio Floor artwork until their
-    # own is drawn, so their desks stay inside the same room and simply pack
-    # tighter -- sixteen and twenty seats where twelve used to be.
-    "studio_building": {
-        "entrance": Vector2(0.88, 0.84),
-        "hub": Vector2(0.54, 0.58),
-        "desks": [
-            Vector2(0.21, 0.41), Vector2(0.28, 0.41), Vector2(0.35, 0.41),
-            Vector2(0.18, 0.57), Vector2(0.25, 0.57), Vector2(0.32, 0.57),
-            Vector2(0.40, 0.68), Vector2(0.47, 0.68), Vector2(0.54, 0.68),
-            Vector2(0.61, 0.70), Vector2(0.68, 0.70),
-            Vector2(0.70, 0.56), Vector2(0.77, 0.56),
-            Vector2(0.30, 0.75), Vector2(0.44, 0.79), Vector2(0.58, 0.79)
-        ],
-        "social": [
-            Vector2(0.50, 0.50), Vector2(0.58, 0.50),
-            Vector2(0.80, 0.38), Vector2(0.78, 0.72)
-        ]
-    },
-    "campus": {
-        "entrance": Vector2(0.88, 0.84),
-        "hub": Vector2(0.54, 0.57),
-        "desks": [
-            Vector2(0.18, 0.39), Vector2(0.25, 0.39), Vector2(0.32, 0.39), Vector2(0.39, 0.39),
-            Vector2(0.16, 0.54), Vector2(0.23, 0.54), Vector2(0.30, 0.54), Vector2(0.37, 0.54),
-            Vector2(0.42, 0.66), Vector2(0.49, 0.66), Vector2(0.56, 0.66), Vector2(0.63, 0.66),
-            Vector2(0.66, 0.54), Vector2(0.73, 0.54), Vector2(0.80, 0.54),
-            Vector2(0.26, 0.72), Vector2(0.33, 0.72),
-            Vector2(0.45, 0.79), Vector2(0.56, 0.79), Vector2(0.67, 0.79)
-        ],
-        "social": [
-            Vector2(0.49, 0.49), Vector2(0.57, 0.49),
-            Vector2(0.82, 0.38), Vector2(0.79, 0.71)
-        ]
-    }
+    "bedroom": 1, "shared_workspace": 3, "small_office": 5,
+    "professional_studio": 8, "large_studio_floor": 12,
+    "studio_building": 16, "campus": 20
 }
 
 static func get_layout(office_id: String) -> Dictionary:
-    return LAYOUTS.get(office_id, LAYOUTS["bedroom"])
+    var capacity := int(LAYOUTS.get(office_id, 1))
+    var columns := mini(4, ceili(sqrt(float(capacity))))
+    var rows := ceili(float(capacity) / columns)
+    var dimensions := Vector2i(columns * 3 + 3, rows * 3 + 3)
+    var layout := {"dimensions": dimensions, "desks": [], "desk_cells": [], "social": [], "blocked": [], "props": []}
+    for index in capacity:
+        var cell := Vector2i(2 + (index % columns) * 3, 2 + (index / columns) * 3)
+        layout["desk_cells"].append(cell)
+        layout["blocked"].append(cell)
+        layout["desks"].append(project(Vector2(cell + Vector2i(0, 1)) + Vector2(0.5, 0.5), dimensions))
+    var props: Array = layout["props"]
+    props.append({"cell": Vector2i(1, 1), "kind": "shelf"})
+    props.append({"cell": Vector2i(dimensions.x - 2, 1), "kind": "plant"})
+    if office_id == "bedroom":
+        props.append({"cell": Vector2i(4, 2), "kind": "bed"})
+    else:
+        props.append({"cell": Vector2i(1, dimensions.y - 3), "kind": "coffee"})
+    for prop in props:
+        layout["blocked"].append(prop["cell"])
+    for x in range(1, dimensions.x - 2, 2):
+        layout["social"].append(project(Vector2(x + 0.5, dimensions.y - 1.5), dimensions))
+    layout["entrance"] = project(Vector2(dimensions.x - 1.5, dimensions.y - 1.5), dimensions)
+    layout["hub"] = project(Vector2(dimensions.x / 2.0, dimensions.y - 1.5), dimensions)
+    return layout
 
 static func desk_count(office_id: String) -> int:
-    return (get_layout(office_id).get("desks", []) as Array).size()
+    return int(LAYOUTS.get(office_id, 1))
 
+static func project(point: Vector2, dimensions: Vector2i) -> Vector2:
+    var total := float(dimensions.x + dimensions.y)
+    return Vector2(0.5 + (point.x - point.y + (dimensions.y - dimensions.x) * 0.5) * 0.88 / total,
+        0.22 + (point.x + point.y) * 0.66 / total)
+
+static func unproject(point: Vector2, dimensions: Vector2i) -> Vector2:
+    var total := float(dimensions.x + dimensions.y)
+    var difference := (point.x - 0.5) * total / 0.88 - (dimensions.y - dimensions.x) * 0.5
+    var sum := (point.y - 0.22) * total / 0.66
+    return Vector2((sum + difference) * 0.5, (sum - difference) * 0.5)
+
+static func is_walkable(cell: Vector2i, layout: Dictionary) -> bool:
+    var dimensions: Vector2i = layout["dimensions"]
+    return cell.x > 0 and cell.y > 0 and cell.x < dimensions.x - 1 and cell.y < dimensions.y - 1 and cell not in layout["blocked"]
+
+static func nearest_cell(point: Vector2, layout: Dictionary) -> Vector2i:
+    var world := unproject(point, layout["dimensions"])
+    var best := Vector2i(-1, -1)
+    var distance := INF
+    var dimensions: Vector2i = layout["dimensions"]
+    for y in range(1, dimensions.y - 1):
+        for x in range(1, dimensions.x - 1):
+            var cell := Vector2i(x, y)
+            if not is_walkable(cell, layout):
+                continue
+            var candidate := world.distance_squared_to(Vector2(cell) + Vector2(0.5, 0.5))
+            if candidate < distance:
+                distance = candidate
+                best = cell
+    return best
+
+static func route(from: Vector2, to: Vector2, layout: Dictionary) -> Array[Vector2]:
+    var dimensions: Vector2i = layout["dimensions"]
+    var grid := AStarGrid2D.new()
+    grid.region = Rect2i(Vector2i.ZERO, dimensions)
+    grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+    grid.update()
+    for y in dimensions.y:
+        for x in dimensions.x:
+            var cell := Vector2i(x, y)
+            grid.set_point_solid(cell, not is_walkable(cell, layout))
+    var start := nearest_cell(from, layout)
+    var target := nearest_cell(to, layout)
+    var result: Array[Vector2] = []
+    for cell in grid.get_id_path(start, target):
+        var point := project(Vector2(cell) + Vector2(0.5, 0.5), dimensions)
+        if point.distance_to(from) > 0.001:
+            result.append(point)
+    return result

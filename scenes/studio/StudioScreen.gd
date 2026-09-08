@@ -34,6 +34,7 @@ func _ready() -> void:
     office_button.pressed.connect(_on_office_pressed)
     teams_button.pressed.connect(_on_teams_pressed)
     %FinanceButton.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/company/FinancialsScreen.tscn"))
+    _setup_surface()
     _refresh()
 
 func _refresh() -> void:
@@ -57,7 +58,7 @@ func _refresh() -> void:
     release_panel.text = _release_text()
 
     if not GameState.active_projects.is_empty():
-        develop_button.text = "DEVELOPMENT (%d / %d TEAMS)" % [
+        develop_button.text = "PROJECTS (%d / %d)" % [
             GameState.active_projects.size(), TeamManager.MAX_TEAMS
         ]
     else:
@@ -92,8 +93,7 @@ func _refresh() -> void:
             FinanceManager.weeks_of_grace_left(),
             "" if FinanceManager.weeks_of_grace_left() == 1 else "s"
         ]
-    else:
-        warning_label.text = ""
+    _refresh_attention()
 
 func _runway_text() -> String:
     ## How long the cash on hand actually lasts at the current burn rate --
@@ -234,3 +234,93 @@ func _open_project(active: GameProject) -> void:
     get_tree().change_scene_to_file("res://scenes/development/DevelopmentScreen.tscn")
 
 
+
+
+var _menu_was_paused := true
+
+func _setup_surface() -> void:
+    %MenuButton.pressed.connect(_open_menu)
+    %AttentionButton.pressed.connect(_open_menu)
+    %CloseMenuButton.pressed.connect(_close_menu)
+    %Shade.gui_input.connect(func(event):
+        if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+            _close_menu())
+    var destinations := {
+        "StaffButton": "res://scenes/company/StaffScreen.tscn",
+        "HiringButton": "res://scenes/company/HiringScreen.tscn",
+        "GamesButton": "res://scenes/studio/GamesScreen.tscn",
+        "MarketButton": "res://scenes/market/MarketScreen.tscn",
+        "EngineButton": "res://scenes/company/EngineLabScreen.tscn",
+        "CompanyButton": "res://scenes/company/CompanyScreen.tscn"
+    }
+    for id in destinations:
+        get_node("%" + id).pressed.connect(_go_to.bind(destinations[id]))
+    resized.connect(_layout_surface)
+    _layout_surface.call_deferred()
+
+func _go_to(path: String) -> void:
+    get_tree().change_scene_to_file(path)
+
+func _layout_surface() -> void:
+    var bounds := get_viewport_rect().size
+    var wide := bounds.x >= 760.0
+    var inset := 20.0
+    var hud_width := minf(410.0, bounds.x - inset * 2.0)
+    %CompanyHUD.position = Vector2(inset, 20 if wide else 80)
+    %CompanyHUD.size.x = hud_width
+    %ClockBar.position = Vector2(bounds.x - hud_width - inset, 20)
+    %ClockBar.size = Vector2(hud_width, 48)
+    project_cards.position = Vector2(bounds.x - hud_width - inset, 86 if wide else 216)
+    project_cards.size.x = hud_width
+    var dock_width := minf(660.0, bounds.x - inset * 2.0)
+    var dock := %BottomDock as VBoxContainer
+    dock.size.x = dock_width
+    dock.reset_size()
+    dock.size.x = dock_width
+    dock.position = Vector2((bounds.x - dock_width) * 0.5, bounds.y - dock.size.y - inset)
+    # The world owns the remaining screen; it never lives in a scrolling card.
+    office_art.position = Vector2(0, 104 if wide else maxf(256, project_cards.position.y + project_cards.size.y + 12))
+    office_art.size = Vector2(bounds.x, maxf(180, dock.position.y - office_art.position.y - 12))
+    var panel := %MenuPanel as PanelContainer
+    panel.size = Vector2(minf(540, bounds.x - 32), bounds.y - 80)
+    panel.position = (bounds - panel.size) * 0.5
+
+func _refresh_attention() -> void:
+    warning_label.visible = not warning_label.text.is_empty()
+    var count := RetentionManager.requests().size() + RetentionManager.leaving().size()
+    count += GameState.pending_postmortems().size()
+    count += 1 if StudioEventManager.has_pending() else 0
+    count += 1 if FinanceManager.is_in_trouble() else 0
+    %AttentionButton.visible = count > 0
+    %AttentionButton.text = "%d STUDIO MATTER%s · REVIEW" % [count, "S" if count != 1 else ""]
+    _layout_surface.call_deferred()
+
+func _open_menu() -> void:
+    if %ManagementOverlay.visible:
+        return
+    _menu_was_paused = GameClock.paused
+    GameClock.set_paused(true)
+    %ManagementOverlay.show()
+    _trap_menu_focus()
+    %CloseMenuButton.grab_focus()
+
+func _close_menu() -> void:
+    %ManagementOverlay.hide()
+    GameClock.set_paused(_menu_was_paused)
+    %MenuButton.grab_focus()
+
+func _unhandled_key_input(event: InputEvent) -> void:
+    if event.is_action_pressed("ui_cancel") and %ManagementOverlay.visible:
+        _close_menu()
+        get_viewport().set_input_as_handled()
+
+
+func _trap_menu_focus() -> void:
+    var buttons: Array[Control] = []
+    for child in %ManagementOverlay.find_children("*", "Button", true, false):
+        if child.is_visible_in_tree() and not child.disabled:
+            buttons.append(child)
+    for index in range(buttons.size()):
+        var button := buttons[index]
+        button.focus_next = button.get_path_to(buttons[(index + 1) % buttons.size()])
+        button.focus_previous = button.get_path_to(buttons[(index + buttons.size() - 1) % buttons.size()])

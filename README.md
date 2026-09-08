@@ -9,7 +9,9 @@ Built and verified against Godot 4.7.2 stable.
 2. Open `project.godot`.
 3. Press F5 to run.
 
-The viewport is 430 x 932 to approximate a modern phone in portrait.
+The base viewport is 430 x 932 for portrait play. Desktop opens at 1280 x 800
+with an expanding viewport: the studio fills the play surface, while management
+pages remain centered, readable panels. The Studio menu opens over the room.
 
 ## The loop
 
