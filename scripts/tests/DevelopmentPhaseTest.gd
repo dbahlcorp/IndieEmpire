@@ -439,13 +439,22 @@ func _balance_is_a_bonus_not_a_dilution() -> void:
     check_approx(project.average_quality(), quality_with_no_balance,
         "balance never changes the core quality average, however high it is")
 
-    project.balance = 0.0
-    var low_balance_score := ReviewSimulator.calculate_review(project)
-    project.balance = 90.0
-    var high_balance_score := ReviewSimulator.calculate_review(project)
-    check_greater(high_balance_score, low_balance_score - 0.01,
-        "but a well-tuned game never reviews worse for it (%.1f vs %.1f)" % [
+    # calculate_review() carries a +/-4 reception roll, which is +/-0.4 review
+    # points -- larger than the effect being measured here. Comparing one roll
+    # against one other roll failed about one run in three. Averaging cancels
+    # the noise so this measures the rule rather than the dice.
+    var low_balance_score := _average_review(project, 0.0)
+    var high_balance_score := _average_review(project, 90.0)
+    check_greater(high_balance_score, low_balance_score,
+        "but a well-tuned game never reviews worse for it (%.2f vs %.2f)" % [
             high_balance_score, low_balance_score])
+
+func _average_review(project: GameProject, balance: float, trials: int = 40) -> float:
+    project.balance = balance
+    var total := 0.0
+    for i in trials:
+        total += ReviewSimulator.calculate_review(project)
+    return total / float(trials)
 
 func _preproduction_costs_less_than_a_full_production_week() -> void:
     section("pre-production costs less than a full production week")

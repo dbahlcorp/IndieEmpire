@@ -7,6 +7,7 @@ distribution, how often the attach-rate ceiling is pinned, quality ratio per
 project size, the cash curve, and how many releases lost money.
 """
 import csv
+import json
 import re
 import glob
 import os
@@ -111,18 +112,50 @@ if "concurrent" in games[0]:
     print("  launched into a genre the studio had already crowded: %.0f%%"
           % (100 * sum(1 for d in demand if d < 0.75) / len(demand)))
 
+def inflation_for(year):
+    """The same curve the game uses, read from the same file.
+
+    Nominal cash is close to meaningless over a 65-year timeline: costs inflate
+    5.3x by 2050, so a balance that has completely stopped growing still prints
+    an ever-larger number. Two balance passes read the nominal column and called
+    a flat economy a runaway. Every cash figure below is therefore reported in
+    1985 dollars and as runway alongside the nominal one.
+    """
+    path = os.path.join(os.path.dirname(__file__), "..", "..", "..",
+                        "data", "inflation.json")
+    try:
+        points = [(int(p["year"]), float(p["multiplier"]))
+                  for p in json.load(open(path, encoding="utf-8"))]
+    except (OSError, ValueError, KeyError):
+        return 1.0
+    if year <= points[0][0]:
+        return points[0][1]
+    for (ya, ma), (yb, mb) in zip(points, points[1:]):
+        if year <= yb:
+            return ma + (mb - ma) * (year - ya) / max(yb - ya, 1)
+    (ya, ma), (yb, mb) = points[-2], points[-1]
+    return mb + (mb - ma) / max(yb - ya, 1) * (year - yb)
+
+
 print("\nCASH CURVE (median across seeds)")
 by_year = {}
 for y in years:
     by_year.setdefault(int(y["year"]), []).append(y)
-print("  %5s %14s %6s %12s %8s %7s" % ("year", "cash", "staff", "payroll/mo", "games", "avg rev"))
+print("  %5s %14s %14s %9s %6s %8s %7s"
+      % ("year", "cash", "in 1985 $", "runway", "staff", "games", "avg rev"))
+real_by_year = {}
 for year in sorted(by_year):
     rows = by_year[year]
-    print("  %5d %14s %6.1f %12s %8.1f %7.2f" % (
+    nominal = st.median([int(r["cash"]) for r in rows])
+    overhead = st.median([int(r["payroll_mo"]) + int(r.get("rent_mo", 0)) for r in rows])
+    real = nominal / inflation_for(year)
+    real_by_year[year] = real
+    print("  %5d %14s %14s %9s %6.1f %8.1f %7.2f" % (
         year,
-        f"${st.median([int(r['cash']) for r in rows]):,.0f}",
+        f"${nominal:,.0f}",
+        f"${real:,.0f}",
+        ("%.0fy" % (nominal / overhead / 12)) if overhead > 0 else "-",
         st.median([int(r["staff"]) for r in rows]),
-        f"${st.median([int(r['payroll_mo']) for r in rows]):,.0f}",
         st.median([int(r["released"]) for r in rows]),
         st.median([float(r["avg_review"]) for r in rows])))
 
@@ -130,3 +163,15 @@ finals = [rows for year, rows in sorted(by_year.items())][-1]
 cash = [int(r["cash"]) for r in finals]
 print("\n  final cash across seeds: min %s  median %s  max %s"
       % (f"${min(cash):,.0f}", f"${st.median(cash):,.0f}", f"${max(cash):,.0f}"))
+
+# Whether the economy is still compounding, which nominal cash cannot show.
+span = sorted(real_by_year)
+if len(span) >= 12:
+    half = span[len(span) // 2]
+    growth = (real_by_year[span[-1]] / max(real_by_year[half], 1.0)) ** (
+        1.0 / max(span[-1] - half, 1)) - 1.0
+    verdict = ("FLAT -- income and costs have met" if abs(growth) < 0.015
+               else "STILL COMPOUNDING -- this is a runaway" if growth > 0
+               else "SHRINKING -- the late game is a treadmill")
+    print("  real growth %d-%d: %+.1f%%/yr  %s"
+          % (half, span[-1], 100 * growth, verdict))

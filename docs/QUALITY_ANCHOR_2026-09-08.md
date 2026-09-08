@@ -112,7 +112,11 @@ magic numbers.
 ## Still open
 
 Both anchors finish a 2050 career on roughly $1.2B against running costs of a
-few million a year. That is a genuine late-game runaway, and it is not this
-constant's doing — it lives in `MAX_ATTACH_RATE` and how the attach ceiling
-interacts with platform install bases growing across the timeline. Out of scope
-here, recorded so it is not mistaken for something this pass addressed.
+few million a year.
+
+> **Corrected.** That is a nominal figure, and it is not a runaway. Measured in
+> 1985 dollars the same career is flat from about 2020 (+0.4%/yr), and runway
+> plateaus near fifty years at the same point. `MAX_ATTACH_RATE` is not involved
+> either -- it is never pinned after 1999. See
+> `docs/LATE_GAME_ECONOMY_2026-09-08.md`; `analyse.py` now reports real terms
+> and runway so the nominal column cannot mislead again.

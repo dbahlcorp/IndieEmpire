@@ -324,6 +324,11 @@ with outcomes, not a formality.
 
 ## What this does not fix, honestly
 
+> **Corrected on September 8, 2026.** The paragraph below reads a nominal
+> figure. Costs inflate 5.3x by 2050, and in 1985 dollars this career is flat
+> from about 2020 -- the sink did exactly what it set out to do. See
+> `docs/LATE_GAME_ECONOMY_2026-09-08.md`.
+
 **A 66-year career still ends on roughly a billion dollars.** The sink flattens
 the growth curve, but the pile that accumulated on the way up stays, and sixty
 years of even modest annual profit integrates to a large number. Removing that

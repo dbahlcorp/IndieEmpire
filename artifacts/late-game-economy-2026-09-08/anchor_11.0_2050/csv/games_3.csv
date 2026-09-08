@@ -1,0 +1,4 @@
+seed,index,year,size,platform,publisher,review,quality,expected_quality,quality_ratio,bugs,dev_weeks,polish_weeks,units,revenue,advance,dev_cost,labour_cost,profit,attach_pct,concurrent,genre_demand,team_size,useful_staff
+3,0,1985,small,microstar_64,thrift,3.90,18.5,28.0,0.662,27,11,0,73,0,3600,8055,0,-4455,0.00,1,1.256,1,2
+3,1,1985,small,microstar_64,thrift,3.60,20.3,28.0,0.726,22,8,0,72,0,2800,6228,0,-3428,0.00,1,0.958,1,2
+3,2,1986,small,microstar_64,thrift,4.00,21.8,28.0,0.779,21,8,0,91,0,2800,6243,0,-3443,0.00,1,1.270,1,2
