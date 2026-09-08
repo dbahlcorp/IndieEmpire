@@ -13,10 +13,47 @@ const QUALITY_FIELDS := [
 
 func run() -> void:
     _no_size_has_a_ceiling_left_in_the_data()
+    _the_curve_has_diminishing_returns()
     _a_solo_project_can_score_a_masterpiece()
     _equal_execution_scores_equally_regardless_of_size()
     _the_same_output_is_a_masterpiece_small_and_mediocre_large()
     _the_universal_floor_and_ceiling_still_apply()
+
+func _the_curve_has_diminishing_returns() -> void:
+    section("merit converts to score with diminishing returns, not one-for-one")
+    var bar := ReviewSimulator.COMPETENT_MERIT
+    check_near(ReviewSimulator.curve(bar), ReviewSimulator.COMPETENT_SCORE, 0.01,
+        "competent work lands on the competent score")
+
+    # The point of the whole exercise: each equal step of merit above the bar
+    # has to buy strictly less score than the step before it, so 90+ merit
+    # means "eligible for greatness" rather than "automatically a 9".
+    var steps: Array[float] = []
+    for i in range(4):
+        var low := ReviewSimulator.curve(bar + 14.0 * i)
+        var high := ReviewSimulator.curve(bar + 14.0 * (i + 1))
+        steps.append(high - low)
+    for i in range(steps.size() - 1):
+        check_less(steps[i + 1], steps[i],
+            "merit step %d buys less than step %d (%.2f < %.2f)"
+                % [i + 2, i + 1, steps[i + 1], steps[i]])
+    check_greater(steps[0], 8.0,
+        "but the first step still pays properly (%.2f)" % steps[0])
+
+    # Monotonic, so more merit is never worse, and the top of the practical
+    # merit range still has somewhere to go: a landmark game has to be able to
+    # read as one, it just has to be nearly perfect to get there.
+    var previous := -INF
+    for merit in range(20, 140, 5):
+        var score := ReviewSimulator.curve(float(merit))
+        check_greater(score, previous, "curve rises through merit %d" % merit)
+        previous = score
+    check_between(ReviewSimulator.curve(130.0), 95.0, 98.0,
+        "a flawless release reaches the landmark band (%.1f)"
+            % ReviewSimulator.curve(130.0))
+    check_less(ReviewSimulator.curve(95.0), 85.0,
+        "but merit well past the bar is still only an 8 (%.1f)"
+            % ReviewSimulator.curve(95.0))
 
 func _project(size_id: String, quality: float, polish: float, balance: float) -> GameProject:
     var project := GameProject.new()
@@ -72,7 +109,11 @@ func _equal_execution_scores_equally_regardless_of_size() -> void:
     # land in the same place either way.
     var small := _average_score(func(): return _clearing_the_bar_by("small", 1.83, 55.0, 70.0))
     var large := _average_score(func(): return _clearing_the_bar_by("large", 1.83, 711.0, 800.0))
-    check_approx(small, large,
+    # Averaged over 40 noisy trials, so these land near each other rather than
+    # on each other. This used to be check_approx() and passed only because
+    # both sides pinned the old 9.8 ceiling exactly -- float equality was
+    # measuring the clamp, not the rule. See TestCase.check_near().
+    check_near(small, large, 0.15,
         "small at %.2f, large at %.2f -- no size-shaped ceiling between them" % [small, large])
 
 func _the_same_output_is_a_masterpiece_small_and_mediocre_large() -> void:

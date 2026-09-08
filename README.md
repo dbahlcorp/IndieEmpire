@@ -348,6 +348,16 @@ each size sets its own expected quality, and understaffing it costs both speed
 and the output that quality is built from. Team size buys the capacity to
 reach a bigger bar, not a better score for clearing the same one.
 
+Quality does not convert to a review score linearly. The scoring components add
+up to an open-ended *merit* figure, and `ReviewSimulator.curve()` bends that
+into a score with diminishing returns: around the competent bar a point of
+merit is worth most of a point of score, and past it the return decays towards
+nothing. Clearing the bar comfortably is a 7; clearing it by a mile is an 8;
+a 9 takes an exceptional release and 9.6+ takes a near-perfect one. A competent
+studio averages about 7.3 across a career rather than drifting up to 9 and
+staying there. See `docs/REVIEW_SCALE_2026-09-08.md` for the measured
+distribution.
+
 Scope is named in the same currency development actually runs on: every size
 sets a required effort total, employees generate effort every week through
 exactly the same staffing maths, and development length is never separately

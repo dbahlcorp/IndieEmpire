@@ -65,6 +65,15 @@ func check_approx(actual: float, expected: float, label: String) -> bool:
     return check(is_equal_approx(actual, expected),
         "%s -- expected %.4f, got %.4f" % [label, expected, actual])
 
+func check_near(actual: float, expected: float, tolerance: float, label: String) -> bool:
+    ## For values a simulation produces rather than computes exactly. Anything
+    ## averaged over randomised trials lands *near* its expectation, never on
+    ## it, so check_approx() is the wrong tool -- it demands float equality and
+    ## only passes when something (usually a clamp) has quietly flattened both
+    ## sides onto the same number.
+    return check(absf(actual - expected) <= tolerance,
+        "%s -- %.4f is not within %.4f of %.4f" % [label, actual, tolerance, expected])
+
 func check_greater(actual: float, threshold: float, label: String) -> bool:
     return check(actual > threshold,
         "%s -- %.4f is not greater than %.4f" % [label, actual, threshold])

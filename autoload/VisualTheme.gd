@@ -222,6 +222,11 @@ func _style_label(label: Label) -> void:
     elif node_name in ["DateLabel", "VersionLabel", "HintLabel"]:
         label.theme_type_variation = &"MutedLabel"
 
+## The widest a column of management text is allowed to get. Past roughly this
+## measure a line stops being comfortable to read, and no amount of screen makes
+## that better -- extra width becomes margin instead.
+const MAX_MEASURE := 520.0
+
 func _fit_management_screen(root: Control) -> void:
     var margin := root.get_node_or_null("Margin") as MarginContainer
     if margin == null:
@@ -229,11 +234,17 @@ func _fit_management_screen(root: Control) -> void:
     if not margin.has_meta("portrait_offsets"):
         margin.set_meta("portrait_offsets", Vector2(margin.offset_left, margin.offset_right))
     var original: Vector2 = margin.get_meta("portrait_offsets")
-    if root.get_viewport_rect().size.x > 700:
+    # Centre as soon as the viewport can hold the full measure plus the gutters
+    # the portrait layout already asks for, rather than at a fixed width. This
+    # was `> 700`, which left a gap: a portrait tablet at 699 logical pixels
+    # fell through to the fill branch and got a 659-pixel measure -- wider than
+    # the wide branch would ever have allowed.
+    var gutters := absf(original.x) + absf(original.y)
+    if root.get_viewport_rect().size.x >= MAX_MEASURE + gutters:
         margin.anchor_left = 0.5
         margin.anchor_right = 0.5
-        margin.offset_left = -260
-        margin.offset_right = 260
+        margin.offset_left = -MAX_MEASURE * 0.5
+        margin.offset_right = MAX_MEASURE * 0.5
     else:
         margin.anchor_left = 0.0
         margin.anchor_right = 1.0

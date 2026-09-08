@@ -1,5 +1,49 @@
 # Studio and development layout — September 8, 2026
 
+## Mobile audit of the full-screen studio
+
+The revision below was verified at 430 × 932 and 1280 × 800 only, and both
+checks asked whether each control was *on screen* — never whether two of them
+were on top of each other. Two bugs got through.
+
+**The company figures were drawn through the project cards on every phone.**
+`_layout_surface()` placed the project cards at a hardcoded y=216 in portrait
+while the company HUD started at y=80 and stands 211 tall — 75 pixels of
+overlap, on every portrait device. Wide screens were fine because the cards sit
+in the other column there. The cards now stack below the HUD's measured height.
+
+**A portrait tablet got a 659-pixel measure.** `_fit_management_screen()`
+centred management screens at 520 logical pixels only past `> 700` wide, so a
+1536 × 2048 iPad — 699 logical pixels — fell through to the fill branch and got
+a line length wider than the wide branch would ever have allowed. It now
+centres as soon as the viewport can hold the full measure plus its gutters,
+with no threshold to fall between.
+
+**`StudioRoomRenderer` had a load-order-dependent parse error.** A shelf colour
+came from indexing an untyped array literal, which `:=` cannot infer a type
+from; whether that is an error depends on the order the compiler reaches the
+script, so it built from the editor and failed when a test loaded it first. The
+palette is a named constant now.
+
+The property the surface layout leans on is worth stating: because the stretch
+aspect is `expand`, the logical viewport is scaled by whichever axis is
+tightest, so **every device gets at least the authored 430 × 932 to lay out in**.
+Nothing can be crushed, only stretched — which is why the layout can size
+against fixed pixel numbers at all.
+
+`scripts/tests/MobileLayoutTest.gd` now walks eight device profiles — iPhone SE,
+iPhone 15 Pro, Pixel 8, a 21:9 Android, a portrait iPad, a foldable inner
+screen, a landscape phone and the desktop default — computing each one's logical
+viewport from the project's own stretch settings and checking that the floating
+controls stay on screen, stay apart, and stay thumb-sized (≥44 px). 184 checks.
+Renders are in [mobile-2026-09-08](../artifacts/mobile-2026-09-08/).
+
+One thing the audit found and did not change: the desktop default of 1280 × 800
+is a landscape window against a portrait base viewport, so it resolves to a
+1492 × 932 logical viewport — everything renders at 86% of authored size. That
+is legible but small, and it is a deliberate consequence of the window override,
+not a bug.
+
 ## Latest revision: studio as the play surface
 
 Following the user's [Steam reference](https://store.steampowered.com/app/239820/Game_Dev_Tycoon/),

@@ -16,10 +16,12 @@ artifacts/balance-2026-09-07/*
 !artifacts/balance-2026-09-07/report_*.txt
 !artifacts/balance-2026-09-07/platforms_before_2050.json
 
-# Godot re-imports the balance CSVs as translation resources on open; the binary
-# .translation files and .csv.import remaps beside them are regenerated scratch.
-artifacts/balance-2026-09-07/csv/**/*.translation
-artifacts/balance-2026-09-07/csv/**/*.csv.import
+# Godot re-imports every CSV it finds as a translation resource on open. For
+# the measurement dumps under artifacts/ that is pure noise: the binary
+# .translation files and the .csv.import remaps beside them are regenerated
+# from the CSV, and there are hundreds of them per balance run.
+artifacts/**/*.translation
+artifacts/**/*.csv.import
 
 # Verification artifact folders keep their screenshots and logs; the per-image
 # .import remaps and per-run editor settings regenerate on import.

@@ -3,6 +3,14 @@ extends RefCounted
 
 ## Floor and low furniture are drawn independently. No painted room is ever
 ## composited over people. Furniture and actors share the same ground-depth sort.
+
+## The spines on a bookshelf, cycled per row. A named constant rather than an
+## array literal indexed in place: indexing an untyped literal yields a Variant,
+## which `:=` cannot infer a type from, and whether that is an error depends on
+## the order the compiler happens to reach this script -- so it built from the
+## editor and failed when a test loaded it first.
+const SHELF_COLORS := [Color("#47828a"), Color("#bd654e"), Color("#ddb45c")]
+
 static func point(world: Vector2, rect: Rect2, plan: Dictionary) -> Vector2:
     return rect.position + OfficeLayout.project(world, plan["dimensions"]) * rect.size
 
@@ -77,7 +85,7 @@ static func furniture(canvas: CanvasItem, rect: Rect2, plan: Dictionary, item: D
         "shelf":
             var top := box(canvas, rect, plan, cell, unit * 2.1, Color("#76593e"))
             for i in 5:
-                var color := [Color("#47828a"), Color("#bd654e"), Color("#ddb45c")][i % 3]
+                var color: Color = SHELF_COLORS[i % SHELF_COLORS.size()]
                 canvas.draw_line(top + Vector2((i - 2) * unit * 0.14, 0), top + Vector2((i - 2) * unit * 0.14, -unit * 0.3), color, maxf(2, unit * 0.1))
         "plant":
             var top := box(canvas, rect, plan, cell, unit * 0.45, Color("#ad674c"), 0.5)

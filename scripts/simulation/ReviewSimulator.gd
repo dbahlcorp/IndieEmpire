@@ -41,11 +41,13 @@ static func calculate_review(project: GameProject) -> float:
     # A famous name on the credits buys the benefit of the doubt too.
     var fame_bonus := minf(float(_credited_reputation(project)) * 0.04, 2.5)
 
-    var score_100 := (
+    # Raw merit: what the project actually delivered, on an open-ended scale
+    # where a competent studio lands near COMPETENT_MERIT and only a flawless
+    # one approaches 130. This is *not* the review score -- see curve().
+    var merit := (
         quality + compatibility + polish_bonus + balance_bonus + experience_bonus + fame_bonus
         - bug_penalty
     )
-    score_100 += randf_range(-4.0, 4.0)
     # No size-based ceiling here on purpose: a tightly-scoped solo project that
     # actually hits its own quality bar deserves to read as a 9 or a 10, the
     # same as a big one does. What a small team cannot do is generate enough
@@ -53,10 +55,51 @@ static func calculate_review(project: GameProject) -> float:
     # higher bar in the first place -- that is expected_quality's job, and
     # team size earns capacity to reach it, not a higher score for the same
     # execution. See average_quality() and ProjectStaffSimulator.effects().
+    var score_100 := curve(merit)
+    # Critical reception is fickle. Applied *after* the curve so the spread
+    # stays a real +/-0.4 review points instead of being flattened along with
+    # everything else above the competent bar.
+    score_100 += randf_range(-4.0, 4.0)
     score_100 = clampf(score_100, 25.0, 98.0)
 
     project.review_score = snappedf(score_100 / 10.0, 0.1)
     return project.review_score
+
+## Raw merit a competent studio reliably delivers -- the measured median across
+## an eight-seed career. Maps to COMPETENT_SCORE, so the middle of the
+## distribution sits where "good, not remarkable" should.
+const COMPETENT_MERIT := 77.0
+const COMPETENT_SCORE := 72.0
+## What merit asymptotically approaches but never reaches. Deliberately above
+## the 98 display ceiling: if the curve levelled off at 100 the top two points
+## would flatten into each other and 9.5 would read the same as a landmark.
+const UNREACHABLE_SCORE := 108.0
+## Conversion rate *at* the competent bar. Near the middle a point of merit is
+## still worth most of a point of score, so ordinary improvement pays; the
+## curve then bends away on its own.
+const COMPETENT_RETURN := 0.85
+
+static func curve(merit: float) -> float:
+    ## Convert raw merit to a 0-100 review score with diminishing returns.
+    ##
+    ## Merit is open-ended and clusters tightly: a mature studio turning out
+    ## competent work sits around 77, and everything from "solid" to "landmark"
+    ## was crammed into the 85-125 band. The old mapping read merit straight off
+    ## as the score, so that band became 8.5 to 9.8 -- a quarter of all releases
+    ## scored 9+ and 7% pinned the ceiling exactly.
+    ##
+    ## This bends it instead. Around the competent bar a point of merit is worth
+    ## COMPETENT_RETURN of a point, so climbing out of the 5s and 6s still pays
+    ## properly. Past it the return decays smoothly towards nothing, so the last
+    ## stretch costs far more than the first: +14 merit over the bar buys about
+    ## +7 score, the next +14 buys about +4, and the next only +2. Reaching 9.6
+    ## takes roughly 120 merit -- every component at once, not one good project.
+    ##
+    ## Exponential rather than a straight knee because a knee either flattens
+    ## the 8s (too steep) or leaves the 9s free (too shallow); the measured
+    ## merit spread needs the return to keep falling all the way up.
+    var head := UNREACHABLE_SCORE - COMPETENT_SCORE
+    return UNREACHABLE_SCORE - head * exp(-(merit - COMPETENT_MERIT) * COMPETENT_RETURN / head)
 
 static func _credited_reputation(project: GameProject) -> int:
     ## The most famous name attached to this release, if any.

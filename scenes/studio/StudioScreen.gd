@@ -266,11 +266,25 @@ func _layout_surface() -> void:
     var wide := bounds.x >= 760.0
     var inset := 20.0
     var hud_width := minf(410.0, bounds.x - inset * 2.0)
-    %CompanyHUD.position = Vector2(inset, 20 if wide else 80)
-    %CompanyHUD.size.x = hud_width
+    var hud := %CompanyHUD as Control
+    hud.position = Vector2(inset, 20 if wide else 80)
+    # Measure the HUD at the width it will actually occupy. Its height is
+    # whatever the company name, cash, audience and burn lines come to, which
+    # is font- and content-dependent -- a long company name wraps and makes it
+    # taller. Same size/reset_size/size dance the dock does below.
+    hud.size.x = hud_width
+    hud.reset_size()
+    hud.size.x = hud_width
     %ClockBar.position = Vector2(bounds.x - hud_width - inset, 20)
     %ClockBar.size = Vector2(hud_width, 48)
-    project_cards.position = Vector2(bounds.x - hud_width - inset, 86 if wide else 216)
+    # Wide screens get two columns, so the cards sit beside the HUD. Portrait
+    # has only one column, so they have to stack *below* it -- this was a fixed
+    # 216, and the HUD is 211 tall from y=80, so the company figures were drawn
+    # straight through the project cards on every phone.
+    if wide:
+        project_cards.position = Vector2(bounds.x - hud_width - inset, 86)
+    else:
+        project_cards.position = Vector2(inset, hud.position.y + hud.size.y + 12.0)
     project_cards.size.x = hud_width
     var dock_width := minf(660.0, bounds.x - inset * 2.0)
     var dock := %BottomDock as VBoxContainer
