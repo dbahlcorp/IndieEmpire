@@ -108,6 +108,9 @@ static func _estimate(project: GameProject) -> Dictionary:
     var lead := LeadershipSimulator.pick_lead(TeamManager.working_members(project.team_id))
     var leadership := float(lead.leadership) if lead != null else LeadershipSimulator.BASELINE
     var half_width := LeadershipSimulator.schedule_half_width(leadership)
+    var complexity_budget := FeatureSimulator.complexity_budget(project.size_id, project.feature_ids)
+    if bool(complexity_budget.get("over_scoped", false)):
+        half_width *= 1.0 + minf((float(complexity_budget["ratio"]) - 1.0) * 0.35, 0.65)
     var preprod_drag := schedule_drag()
 
     var preprod_remaining := maxf(100.0 - project.preproduction_progress, 0.0)
@@ -287,13 +290,15 @@ static func start_project(
     project.size_id = size_id
     project.team_id = team_id
     project.engine_id = engine_id if EngineManager.has_engine(engine_id) else ""
-    # A stale selection (the year moved on, or the tech was never actually
-    # researched) is dropped rather than trusted.
+    # A stale selection (the year moved on, a prerequisite was removed, or
+    # the selected engine lacks a capability) is dropped rather than trusted.
     var chosen: Array[String] = []
+    var selected_engine_features := FeatureSimulator.engine_features(project.engine_id)
     for id in feature_ids:
         var feature := DataManager.get_game_feature(str(id))
         if not feature.is_empty() and FeatureSimulator.is_available(
-                feature, TimeManager.current_year, GameState.researched_engine_features):
+                feature, TimeManager.current_year, GameState.researched_engine_features,
+                selected_engine_features, chosen):
             chosen.append(str(id))
     project.feature_ids = chosen
     project.role_assignments = resolved
@@ -395,6 +400,10 @@ static func advance_project(project: GameProject) -> Dictionary:
     var work := required_effort(project.size_id, project.feature_ids)
     var progress_scale := 100.0 / work
     var staff := staff_effects(project)
+    var feature_effort := float(FeatureSimulator.effort_bonus(project.feature_ids))
+    var feature_share := clampf(feature_effort / maxf(work, 1.0), 0.0, 0.80)
+    var feature_capacity := lerpf(
+        1.0, FeatureSimulator.execution_multiplier(project.feature_ids, staff), feature_share)
     # A disciplined studio wastes less of the week -- that one is folded into
     # staff_effects(); a meticulous one ships fewer bugs; an adventurous one
     # takes more chances. All small.
@@ -418,7 +427,7 @@ static func advance_project(project: GameProject) -> Dictionary:
     var progress_before := project.development_progress
     project.development_progress = minf(
         project.development_progress
-            + weekly_roll * progress_scale * float(staff["progress"]) * plan_drag
+            + weekly_roll * progress_scale * float(staff["progress"]) * plan_drag * feature_capacity
                 * DevelopmentFocusSimulator.multiplier(
                     project, "production", "progress"),
         100.0
@@ -428,7 +437,7 @@ static func advance_project(project: GameProject) -> Dictionary:
     # finished building never counts, and one built steadily across the whole
     # project earns its full worth by the end.
     FeatureSimulator.apply_quality_potential(
-        project, project.development_progress - progress_before)
+        project, project.development_progress - progress_before, staff)
 
     var compatibility := _calculate_compatibility(project)
     var genre_bonus := ExperienceManager.genre_bonus(project.genre_id)
@@ -512,7 +521,8 @@ static func advance_project(project: GameProject) -> Dictionary:
     var bug_risk := crunch_bugs * culture_bugs * (
         (1.30 - float(staff["testing"]) * 0.32 - float(staff["programming"]) * 0.12)
         * (1.0 + float(staff["overload"]) * 0.8) * float(staff["chemistry_bug"])
-        * float(engine["bugs"]) * FeatureSimulator.bug_risk_multiplier(project.feature_ids)
+        * float(engine["bugs"]) * FeatureSimulator.bug_risk_multiplier(
+            project.feature_ids, project.size_id)
         * DevelopmentFocusSimulator.multiplier(project, "production", "bug_risk")
     )
     var new_bugs := maxi(int(round(float(randi_range(0, 4)) * bug_risk)), 0)

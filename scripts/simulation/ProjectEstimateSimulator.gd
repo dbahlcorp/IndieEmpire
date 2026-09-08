@@ -71,6 +71,9 @@ static func schedule_and_cost(
     var lead := LeadershipSimulator.pick_lead(employees)
     var leadership := float(lead.leadership) if lead != null else LeadershipSimulator.BASELINE
     var half_width := LeadershipSimulator.schedule_half_width(leadership)
+    var complexity_budget := FeatureSimulator.complexity_budget(size_id, feature_ids)
+    if bool(complexity_budget.get("over_scoped", false)):
+        half_width *= 1.0 + minf((float(complexity_budget["ratio"]) - 1.0) * 0.35, 0.65)
     var culture_progress := CultureSimulator.progress_multiplier(CultureManager.value("efficiency"))
 
     # Pre-production, fast and slow ends of the same weekly roll production
@@ -89,6 +92,10 @@ static func schedule_and_cost(
     var work := DevelopmentSimulator.required_effort(size_id, feature_ids)
     var progress_scale := 100.0 / work
     var prod_staff := float(effects.get("progress", 1.0))
+    var feature_effort := float(FeatureSimulator.effort_bonus(feature_ids))
+    var feature_share := clampf(feature_effort / maxf(work, 1.0), 0.0, 0.80)
+    prod_staff *= lerpf(
+        1.0, FeatureSimulator.execution_multiplier(feature_ids, effects), feature_share)
     var prod_fast := 100.0 / maxf(
         (11.0 + half_width) * progress_scale * prod_staff * culture_progress, 0.01)
     var prod_slow := 100.0 / maxf(
@@ -227,7 +234,11 @@ static func risk_assessment(
 
     var size := DataManager.get_size(size_id)
     var base_work := maxf(float(size.get("work", 100)), 1.0)
-    if float(FeatureSimulator.effort_bonus(feature_ids)) >= base_work * AMBITIOUS_FEATURE_SHARE:
+    var complexity_budget := FeatureSimulator.complexity_budget(size_id, feature_ids)
+    if bool(complexity_budget.get("over_scoped", false)):
+        points += 2
+        reasons.append("Chosen features exceed this scope's recommended complexity capacity.")
+    elif float(FeatureSimulator.effort_bonus(feature_ids)) >= base_work * AMBITIOUS_FEATURE_SHARE:
         points += 1
         reasons.append(
             "Chosen features add significant scope beyond a standard %s project." % str(size.get("name", "")))

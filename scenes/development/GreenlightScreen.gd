@@ -80,7 +80,14 @@ func _render_features() -> void:
     for id in feature_ids:
         var feature := DataManager.get_game_feature(str(id))
         features_container.add_child(UiBuilder.label(
-            "• %s" % str(feature.get("name", str(id))), 14))
+            "• %s" % FeatureSimulator.display_name(feature), 14))
+    var complexity := FeatureSimulator.complexity_budget(
+        str(_draft.get("size_id", "small")), feature_ids)
+    var complexity_text := "PROJECT COMPLEXITY  %d / %d recommended" % [
+        int(complexity.get("current", 0)), int(complexity.get("recommended_max", 0))]
+    if bool(complexity.get("over_scoped", false)):
+        complexity_text += "\n⚠ OVER-SCOPED — longer development, higher bug risk, greater uncertainty"
+    features_container.add_child(UiBuilder.label(complexity_text, 13, true))
 
 func _render_team() -> void:
     UiBuilder.clear(team_container)

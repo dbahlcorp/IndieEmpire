@@ -150,7 +150,7 @@ func _greenlight_screen_shows_every_section_the_mock_up_asks_for() -> void:
     check(text.contains("Scope:"), "Scope")
     check(text.contains("Engine:"), "Engine")
     check(text.contains("FEATURES"), "FEATURES heading")
-    check(text.contains("Save System"), "the chosen feature, by its real name")
+    check(text.contains("Save Games"), "the chosen feature, by its real name")
     check(text.contains("TEAM"), "TEAM heading")
     check(text.contains("employee"), "a headcount")
     check(text.contains("PROJECT PRIORITIES"), "PROJECT PRIORITIES heading")

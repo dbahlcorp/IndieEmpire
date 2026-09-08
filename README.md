@@ -381,17 +381,17 @@ authored -- it is just how many weeks that took. The project-setup screen
 shows required effort next to the scope so the comparison is not hidden in
 the numbers behind it.
 
-A project can also name specific features -- Save System, Dialogue Trees,
-Turn-Based Combat and a dozen more, authored in `data/game_features.json` and
-picked once at project start. Each one adds straight onto required effort (so
-a small team taking on a few ambitious features can end up scheduled like a
-much bigger, plainer game), taxes bug risk, and pays out its own quality
-potential gradually as production progress is actually made -- a feature
-nobody finished building never counts. Some are gated behind researched
-engine technology, so the Engine Lab and this list read each other: an
-ambitious feature is as much a technology decision as a design one. Nothing
-here is required -- a project with no features chosen behaves exactly as it
-always has.
+A project can also name specific features -- Save Games, Branching Dialogue,
+Turn-Based Combat, Open World and more, authored in `data/game_features.json`
+and picked once at project start. Each adds effort, discipline demand,
+complexity and bug risk; its potential is realised gradually according to the
+assigned team's ability to execute it. Every scope has a recommended complexity
+range, but over-scoping remains an allowed, explicitly warned choice. Research
+unlocks advanced features while the selected engine must actually contain any
+capabilities they require. Soft genre relevance can help without creating a
+single correct feature list. Outcomes survive saves and become durable studio
+knowledge when the player completes a postmortem. Nothing here is required --
+a project with no features chosen behaves exactly as it always has.
 
 Named project assignments act as discipline leads. Other members of the active
 team contribute as project support at 35% workload, allowing the full twelve-

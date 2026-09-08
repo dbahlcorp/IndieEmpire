@@ -57,6 +57,7 @@ var theme_experience: Dictionary = {}       # theme_id -> xp
 var platform_experience: Dictionary = {}    # platform_id -> xp
 var combo_knowledge: Dictionary = {}        # "theme|genre" -> shipments
 var platform_genre_knowledge: Dictionary = {} # "platform|genre" -> shipments
+var feature_knowledge: Dictionary = {}       # "feature|genre" -> postmortems
 
 # --- Technology ---
 var researched_engine_features: Array = []
@@ -268,6 +269,7 @@ func reset_company() -> void:
     platform_experience.clear()
     combo_knowledge.clear()
     platform_genre_knowledge.clear()
+    feature_knowledge.clear()
     EngineManager.reset_technology()
 
     genre_trends.clear()

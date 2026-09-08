@@ -10,7 +10,7 @@ signal game_saved(slot: String)
 const SAVE_DIR := "user://saves"
 const AUTOSAVE := "autosave"
 const MANUAL_SLOTS := ["save_1", "save_2", "save_3"]
-const SAVE_VERSION := 18
+const SAVE_VERSION := 19
 const MIN_SUPPORTED_VERSION := 5
 
 var has_active_company: bool = false
@@ -156,7 +156,8 @@ func _collect_save_data() -> Dictionary:
             "theme_experience": GameState.theme_experience,
             "platform_experience": GameState.platform_experience,
             "combo_knowledge": GameState.combo_knowledge,
-            "platform_genre_knowledge": GameState.platform_genre_knowledge
+            "platform_genre_knowledge": GameState.platform_genre_knowledge,
+            "feature_knowledge": GameState.feature_knowledge
         },
         "technology": {
             "researched_features": GameState.researched_engine_features,
@@ -257,6 +258,7 @@ func _apply_save_data(data: Dictionary) -> void:
     GameState.platform_experience = _int_dictionary(knowledge.get("platform_experience", {}))
     GameState.combo_knowledge = _int_dictionary(knowledge.get("combo_knowledge", {}))
     GameState.platform_genre_knowledge = _int_dictionary(knowledge.get("platform_genre_knowledge", {}))
+    GameState.feature_knowledge = _int_dictionary(knowledge.get("feature_knowledge", {}))
 
     var technology: Dictionary = data.get("technology", {})
     GameState.researched_engine_features = _string_array(

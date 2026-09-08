@@ -16,6 +16,10 @@ var engine_id: String = ""
 ## Chosen once at project start and fixed for the whole build. See
 ## FeatureSimulator and DevelopmentSimulator.required_effort().
 var feature_ids: Array[String] = []
+## Per-feature execution evidence accumulated as production advances. Kept
+## separate from the catalog so balance data can evolve without rewriting the
+## historical outcome of a shipped game.
+var feature_outcomes: Dictionary = {}
 var role_assignments: Dictionary = {}
 ## Who actually worked on this, refreshed every development week. Used after
 ## release -- once the team has moved on to something else -- to credit the
@@ -257,6 +261,7 @@ func to_dict() -> Dictionary:
     data["role_assignments"] = role_assignments.duplicate()
     data["focus_choices"] = focus_choices.duplicate()
     data["priority_choices"] = priority_choices.duplicate()
+    data["feature_outcomes"] = feature_outcomes.duplicate(true)
     return data
 
 static func from_dict(data: Dictionary) -> GameProject:
@@ -323,6 +328,18 @@ static func from_dict(data: Dictionary) -> GameProject:
     if data.get("priority_choices", {}) is Dictionary:
         saved_priorities = data.get("priority_choices", {})
     project.priority_choices = ProjectPrioritySimulator.sanitize(saved_priorities)
+
+    var saved_outcomes = data.get("feature_outcomes", {})
+    if saved_outcomes is Dictionary:
+        for feature_id in saved_outcomes:
+            var raw = saved_outcomes[feature_id]
+            if raw is Dictionary:
+                project.feature_outcomes[str(feature_id)] = {
+                    "progress": float(raw.get("progress", 0.0)),
+                    "execution_total": float(raw.get("execution_total", 0.0)),
+                    "genre_relevance": float(raw.get("genre_relevance", 1.0)),
+                    "realised_potential": float(raw.get("realised_potential", 0.0))
+                }
 
     if project.id.is_empty():
         project.id = GameState.next_project_id()

@@ -4,6 +4,9 @@ extends TestCase
 ## one, and nothing in a later phase starts before the one before it finishes.
 
 func run() -> void:
+    # This suite compares authored planning bands; a stable seed keeps the
+    # boundary case from randomly crossing into the adjacent headline band.
+    seed(424242)
     _starts_in_preproduction()
     _production_waits_its_turn()
     _preproduction_then_production()

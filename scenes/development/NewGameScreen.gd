@@ -154,39 +154,58 @@ func _populate_roles(team_id: String) -> void:
 func _populate_features() -> void:
     UiBuilder.clear(feature_list)
     _selected_feature_ids = _selected_feature_ids.filter(func(id): return _feature_selectable(id))
-
+    var grouped := {}
     for feature in DataManager.game_features:
-        var id := str(feature.get("id", ""))
-        if int(feature.get("unlock_year", 1985)) > TimeManager.current_year:
+        var unlocks: Dictionary = feature.get("unlock_requirements", {})
+        if int(unlocks.get("year", feature.get("unlock_year", 1985))) > TimeManager.current_year:
             continue
-        feature_list.add_child(_feature_row(feature, id))
+        var category := str(feature.get("category", "Other"))
+        if not grouped.has(category):
+            grouped[category] = []
+        grouped[category].append(feature)
+    for category in grouped:
+        feature_list.add_child(UiBuilder.heading(str(category).to_upper()))
+        for feature in grouped[category]:
+            feature_list.add_child(_feature_row(feature, str(feature.get("id", ""))))
 
 func _feature_selectable(id: String) -> bool:
     var feature := DataManager.get_game_feature(id)
     return not feature.is_empty() and FeatureSimulator.is_available(
-        feature, TimeManager.current_year, GameState.researched_engine_features)
+        feature, TimeManager.current_year, GameState.researched_engine_features,
+        FeatureSimulator.engine_features(_selected_id(engine_option)), _selected_feature_ids)
 
 func _feature_row(feature: Dictionary, id: String) -> Control:
     var panel := PanelContainer.new()
     var stack := VBoxContainer.new()
     stack.add_theme_constant_override("separation", 4)
 
-    var missing := FeatureSimulator.missing_tech(feature, GameState.researched_engine_features)
+    var missing := FeatureSimulator.missing_requirements(
+        feature, TimeManager.current_year, GameState.researched_engine_features,
+        FeatureSimulator.engine_features(_selected_id(engine_option)), _selected_feature_ids)
     var locked := not missing.is_empty()
 
-    var toggle := UiBuilder.toggle(str(feature.get("name", id)), id in _selected_feature_ids)
+    var toggle := UiBuilder.toggle(FeatureSimulator.display_name(feature), id in _selected_feature_ids)
     toggle.disabled = locked
     toggle.toggled.connect(_on_feature_toggled.bind(id))
     stack.add_child(toggle)
 
-    var bonuses: Array = []
-    for field in feature.get("quality_potential", {}).keys():
-        bonuses.append("+%d %s" % [
-            int(feature["quality_potential"][field]), str(field).capitalize()])
-    var detail := "Effort +%d    Bug risk +%d%%\n%s" % [
-        int(feature.get("effort", 0)), int(round(float(feature.get("bug_risk", 0.0)) * 100.0)),
-        ", ".join(bonuses)
+    var demands: Array[String] = []
+    for discipline in FeatureSimulator.DISCIPLINES:
+        var amount := int(feature.get(FeatureSimulator.DEMAND_FIELDS[discipline], 0))
+        if amount > 0:
+            demands.append("%s %d" % [discipline.capitalize(), amount])
+    var benefits: Array = feature.get("known_benefits", [])
+    var detail := "Effort +%d    Complexity +%d    Bug risk: %s\nDemand: %s\nBenefits: %s" % [
+        int(feature.get("development_effort", 0)), int(feature.get("complexity", 0)),
+        FeatureSimulator.bug_risk_label(feature), ", ".join(demands),
+        ", ".join(benefits)
     ]
+    var technology: Array = feature.get("technology_requirements", [])
+    if not technology.is_empty():
+        var technology_names: Array[String] = []
+        for tech_id in technology:
+            technology_names.append(str(EngineManager.feature(str(tech_id)).get("name", tech_id)))
+        detail += "\nTechnology: %s" % ", ".join(technology_names)
     if locked:
         detail += "\nRequires: %s" % ", ".join(missing)
     stack.add_child(UiBuilder.label(detail, 12))
@@ -199,6 +218,7 @@ func _on_feature_toggled(pressed: bool, id: String) -> void:
         _selected_feature_ids.append(id)
     elif not pressed:
         _selected_feature_ids.erase(id)
+    _populate_features()
     _refresh()
 
 func _build_priorities_section() -> void:
@@ -314,8 +334,14 @@ func _refresh() -> void:
     var ideal_max := int(size.get("max_useful_staff", 1))
     var team_id := _selected_id(team_option)
     var headcount := TeamManager.working_members(team_id).size()
+    var complexity_budget := FeatureSimulator.complexity_budget(size_id, _selected_feature_ids)
 
-    var cost_text := "Scope\n%s (ideal team %s)\nRequired Effort %d\n\nAssigned Team\n%d employee%s\n\n" % [
+    var cost_text := "PROJECT COMPLEXITY\n%d / %d recommended\n" % [
+        int(complexity_budget.get("current", 0)),
+        int(complexity_budget.get("recommended_max", 0))]
+    if bool(complexity_budget.get("over_scoped", false)):
+        cost_text += "⚠ OVER-SCOPED\nExpected consequences:\n• Longer development\n• Higher bug risk\n• Greater schedule uncertainty\n"
+    cost_text += "\nScope\n%s (ideal team %s)\nRequired Effort %d\n\nAssigned Team\n%d employee%s\n\n" % [
         str(size.get("name", "")), ScopeSimulator.team_size_label(ideal_min, ideal_max),
         int(DevelopmentSimulator.required_effort(size_id, _selected_feature_ids)),
         headcount, "" if headcount == 1 else "s"
@@ -481,6 +507,7 @@ func _on_title_changed(_text: String) -> void:
     _refresh()
 
 func _on_choice_changed(_index: int) -> void:
+    _populate_features()
     _refresh()
 
 func _on_team_changed(_index: int) -> void:

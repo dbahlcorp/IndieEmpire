@@ -40,10 +40,9 @@ func _build() -> void:
     if not game.engine_id.is_empty():
         list.add_child(UiBuilder.label("Built with %s" % EngineManager.engine_name(game.engine_id), 14, true))
     if not game.feature_ids.is_empty():
-        var names: Array[String] = []
-        for id in game.feature_ids:
-            names.append(str(DataManager.get_game_feature(id).get("name", id)))
-        list.add_child(UiBuilder.label("FEATURES\n%s" % "\n".join(names), 14, true))
+        list.add_child(UiBuilder.label(
+            "FEATURES\n%s" % FeatureSimulator.feature_names(game.feature_ids).replace(", ", "\n"),
+            14, true))
     list.add_child(UiBuilder.divider())
 
     _reviews()

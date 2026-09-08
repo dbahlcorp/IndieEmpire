@@ -71,7 +71,7 @@ below:
   significant exception — engine-tech data is hardcoded in GDScript instead
   of JSON, unlike its sibling `data/game_features.json`. PA.2 below proposes
   fixing that inconsistency rather than building around it.
-- **Saves** are versioned (`SaveManager.SAVE_VERSION := 18`,
+- **Saves** are versioned (`SaveManager.SAVE_VERSION := 19`,
   `MIN_SUPPORTED_VERSION := 5`) with numbered migration branches
   (`if int(data.get("version", 0)) < 15: ...`). Every PA section that adds a
   `GameState` field needs a version bump and a migration branch in this same
@@ -100,7 +100,7 @@ below:
 |---|---|---|---|
 | PA.1 | Game Creation & Project Decisions | **Implemented** (2026-09-08; pricing/marketing still out) | Low |
 | PA.2 | Research & Technology | **Partial** (works, not data-driven) | Low–Medium |
-| PA.3 | Game Features | **Mostly complete** | Low |
+| PA.3 | Game Features | **Implemented** (2026-09-08) | Complete |
 | PA.4 | Engine Progression | **Partial** | Medium |
 | PA.5 | Content Expansion | **Partial** (breadth uneven) | Low–Medium (content authoring, not engineering) |
 | PA.6 | Onboarding & Progressive Disclosure | **Missing** | Medium–High |
@@ -353,57 +353,47 @@ entries are the natural way to expand content here).
 
 ## PA.3 — Game Features
 
-### Current repository state
-`data/game_features.json` (12 features, 1985–1995) is fully data-driven:
-`unlock_year`, `effort` (added straight onto required project effort),
-`bug_risk`, `requires_tech` (references `EngineManager` feature ids —
-already cross-links to PA.2), and `quality_potential` per scoring dimension,
-paid out gradually as production progress is made. `FeatureSimulator.gd`
-implements the payout logic. `NewGameScreen` gates selection on
-`missing_tech` and unlock year.
+**Status: implemented, 2026-09-08.** The existing partial feature path was
+extended rather than replaced. `data/game_features.json` now authors 19
+features in seven categories, including every feature named in the PA.3 brief.
+Every definition carries display/category copy, compound unlock requirements,
+research and selected-engine requirements, compatible eras, development
+effort, six discipline demands, bug risk, complexity, quality and innovation
+potential, soft genre relevance and player-facing known benefits.
 
-### Existing systems that can be reused
-Everything — this is the most complete PA section already.
+`FeatureSimulator.gd` is the single rules surface for loading validation,
+availability, engine capability checks, effort, complexity, discipline demand,
+bug risk, genre relevance and realised potential. A feature's upside is no
+longer automatic: it is earned with production progress and scaled by how well
+the assigned team's programming/design/art/writing/audio/QA capacity matches
+the feature. Feature-heavy projects therefore take longer and cost more through
+the existing weekly development economy; over-scoped projects add further bug
+risk and widen their schedule forecast. Genre relationships remain soft — they
+can improve effectiveness but never make an unusual feature choice invalid.
 
-### Missing functionality
-- Features are invisible after project start: no icon set
-  (`docs/ASSET_UI_PLAN.md` Batch 2 lists "engine-feature icons" as still
-  unchecked), no display of which features shipped on a released game's
-  detail page.
-- No post-launch content (a shipped game's feature set is permanently
-  fixed; no patch/DLC concept — plausibly intentional for this milestone,
-  flagging rather than recommending).
+`game_sizes.json` now provides an authored recommended complexity range for
+every scope. Project creation and greenlight show `current / recommended`, an
+explicit `OVER-SCOPED` state and its consequences while still allowing the
+player to proceed. The selector is grouped from authored categories and shows
+effort, complexity, discipline demand, known benefits, technology requirements
+and human-readable lock reasons; simulation multipliers remain hidden.
 
-### Required data/model changes
-None to add features (that's PA.5 authoring work against the existing
-schema). If shipped-feature display is added, no new field is needed —
-`GameProject.feature_ids` already persists it.
+`GameProject.feature_ids` and the new per-feature `feature_outcomes` both
+serialize. Save version 19 also persists `GameState.feature_knowledge`, awarded
+only when a postmortem is completed. Postmortems name strong feature/genre
+interactions, identify features that exceeded the team's discipline capacity,
+and explain when the overall feature set exceeded production capacity. Active
+development and released-game detail screens use the catalog's display names.
 
-### Required simulation changes
-None.
+`FeatureTest` is now deterministic and covers 87 checks: catalog/schema loading,
+compound unlock requirements, selected-engine requirements, complexity,
+development effort, discipline demand/execution, bug generation, soft genre
+interaction, over-scoping, full save/load of selections and outcomes, and
+postmortem knowledge. The full 53 regression suites plus all four connected
+acceptance phases pass after integration.
 
-### Required UI
-Feature icon set (ties to PA.9/ASSET_UI_PLAN); a "Features" line on
-`GameDetailScreen` reading `GameProject.feature_ids` through
-`EngineManager.feature_names`-style lookup (that exact helper exists for
-engine features; a `FeatureSimulator.feature_names` sibling would match it).
-
-### Save migration requirements
-None.
-
-### Tests required
-A `FeatureTest` already exists (28 checks) and is part of the flaky-RNG
-pair noted in the baseline — see PA.15 for the fix recommendation
-(seed the RNG). No new suite required for the icon/display work; extend
-`GameDetailScreen`'s existing test coverage if one exists, otherwise add a
-small assertion to whatever suite already exercises that screen.
-
-### Acceptance criteria
-A shipped game's detail page lists the features it was built with.
-
-### Dependencies on other sections
-PA.5 (this is where new features get authored); PA.2 (features gate on
-engine tech, so the two catalogs evolve together).
+No PA.3 functionality remains. Feature icons and post-launch DLC/patches remain
+optional future presentation/content work, not part of the Playable Alpha gate.
 
 ---
 

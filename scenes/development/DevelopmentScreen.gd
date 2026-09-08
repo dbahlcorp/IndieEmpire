@@ -92,7 +92,7 @@ func _refresh() -> void:
     if not project.feature_ids.is_empty():
         var names: Array[String] = []
         for id in project.feature_ids:
-            names.append(str(DataManager.get_game_feature(id).get("name", id)))
+            names.append(FeatureSimulator.display_name(DataManager.get_game_feature(id)))
         title_label.text += "\nFeatures: %s" % ", ".join(names)
     phase_label.text = _phase_text()
     %PlanBar.value = project.preproduction_progress
@@ -324,7 +324,7 @@ func _build_deadline_decisions() -> void:
 
     for feature_variant in project.feature_ids.duplicate():
         var feature_id := str(feature_variant)
-        var feature_name := str(DataManager.get_game_feature(feature_id).get("name", feature_id))
+        var feature_name := FeatureSimulator.display_name(DataManager.get_game_feature(feature_id))
         var cut := UiBuilder.button("REDUCE SCOPE: CUT %s" % feature_name.to_upper())
         cut.pressed.connect(_on_reduce_scope_pressed.bind(feature_id, feature_name))
         deadline_container.add_child(cut)

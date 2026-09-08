@@ -63,9 +63,14 @@ static func analyse(project: GameProject) -> void:
     else:
         poorly.append("The project lost $%s." % Format.exact(absi(project.profit())))
 
+    var feature_findings := _feature_findings(project, genre_name)
+    well.append_array(feature_findings.get("well", []))
+    poorly.append_array(feature_findings.get("poorly", []))
+
     project.went_well = well
     project.went_poorly = poorly
     project.lessons = _award_and_describe(project)
+    project.lessons.append_array(_award_feature_knowledge(project))
     project.postmortem_reviewed = true
 
 static func _quality_rows(project: GameProject) -> Array:
@@ -118,4 +123,52 @@ static func _award_and_describe(project: GameProject) -> Array[String]:
     if lines.is_empty():
         lines.append("%s experience +%d XP" % [genre_name, int(progression["xp"])])
 
+    return lines
+
+static func _feature_findings(project: GameProject, genre_name: String) -> Dictionary:
+    var well: Array[String] = []
+    var poorly: Array[String] = []
+    var execution_total := 0.0
+    var outcome_count := 0
+    for feature_id in project.feature_ids:
+        var feature := DataManager.get_game_feature(feature_id)
+        if feature.is_empty():
+            continue
+        var outcome: Dictionary = project.feature_outcomes.get(feature_id, {})
+        var execution := FeatureSimulator.execution_for_outcome(outcome) if not outcome.is_empty() else 1.0
+        var relevance := float(outcome.get(
+            "genre_relevance", FeatureSimulator.genre_relevance(feature, project.genre_id)))
+        execution_total += execution
+        outcome_count += 1
+        var name := FeatureSimulator.display_name(feature)
+        if relevance >= 1.15 and execution >= 0.80:
+            well.append("%s worked particularly well in this %s." % [name, genre_name])
+        elif execution < 0.75:
+            var discipline := FeatureSimulator.dominant_discipline([feature_id])
+            poorly.append("%s exceeded the team's %s capacity." % [
+                name, discipline.capitalize() if not discipline.is_empty() else "production"])
+
+    var budget := FeatureSimulator.complexity_budget(project.size_id, project.feature_ids)
+    var average_execution := execution_total / float(outcome_count) if outcome_count > 0 else 1.0
+    if bool(budget.get("over_scoped", false)):
+        if average_execution < 0.85:
+            poorly.append("The game's ambitious feature set exceeded the team's production capacity.")
+        else:
+            well.append("The team successfully delivered an ambitious, over-scoped feature set.")
+    return {"well": well, "poorly": poorly}
+
+static func _award_feature_knowledge(project: GameProject) -> Array[String]:
+    var lines: Array[String] = []
+    for feature_id in project.feature_ids:
+        var feature := DataManager.get_game_feature(feature_id)
+        if feature.is_empty():
+            continue
+        var key := "%s|%s" % [feature_id, project.genre_id]
+        GameState.feature_knowledge[key] = int(GameState.feature_knowledge.get(key, 0)) + 1
+        var outcome: Dictionary = project.feature_outcomes.get(feature_id, {})
+        var execution := FeatureSimulator.execution_for_outcome(outcome) if not outcome.is_empty() else 1.0
+        var effectiveness := "Strong" if execution >= 0.95 else ("Mixed" if execution >= 0.75 else "Weak")
+        lines.append("%s in %s\nEffectiveness learned: %s" % [
+            FeatureSimulator.display_name(feature),
+            DataManager.display_name(DataManager.genres, project.genre_id), effectiveness])
     return lines

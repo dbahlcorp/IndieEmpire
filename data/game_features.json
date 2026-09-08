@@ -1,122 +1,21 @@
 [
-  {
-    "id": "save_system",
-    "name": "Save System",
-    "unlock_year": 1985,
-    "effort": 25,
-    "bug_risk": 0.04,
-    "requires_tech": [],
-    "quality_potential": {"gameplay": 2},
-    "description": "Lets players stop and pick up where they left off."
-  },
-  {
-    "id": "multiple_endings",
-    "name": "Multiple Endings",
-    "unlock_year": 1985,
-    "effort": 30,
-    "bug_risk": 0.05,
-    "requires_tech": [],
-    "quality_potential": {"story": 5, "narrative_quality": 4},
-    "description": "The choices players make actually change how it ends."
-  },
-  {
-    "id": "character_creation",
-    "name": "Character Creation",
-    "unlock_year": 1986,
-    "effort": 45,
-    "bug_risk": 0.06,
-    "requires_tech": [],
-    "quality_potential": {"gameplay": 3, "graphics": 3},
-    "description": "Build your own hero before the story even starts."
-  },
-  {
-    "id": "dialogue_trees",
-    "name": "Dialogue Trees",
-    "unlock_year": 1987,
-    "effort": 40,
-    "bug_risk": 0.05,
-    "requires_tech": [],
-    "quality_potential": {"story": 6, "narrative_quality": 5},
-    "description": "Branching conversations instead of one-liners."
-  },
-  {
-    "id": "turn_based_combat",
-    "name": "Turn-Based Combat",
-    "unlock_year": 1987,
-    "effort": 55,
-    "bug_risk": 0.07,
-    "requires_tech": [],
-    "quality_potential": {"gameplay": 6},
-    "description": "A full combat system, not a bolted-on mini-game."
-  },
-  {
-    "id": "skill_trees",
-    "name": "Skill Trees",
-    "unlock_year": 1989,
-    "effort": 35,
-    "bug_risk": 0.04,
-    "requires_tech": [],
-    "quality_potential": {"gameplay": 4},
-    "description": "Meaningful choices in how a character grows."
-  },
-  {
-    "id": "boss_battles",
-    "name": "Boss Battles",
-    "unlock_year": 1990,
-    "effort": 30,
-    "bug_risk": 0.06,
-    "requires_tech": [],
-    "quality_potential": {"gameplay": 5, "innovation": 2},
-    "description": "Set-piece fights worth building a whole system for."
-  },
-  {
-    "id": "voice_acting",
-    "name": "Voice Acting",
-    "unlock_year": 1992,
-    "effort": 35,
-    "bug_risk": 0.03,
-    "requires_tech": ["advanced_audio"],
-    "quality_potential": {"sound": 8, "narrative_quality": 3},
-    "description": "Real performances instead of text boxes. Needs proper studio audio tools."
-  },
-  {
-    "id": "crafting_system",
-    "name": "Crafting System",
-    "unlock_year": 1991,
-    "effort": 50,
-    "bug_risk": 0.08,
-    "requires_tech": [],
-    "quality_potential": {"gameplay": 5, "innovation": 3},
-    "description": "Gathering and combining, with all the edge cases that implies."
-  },
-  {
-    "id": "procedural_generation",
-    "name": "Procedural Generation",
-    "unlock_year": 1993,
-    "effort": 60,
-    "bug_risk": 0.10,
-    "requires_tech": ["scripting"],
-    "quality_potential": {"innovation": 8, "gameplay": 3},
-    "description": "Content the team did not hand-place. Needs a real scripting runtime."
-  },
-  {
-    "id": "open_world",
-    "name": "Open World",
-    "unlock_year": 1994,
-    "effort": 90,
-    "bug_risk": 0.12,
-    "requires_tech": ["3d_renderer", "scripting"],
-    "quality_potential": {"gameplay": 6, "graphics": 6, "innovation": 4},
-    "description": "No loading screens between one part of the game and the next. A serious commitment."
-  },
-  {
-    "id": "achievements",
-    "name": "Achievements",
-    "unlock_year": 1995,
-    "effort": 15,
-    "bug_risk": 0.02,
-    "requires_tech": [],
-    "quality_potential": {"gameplay": 1},
-    "description": "Small goals that keep players coming back."
-  }
+  {"id":"save_system","display_name":"Save Games","name":"Save Games","category":"Core Systems","description":"Lets players stop and continue without losing progress.","unlock_requirements":{"year":1985,"released_games":0},"unlock_year":1985,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1985,2100],"development_effort":22,"effort":22,"programming_demand":18,"design_demand":2,"art_demand":0,"writing_demand":0,"audio_demand":0,"qa_demand":8,"bug_risk":0.04,"quality_potential":{"gameplay":2},"innovation_potential":0,"engine_requirements":[],"complexity":12,"genre_relevance":{"rpg":1.08,"strategy":1.08,"simulation":1.08},"known_benefits":["Player convenience","Supports longer games"]},
+  {"id":"character_creation","display_name":"Character Creation","name":"Character Creation","category":"Player & Progression","description":"Players define their own hero and identity.","unlock_requirements":{"year":1986,"released_games":0},"unlock_year":1986,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1986,2100],"development_effort":45,"effort":45,"programming_demand":14,"design_demand":16,"art_demand":14,"writing_demand":3,"audio_demand":0,"qa_demand":7,"bug_risk":0.06,"quality_potential":{"gameplay":3,"graphics":3},"innovation_potential":1,"engine_requirements":[],"complexity":32,"genre_relevance":{"rpg":1.22,"simulation":1.12,"adventure":1.08},"known_benefits":["Player expression","Replay value"]},
+  {"id":"inventory","display_name":"Inventory","name":"Inventory","category":"Player & Progression","description":"Items can be collected, managed and used.","unlock_requirements":{"year":1985,"released_games":0},"unlock_year":1985,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1985,2100],"development_effort":32,"effort":32,"programming_demand":14,"design_demand":12,"art_demand":5,"writing_demand":1,"audio_demand":0,"qa_demand":8,"bug_risk":0.05,"quality_potential":{"gameplay":4},"innovation_potential":0,"engine_requirements":[],"complexity":23,"genre_relevance":{"rpg":1.18,"adventure":1.10,"simulation":1.06},"known_benefits":["Deeper progression","More player choices"]},
+  {"id":"dialogue_system","display_name":"Dialogue System","name":"Dialogue System","category":"Narrative","description":"Characters can hold authored conversations with the player.","unlock_requirements":{"year":1985,"released_games":0},"unlock_year":1985,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1985,2100],"development_effort":28,"effort":28,"programming_demand":7,"design_demand":6,"art_demand":2,"writing_demand":18,"audio_demand":0,"qa_demand":4,"bug_risk":0.03,"quality_potential":{"story":4,"narrative_quality":4},"innovation_potential":0,"engine_requirements":[],"complexity":18,"genre_relevance":{"rpg":1.16,"adventure":1.18},"known_benefits":["Stronger characters","Story delivery"]},
+  {"id":"dialogue_trees","display_name":"Branching Dialogue","name":"Branching Dialogue","category":"Narrative","description":"Conversations react to choices and follow different paths.","unlock_requirements":{"year":1987,"released_games":1,"features":["dialogue_system"]},"unlock_year":1987,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1987,2100],"development_effort":42,"effort":42,"programming_demand":12,"design_demand":12,"art_demand":0,"writing_demand":28,"audio_demand":0,"qa_demand":12,"bug_risk":0.07,"quality_potential":{"story":6,"narrative_quality":6},"innovation_potential":2,"engine_requirements":[],"complexity":34,"genre_relevance":{"rpg":1.20,"adventure":1.22,"simulation":1.08},"known_benefits":["Meaningful choices","Replay value"]},
+  {"id":"turn_based_combat","display_name":"Turn-Based Combat","name":"Turn-Based Combat","category":"Gameplay","description":"A tactical combat system where players act in turns.","unlock_requirements":{"year":1987,"released_games":0},"unlock_year":1987,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1987,2100],"development_effort":55,"effort":55,"programming_demand":18,"design_demand":24,"art_demand":8,"writing_demand":1,"audio_demand":3,"qa_demand":13,"bug_risk":0.07,"quality_potential":{"gameplay":7,"balance":3},"innovation_potential":1,"engine_requirements":[],"complexity":44,"genre_relevance":{"rpg":1.18,"strategy":1.22,"action":0.94},"known_benefits":["Tactical depth","Strategic pacing"]},
+  {"id":"real_time_combat","display_name":"Real-Time Combat","name":"Real-Time Combat","category":"Gameplay","description":"Responsive combat unfolds continuously under player control.","unlock_requirements":{"year":1989,"released_games":1},"unlock_year":1989,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1989,2100],"development_effort":65,"effort":65,"programming_demand":28,"design_demand":24,"art_demand":12,"writing_demand":0,"audio_demand":7,"qa_demand":16,"bug_risk":0.09,"quality_potential":{"gameplay":8,"performance":3,"balance":2},"innovation_potential":2,"engine_requirements":[],"complexity":52,"genre_relevance":{"action":1.24,"adventure":1.08,"strategy":0.96},"known_benefits":["Immediate action","Mechanical mastery"]},
+  {"id":"multiple_endings","display_name":"Multiple Endings","name":"Multiple Endings","category":"Narrative","description":"Player actions lead to meaningfully different conclusions.","unlock_requirements":{"year":1985,"released_games":0},"unlock_year":1985,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1985,2100],"development_effort":30,"effort":30,"programming_demand":6,"design_demand":8,"art_demand":4,"writing_demand":18,"audio_demand":2,"qa_demand":8,"bug_risk":0.05,"quality_potential":{"story":5,"narrative_quality":4},"innovation_potential":2,"engine_requirements":[],"complexity":24,"genre_relevance":{"rpg":1.18,"adventure":1.20,"simulation":1.05},"known_benefits":["Consequential choices","Replay value"]},
+  {"id":"basic_ai","display_name":"Basic AI","name":"Basic AI","category":"Simulation","description":"Computer-controlled characters react to simple game states.","unlock_requirements":{"year":1985,"released_games":0},"unlock_year":1985,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1985,2100],"development_effort":26,"effort":26,"programming_demand":20,"design_demand":8,"art_demand":0,"writing_demand":0,"audio_demand":0,"qa_demand":8,"bug_risk":0.05,"quality_potential":{"gameplay":3,"technology":2},"innovation_potential":1,"engine_requirements":[],"complexity":20,"genre_relevance":{"strategy":1.14,"simulation":1.14,"action":1.08},"known_benefits":["Reactive opponents","Richer game worlds"]},
+  {"id":"advanced_ai","display_name":"Advanced AI","name":"Advanced AI","category":"Simulation","description":"Agents plan, coordinate and adapt to changing situations.","unlock_requirements":{"year":1995,"released_games":5,"features":["basic_ai"]},"unlock_year":1995,"technology_requirements":["scripting"],"requires_tech":["scripting"],"compatible_eras":[1995,2100],"development_effort":75,"effort":75,"programming_demand":48,"design_demand":20,"art_demand":0,"writing_demand":0,"audio_demand":0,"qa_demand":25,"bug_risk":0.12,"quality_potential":{"gameplay":6,"technology":7},"innovation_potential":5,"engine_requirements":["scripting"],"complexity":68,"genre_relevance":{"strategy":1.25,"simulation":1.22,"action":1.08},"known_benefits":["Believable opponents","Emergent situations"]},
+  {"id":"2d_graphics","display_name":"2D Graphics","name":"2D Graphics","category":"Presentation","description":"Purpose-built sprite, animation and tile presentation.","unlock_requirements":{"year":1985,"released_games":0},"unlock_year":1985,"technology_requirements":["2d_renderer"],"requires_tech":["2d_renderer"],"compatible_eras":[1985,2100],"development_effort":30,"effort":30,"programming_demand":5,"design_demand":3,"art_demand":28,"writing_demand":0,"audio_demand":0,"qa_demand":4,"bug_risk":0.03,"quality_potential":{"graphics":7},"innovation_potential":1,"engine_requirements":[],"complexity":20,"genre_relevance":{"strategy":1.06,"adventure":1.05},"known_benefits":["Distinct visual identity","Clear animation"]},
+  {"id":"3d_graphics","display_name":"3D Graphics","name":"3D Graphics","category":"Presentation","description":"Polygonal environments, models, cameras and lighting.","unlock_requirements":{"year":1992,"released_games":3},"unlock_year":1992,"technology_requirements":["3d_renderer"],"requires_tech":["3d_renderer"],"compatible_eras":[1992,2100],"development_effort":72,"effort":72,"programming_demand":28,"design_demand":10,"art_demand":48,"writing_demand":0,"audio_demand":3,"qa_demand":15,"bug_risk":0.10,"quality_potential":{"graphics":10,"technology":4,"performance":3},"innovation_potential":5,"engine_requirements":["3d_renderer"],"complexity":65,"genre_relevance":{"action":1.16,"simulation":1.10},"known_benefits":["Spatial worlds","Modern presentation"]},
+  {"id":"voice_acting","display_name":"Voice Acting","name":"Voice Acting","category":"Audio","description":"Recorded performances bring characters and story scenes to life.","unlock_requirements":{"year":1992,"released_games":2},"unlock_year":1992,"technology_requirements":["advanced_audio"],"requires_tech":["advanced_audio"],"compatible_eras":[1992,2100],"development_effort":38,"effort":38,"programming_demand":3,"design_demand":3,"art_demand":0,"writing_demand":16,"audio_demand":34,"qa_demand":8,"bug_risk":0.04,"quality_potential":{"sound":8,"narrative_quality":3},"innovation_potential":1,"engine_requirements":["advanced_audio"],"complexity":31,"genre_relevance":{"adventure":1.20,"rpg":1.14},"known_benefits":["Emotional performances","Stronger characters"]},
+  {"id":"physics","display_name":"Physics","name":"Physics","category":"Simulation","description":"Objects move and interact through a reusable physical simulation.","unlock_requirements":{"year":1994,"released_games":3},"unlock_year":1994,"technology_requirements":["scripting"],"requires_tech":["scripting"],"compatible_eras":[1994,2100],"development_effort":58,"effort":58,"programming_demand":42,"design_demand":12,"art_demand":6,"writing_demand":0,"audio_demand":3,"qa_demand":22,"bug_risk":0.12,"quality_potential":{"technology":6,"gameplay":4,"performance":2},"innovation_potential":5,"engine_requirements":["scripting"],"complexity":52,"genre_relevance":{"action":1.20,"simulation":1.22},"known_benefits":["Emergent interactions","Tactile worlds"]},
+  {"id":"open_world","display_name":"Open World","name":"Open World","category":"World Design","description":"A large connected world offers freedom beyond a linear route.","unlock_requirements":{"year":1996,"released_games":6},"unlock_year":1996,"technology_requirements":["3d_renderer","scripting"],"requires_tech":["3d_renderer","scripting"],"compatible_eras":[1996,2100],"development_effort":100,"effort":100,"programming_demand":42,"design_demand":48,"art_demand":40,"writing_demand":18,"audio_demand":10,"qa_demand":38,"bug_risk":0.16,"quality_potential":{"gameplay":7,"graphics":6},"innovation_potential":7,"engine_requirements":["3d_renderer","scripting"],"complexity":90,"genre_relevance":{"rpg":1.24,"adventure":1.20,"simulation":1.12},"known_benefits":["Player freedom","Exploration","Emergent stories"]},
+  {"id":"online_multiplayer","display_name":"Online Multiplayer","name":"Online Multiplayer","category":"Connectivity","description":"Players can compete or cooperate over a network.","unlock_requirements":{"year":1997,"released_games":8},"unlock_year":1997,"technology_requirements":["scripting","optimization"],"requires_tech":["scripting","optimization"],"compatible_eras":[1997,2100],"development_effort":110,"effort":110,"programming_demand":58,"design_demand":24,"art_demand":3,"writing_demand":0,"audio_demand":4,"qa_demand":52,"bug_risk":0.20,"quality_potential":{"gameplay":8,"technology":8,"performance":4},"innovation_potential":8,"engine_requirements":["scripting","optimization"],"complexity":95,"genre_relevance":{"action":1.22,"strategy":1.20,"simulation":1.10},"known_benefits":["Shared play","Competitive longevity"]},
+  {"id":"achievements","display_name":"Achievements","name":"Achievements","category":"Player & Progression","description":"Optional goals recognize unusual feats and long-term play.","unlock_requirements":{"year":1995,"released_games":3},"unlock_year":1995,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1995,2100],"development_effort":16,"effort":16,"programming_demand":7,"design_demand":7,"art_demand":2,"writing_demand":2,"audio_demand":1,"qa_demand":5,"bug_risk":0.02,"quality_potential":{"gameplay":1},"innovation_potential":0,"engine_requirements":[],"complexity":12,"genre_relevance":{},"known_benefits":["Optional goals","Player retention"]},
+  {"id":"procedural_generation","display_name":"Procedural Generation","name":"Procedural Generation","category":"World Design","description":"Algorithms create layouts, encounters or content.","unlock_requirements":{"year":1993,"released_games":4},"unlock_year":1993,"technology_requirements":["scripting"],"requires_tech":["scripting"],"compatible_eras":[1993,2100],"development_effort":64,"effort":64,"programming_demand":44,"design_demand":28,"art_demand":8,"writing_demand":3,"audio_demand":1,"qa_demand":24,"bug_risk":0.13,"quality_potential":{"gameplay":3,"technology":4},"innovation_potential":9,"engine_requirements":["scripting"],"complexity":58,"genre_relevance":{"strategy":1.16,"simulation":1.18,"rpg":1.10},"known_benefits":["Replayable worlds","Content variety"]},
+  {"id":"crafting_system","display_name":"Crafting System","name":"Crafting System","category":"Player & Progression","description":"Players gather and combine resources into useful items.","unlock_requirements":{"year":1991,"released_games":2},"unlock_year":1991,"technology_requirements":[],"requires_tech":[],"compatible_eras":[1991,2100],"development_effort":50,"effort":50,"programming_demand":18,"design_demand":26,"art_demand":10,"writing_demand":2,"audio_demand":2,"qa_demand":14,"bug_risk":0.08,"quality_potential":{"gameplay":5},"innovation_potential":3,"engine_requirements":[],"complexity":42,"genre_relevance":{"rpg":1.18,"simulation":1.16,"adventure":1.08},"known_benefits":["System depth","Resource progression"]}
 ]
