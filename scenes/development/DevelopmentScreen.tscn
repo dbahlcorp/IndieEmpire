@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource path="res://scenes/development/DevelopmentScreen.gd" type="Script" id="1"]
 [ext_resource path="res://scenes/ui/ClockBar.tscn" type="PackedScene" id="2"]
 [ext_resource path="res://scripts/ui/OfficeFloorView.gd" type="Script" id="3"]
+
+[ext_resource path="res://scenes/ui/NavBar.tscn" type="PackedScene" id="4"]
 
 [node name="DevelopmentScreen" type="Control"]
 layout_mode = 3
@@ -23,116 +25,148 @@ offset_top = 34.0
 offset_right = -24.0
 offset_bottom = -34.0
 
-[node name="Scroll" type="ScrollContainer" parent="Margin"]
+[node name="Shell" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ClockBar" parent="Margin/Shell" instance=ExtResource("2")]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/Shell"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="VBox" type="VBoxContainer" parent="Margin/Scroll"]
+[node name="VBox" type="VBoxContainer" parent="Margin/Shell/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 
-[node name="ClockBar" parent="Margin/Scroll/VBox" instance=ExtResource("2")]
-layout_mode = 2
-
-[node name="TitleLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="TitleLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "PROJECT"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 22
 
-[node name="PhaseLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="PhaseLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "PRE-PRODUCTION"
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 14
 
-[node name="WorkOutputLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="PhaseBars" type="HBoxContainer" parent="Margin/Shell/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PlanBar" type="ProgressBar" parent="Margin/Shell/Scroll/VBox/PhaseBars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+
+[node name="BuildBar" type="ProgressBar" parent="Margin/Shell/Scroll/VBox/PhaseBars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+
+[node name="PolishBar" type="ProgressBar" parent="Margin/Shell/Scroll/VBox/PhaseBars"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+
+[node name="WorkOutputLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "LIVE WORK OUTPUT"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 
-[node name="WorkOutputPanel" type="PanelContainer" parent="Margin/Scroll/VBox"]
-custom_minimum_size = Vector2(0, 174)
+[node name="WorkOutputPanel" type="PanelContainer" parent="Margin/Shell/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 280)
 layout_mode = 2
 
-[node name="OfficeArt" type="Control" parent="Margin/Scroll/VBox/WorkOutputPanel"]
-custom_minimum_size = Vector2(0, 170)
+[node name="OfficeArt" type="Control" parent="Margin/Shell/Scroll/VBox/WorkOutputPanel"]
+custom_minimum_size = Vector2(0, 276)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("3")
 
-[node name="DecisionContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+[node name="DecisionContainer" type="VBoxContainer" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TeamLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="TeamLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "TEAM A"
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 13
 
-[node name="BottleneckContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+[node name="BottleneckContainer" type="VBoxContainer" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="StatsLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="StatsLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "Stats"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 18
 
-[node name="BugsLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="BugsLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "Bugs: 0"
 horizontal_alignment = 1
 
-[node name="CashLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="CashLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "Cash: $0"
 horizontal_alignment = 1
 
-[node name="BudgetContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+[node name="BudgetContainer" type="VBoxContainer" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="DeadlineContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+[node name="DeadlineContainer" type="VBoxContainer" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Spacer" type="Control" parent="Margin/Scroll/VBox"]
-custom_minimum_size = Vector2(0, 40)
+[node name="Spacer" type="Control" parent="Margin/Shell/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="StatusLabel" type="Label" parent="Margin/Scroll/VBox"]
+[node name="StatusLabel" type="Label" parent="Margin/Shell/Scroll/VBox"]
 layout_mode = 2
 text = "In development..."
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 15
 
-[node name="PolishButton" type="Button" parent="Margin/Scroll/VBox"]
+[node name="PolishButton" type="Button" parent="Margin/Shell/Scroll/VBox"]
 custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 text = "POLISH / FIX BUGS ($500)"
 
-[node name="ReleaseButton" type="Button" parent="Margin/Scroll/VBox"]
+[node name="AbandonButton" type="Button" parent="Margin/Shell/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "ABANDON PROJECT"
+
+[node name="ReleaseButton" type="Button" parent="Margin/Shell"]
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
 text = "RELEASE GAME"
 disabled = true
 
-[node name="AbandonButton" type="Button" parent="Margin/Scroll/VBox"]
-custom_minimum_size = Vector2(0, 52)
+[node name="NavBar" parent="Margin/Shell" instance=ExtResource("4")]
 layout_mode = 2
-text = "ABANDON PROJECT"
 
 [node name="AbandonConfirm" type="ConfirmationDialog" parent="."]
 title = "Abandon project?"
@@ -141,3 +175,4 @@ size = Vector2i(360, 140)
 ok_button_text = "ABANDON"
 dialog_text = "Everything spent on this project is lost. Continue?"
 dialog_autowrap = true
+

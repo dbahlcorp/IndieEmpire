@@ -1,0 +1,4 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://artifacts/ui-layout-2026-09-08/LayoutCheck.gd" id="1"]
+[node name="LayoutCheck" type="Node"]
+script = ExtResource("1")

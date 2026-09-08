@@ -7,6 +7,10 @@ Studio dashboard overflow, two career-balance assertion failures and a faulty
 delay-test assumption. Workforce and two-team integration checks provide partial
 evidence; the connected UI growth journey is still pending.
 
+The [September 8 UI redesign](UI_LAYOUT_REFERENCE.md) fixes the dashboard overflow
+and verifies visible clock, primary actions and navigation in both studio sizes.
+The remaining gameplay acceptance gaps are unchanged.
+
 M3 is complete only when the player can perform every action below through the
 game UI in a connected career. The existence of a manager, formula, screen or
 passing isolated test is supporting evidence, not milestone acceptance.

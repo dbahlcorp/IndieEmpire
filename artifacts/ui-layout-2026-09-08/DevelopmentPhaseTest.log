@@ -1,0 +1,49 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== DevelopmentPhaseTest ===
+
+-- a new project starts in pre-production --
+
+-- production does not start early --
+
+-- then production takes over --
+
+-- different employees matter more in each phase --
+
+-- a strong pre-production leaves a mark on the game --
+
+-- what a plan is worth --
+
+-- poor pre-production creates a penalty later, exactly as advertised --
+
+-- a clear plan pays that back --
+
+-- a named flaw or strength is announced --
+
+-- an unremarkable plan is not a headline --
+
+-- polish has a target, not a hard stop --
+
+-- polish improves bugs, polish, performance and balance --
+
+-- polish's contributors --
+
+-- balance adds to a review, it does not dilute one --
+
+-- pre-production costs less than a full production week --
+
+-- phase labels --
+
+-- hands-on phase focus choices have real tradeoffs --
+
+-- phase decisions survive serialization --
+
+-- phase progress survives a save --
+
+-- balance survives a save --
+
+-- a save from before phases existed is not punished for it --
+
+DevelopmentPhaseTest PASSED (101 checks)

@@ -2,22 +2,23 @@ extends Control
 
 ## The company dashboard: the home screen of the game.
 
-@onready var company_label: Label = $Margin/VBox/Scroll/Content/CompanyLabel
-@onready var date_label: Label = $Margin/VBox/Scroll/Content/DateLabel
-@onready var cash_label: Label = $Margin/VBox/Scroll/Content/Header/CashGroup/CashLabel
-@onready var reputation_label: Label = $Margin/VBox/Scroll/Content/Header/ReputationGroup/ReputationLabel
-@onready var runway_label: Label = $Margin/VBox/Scroll/Content/RunwayLabel
-@onready var fans_label: Label = $Margin/VBox/Scroll/Content/FansGroup/FansLabel
-@onready var office_art: OfficeFloorView = $Margin/VBox/Scroll/Content/OfficePanel/OfficeVBox/OfficeArt
-@onready var office_label: Label = $Margin/VBox/Scroll/Content/OfficePanel/OfficeVBox/OfficeText
-@onready var office_button: Button = $Margin/VBox/Scroll/Content/OfficeButton
-@onready var teams_button: Button = $Margin/VBox/Scroll/Content/TeamsButton
-@onready var release_panel: Label = $Margin/VBox/Scroll/Content/ReleasePanel
-@onready var warning_label: Label = $Margin/VBox/Scroll/Content/WarningLabel
-@onready var develop_button: Button = $Margin/VBox/DevelopButton
-@onready var postmortem_button: Button = $Margin/VBox/Scroll/Content/PostmortemButton
-@onready var event_button: Button = $Margin/VBox/Scroll/Content/EventButton
-@onready var contracts_button: Button = $Margin/VBox/Scroll/Content/ContractsButton
+@onready var company_label: Label = %CompanyLabel
+@onready var burn_label: Label = %BurnLabel
+@onready var project_cards: VBoxContainer = %Projects
+@onready var cash_label: Label = %CashLabel
+@onready var reputation_label: Label = %ReputationLabel
+@onready var runway_label: Label = %RunwayLabel
+@onready var fans_label: Label = %FansLabel
+@onready var office_art: OfficeFloorView = %OfficeArt
+@onready var office_label: Label = %OfficeText
+@onready var office_button: Button = %OfficeButton
+@onready var teams_button: Button = %TeamsButton
+@onready var release_panel: Label = %ReleasePanel
+@onready var warning_label: Label = %WarningLabel
+@onready var develop_button: Button = %DevelopButton
+@onready var postmortem_button: Button = %PostmortemButton
+@onready var event_button: Button = %EventButton
+@onready var contracts_button: Button = %ContractsButton
 
 func _ready() -> void:
     GameClock.enter_gameplay(false)
@@ -32,19 +33,22 @@ func _ready() -> void:
     contracts_button.pressed.connect(_on_contracts_pressed)
     office_button.pressed.connect(_on_office_pressed)
     teams_button.pressed.connect(_on_teams_pressed)
+    %FinanceButton.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/company/FinancialsScreen.tscn"))
     _refresh()
 
 func _refresh() -> void:
     company_label.text = GameState.company_name.to_upper()
-    date_label.text = TimeManager.get_date_label()
+    _refresh_projects()
     cash_label.text = Format.display(GameState.cash)
     reputation_label.text = "%.1f reputation" % GameState.consumer_reputation
     fans_label.text = "%s fans" % Format.count(GameState.fans)
     runway_label.text = _runway_text()
+    var burn := int(EmployeeManager.monthly_expenses()["total"])
+    burn_label.text = "%s / month   ·   %s runway" % [Format.display(burn), Format.runway_label(FinanceManager.cash_runway_months(GameState.cash, burn))]
 
     var office := OfficeManager.current_office()
     office_art.set_office(GameState.office_id)
-    office_label.text = "%s\n\n%d / %d PEOPLE\nComfort %s   Prestige %s\nRent $%s / month" % [
+    office_label.text = "%s  ·  %d / %d PEOPLE\n%s comfort  ·  %s prestige  ·  $%s rent" % [
         str(office.get("name", "Office")).to_upper(),
         OfficeManager.headcount(), OfficeManager.capacity(),
         office.get("comfort", "Poor"), office.get("prestige", "None"),
@@ -61,11 +65,11 @@ func _refresh() -> void:
 
     var contract := ContractManager.active_contract()
     if contract != null:
-        contracts_button.text = "CONTRACT: %s (%.0f%%)" % [contract.name, contract.progress_percent()]
+        contracts_button.text = "CONTRACT · %.0f%%" % contract.progress_percent()
     elif not ContractManager.offers().is_empty():
-        contracts_button.text = "CONTRACT WORK (%d available)" % ContractManager.offers().size()
+        contracts_button.text = "CONTRACTS (%d)" % ContractManager.offers().size()
     else:
-        contracts_button.text = "CONTRACT WORK"
+        contracts_button.text = "CONTRACTS"
 
     var pending := GameState.pending_postmortems()
     postmortem_button.visible = not pending.is_empty()
@@ -76,6 +80,7 @@ func _refresh() -> void:
     if StudioEventManager.has_pending():
         event_button.text = str(StudioEventManager.pending_event().get("title", "STUDIO EVENT"))
 
+    warning_label.text = ""
     var waiting := RetentionManager.requests().size() + RetentionManager.leaving().size()
     if waiting > 0:
         warning_label.text = "%d staff matter%s need answering" % [
@@ -95,7 +100,7 @@ func _runway_text() -> String:
     ## this is the number that matters more than the raw cash figure above it.
     var burn := int(EmployeeManager.monthly_expenses()["total"])
     var runway := FinanceManager.cash_runway_months(GameState.cash, burn)
-    return "RUNWAY\n\nCash\n%s\n\nMonthly Expenses\n%s\n\nEstimated Runway\n%s" % [
+    return "RUNWAY\nCash  %s\nMonthly Expenses  %s\nEstimated Runway  %s" % [
         Format.money_exact(GameState.cash),
         Format.money_exact(burn),
         Format.runway_label(runway)
@@ -158,4 +163,74 @@ func _on_office_pressed() -> void:
 
 func _on_teams_pressed() -> void:
     get_tree().change_scene_to_file("res://scenes/studio/TeamsScreen.tscn")
+
+
+
+var _cards: Dictionary = {}
+
+func _refresh_projects() -> void:
+    var active_ids: Array[String] = []
+    for active in GameState.active_projects:
+        active_ids.append(active.id)
+    for id in _cards.keys():
+        if id not in active_ids:
+            var old_button: Button = _cards[id]["button"]
+            project_cards.remove_child(old_button)
+            old_button.queue_free()
+            _cards.erase(id)
+    var idle := project_cards.get_node_or_null("Idle") as Label
+    if active_ids.is_empty():
+        if idle == null:
+            idle = Label.new()
+            idle.name = "Idle"
+            idle.text = "YOUR NEXT GAME STARTS HERE"
+            idle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+            idle.add_theme_font_size_override("font_size", 13)
+            project_cards.add_child(idle)
+        return
+    if idle != null:
+        project_cards.remove_child(idle)
+        idle.queue_free()
+    for active in GameState.active_projects:
+        if not _cards.has(active.id):
+            var button := Button.new()
+            button.custom_minimum_size.y = 72
+            button.text = ""
+            button.pressed.connect(_open_project.bind(active))
+            project_cards.add_child(button)
+            var margin := MarginContainer.new()
+            margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+            for side in ["left", "right", "top", "bottom"]:
+                margin.add_theme_constant_override("margin_" + side, 9)
+            margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+            button.add_child(margin)
+            var stack := VBoxContainer.new()
+            stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+            stack.add_theme_constant_override("separation", 3)
+            margin.add_child(stack)
+            var label := Label.new()
+            label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+            label.add_theme_font_size_override("font_size", 13)
+            label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+            stack.add_child(label)
+            var bar := ProgressBar.new()
+            bar.custom_minimum_size.y = 6
+            bar.show_percentage = false
+            bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+            stack.add_child(bar)
+            _cards[active.id] = {"button": button, "label": label, "bar": bar}
+        var phase := "Planning" if active.preproduction_progress < 100.0 else "Production"
+        var progress := active.preproduction_progress if active.preproduction_progress < 100.0 else active.development_progress
+        if active.development_progress >= 100.0:
+            phase = "Polishing" if active.polishing else "Ready to ship"
+        var team := TeamManager.find_team(active.team_id)
+        var label: Label = _cards[active.id]["label"]
+        label.text = "%s  ·  %s\n%s  ·  %d%%" % [active.title, team.name if team != null else "Team", phase, int(progress)]
+        var bar: ProgressBar = _cards[active.id]["bar"]
+        bar.value = progress
+
+func _open_project(active: GameProject) -> void:
+    GameState.select_project(active)
+    get_tree().change_scene_to_file("res://scenes/development/DevelopmentScreen.tscn")
+
 

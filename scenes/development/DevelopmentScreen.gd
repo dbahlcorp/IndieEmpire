@@ -3,20 +3,20 @@ extends Control
 ## A live view of a project building itself. Time advances automatically while
 ## the player directs each phase, manages constraints, and chooses when to ship.
 
-@onready var title_label: Label = $Margin/Scroll/VBox/TitleLabel
-@onready var phase_label: Label = $Margin/Scroll/VBox/PhaseLabel
-@onready var decision_container: VBoxContainer = $Margin/Scroll/VBox/DecisionContainer
-@onready var team_label: Label = $Margin/Scroll/VBox/TeamLabel
-@onready var bottleneck_container: VBoxContainer = $Margin/Scroll/VBox/BottleneckContainer
-@onready var stats_label: Label = $Margin/Scroll/VBox/StatsLabel
-@onready var bugs_label: Label = $Margin/Scroll/VBox/BugsLabel
-@onready var cash_label: Label = $Margin/Scroll/VBox/CashLabel
-@onready var budget_container: VBoxContainer = $Margin/Scroll/VBox/BudgetContainer
-@onready var deadline_container: VBoxContainer = $Margin/Scroll/VBox/DeadlineContainer
-@onready var status_label: Label = $Margin/Scroll/VBox/StatusLabel
-@onready var polish_button: Button = $Margin/Scroll/VBox/PolishButton
-@onready var release_button: Button = $Margin/Scroll/VBox/ReleaseButton
-@onready var abandon_button: Button = $Margin/Scroll/VBox/AbandonButton
+@onready var title_label: Label = $Margin/Shell/Scroll/VBox/TitleLabel
+@onready var phase_label: Label = $Margin/Shell/Scroll/VBox/PhaseLabel
+@onready var decision_container: VBoxContainer = $Margin/Shell/Scroll/VBox/DecisionContainer
+@onready var team_label: Label = $Margin/Shell/Scroll/VBox/TeamLabel
+@onready var bottleneck_container: VBoxContainer = $Margin/Shell/Scroll/VBox/BottleneckContainer
+@onready var stats_label: Label = $Margin/Shell/Scroll/VBox/StatsLabel
+@onready var bugs_label: Label = $Margin/Shell/Scroll/VBox/BugsLabel
+@onready var cash_label: Label = $Margin/Shell/Scroll/VBox/CashLabel
+@onready var budget_container: VBoxContainer = $Margin/Shell/Scroll/VBox/BudgetContainer
+@onready var deadline_container: VBoxContainer = $Margin/Shell/Scroll/VBox/DeadlineContainer
+@onready var status_label: Label = $Margin/Shell/Scroll/VBox/StatusLabel
+@onready var polish_button: Button = $Margin/Shell/Scroll/VBox/PolishButton
+@onready var release_button: Button = $Margin/Shell/ReleaseButton
+@onready var abandon_button: Button = $Margin/Shell/Scroll/VBox/AbandonButton
 @onready var abandon_confirm: ConfirmationDialog = $AbandonConfirm
 
 const BUDGET_STEP := 5000
@@ -95,6 +95,9 @@ func _refresh() -> void:
             names.append(str(DataManager.get_game_feature(id).get("name", id)))
         title_label.text += "\nFeatures: %s" % ", ".join(names)
     phase_label.text = _phase_text()
+    %PlanBar.value = project.preproduction_progress
+    %BuildBar.value = project.development_progress
+    %PolishBar.value = DevelopmentSimulator.polish_percent(project)
     _build_focus_section()
     team_label.text = _team_text()
     _build_bottleneck_section()
@@ -396,12 +399,9 @@ func _phase_text() -> String:
     ## design and writing drive pre-production, the whole team drives
     ## production, QA/artists/designers/programmers carry polish.
     var polish_percent := DevelopmentSimulator.polish_percent(project)
-    var text := "PRE-PRODUCTION\n%s %d%%\n\nPRODUCTION\n%s %d%%\n\nPOLISH\n%s %d%%" % [
-        UiBuilder.meter(project.preproduction_progress), int(round(project.preproduction_progress)),
-        UiBuilder.meter(project.development_progress), int(round(project.development_progress)),
-        UiBuilder.meter(polish_percent), int(round(polish_percent))
-    ]
-
+    var text := "PLAN %d%%   ·   BUILD %d%%   ·   POLISH %d%%" % [
+        int(round(project.preproduction_progress)),
+        int(round(project.development_progress)), int(round(polish_percent))]
     # Only known once pre-production has actually finished.
     var flaw := project.preproduction_flaw_label()
     if project.preproduction_progress >= 100.0 and not flaw.is_empty():
@@ -522,3 +522,4 @@ func _on_release_pressed() -> void:
     # Who sells it is the last decision before it ships.
     project.polishing = false
     get_tree().change_scene_to_file("res://scenes/release/PublishingScreen.tscn")
+

@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== EquipmentTest ===
+
+-- three tiers, each strictly dearer, none of them free --
+
+-- nothing beats having no computer at all --
+
+-- buying somebody a workstation --
+
+-- a workstation you cannot pay for is offered but refused --
+
+-- upgrading somebody who already has a machine --
+
+-- equipment reaches the actual project maths, discipline by discipline --
+
+-- and how somebody feels about their own desk --
+
+-- equipping everyone who is still missing one --
+
+-- a workstation is remembered --
+
+-- a hand-edited or stale tier id is dropped rather than trusted --
+
+EquipmentTest PASSED (54 checks)

@@ -36,6 +36,8 @@ func _ready() -> void:
     _news_button.custom_minimum_size = Vector2(48, 48)
     _news_button.icon = UiIcons.texture("news")
     _news_button.expand_icon = true
+    for state in ["normal", "hover", "pressed", "focus"]:
+        _news_button.add_theme_color_override("icon_" + state + "_color", Color("#315f65"))
     _news_button.add_theme_constant_override("icon_max_width", 21)
     _news_button.tooltip_text = "News feed"
     _news_button.disabled = (
@@ -69,3 +71,4 @@ func _on_speed_pressed() -> void:
 
 func _on_news_pressed() -> void:
     get_tree().change_scene_to_file("res://scenes/market/NewsScreen.tscn")
+

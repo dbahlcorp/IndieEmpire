@@ -41,6 +41,7 @@ const REACTION_COLORS := {
 
 var office_id := "bedroom"
 var office_texture: Texture2D
+var workstation_textures: Dictionary = {}
 var foreground_texture: Texture2D
 var atmosphere_texture: Texture2D
 var actors: Array[Dictionary] = []
@@ -48,6 +49,9 @@ var work_bubbles: Array[Dictionary] = []
 var elapsed := 0.0
 
 func _ready() -> void:
+    # Retain textures for the canvas draw commands between frames.
+    for tier in ["basic", "standard", "pro"]:
+        workstation_textures[tier] = EquipmentSimulator.art_texture(tier)
     clip_contents = true
     mouse_filter = Control.MOUSE_FILTER_IGNORE
     resized.connect(queue_redraw)
@@ -789,7 +793,7 @@ func _draw_workstation_upgrades(art_rect: Rect2) -> void:
         var employee := actor["employee"] as Employee
         if employee == null or employee.workstation_tier.is_empty():
             continue
-        var texture := EquipmentSimulator.art_texture(employee.workstation_tier)
+        var texture := workstation_textures.get(employee.workstation_tier) as Texture2D
         if texture == null:
             continue
         var anchor := art_rect.position + (actor["desk"] as Vector2) * art_rect.size
@@ -885,3 +889,4 @@ func _draw_actor_shadow(actor: Dictionary, art_rect: Rect2) -> void:
     draw_set_transform(feet + Vector2(0.0, -1.5 * scale), 0.0, Vector2(1.0, 0.34))
     draw_circle(Vector2.ZERO, radius, Color(0.10, 0.075, 0.055, alpha))
     draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
