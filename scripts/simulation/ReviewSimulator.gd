@@ -5,6 +5,19 @@ extends RefCounted
 ## numbers, so a long project has to earn its extra development time.
 
 const QUALITY_PER_WORK := 0.40
+## The printed score can never leave this range, whatever the merit behind it.
+## The floor is above zero because even a disaster is a game somebody finished;
+## the ceiling is below 100 because a perfect game is not a thing.
+##
+## Other systems calibrate against the top of this range -- notably
+## SalesSimulator.QUALITY_ANCHOR, which is meant to sit above it. Named so they
+## can read it rather than each carrying their own copy of 9.8.
+const MIN_SCORE := 25.0
+const MAX_SCORE := 98.0
+
+static func best_possible_score() -> float:
+    ## The highest review a release can print, on the 0-10 scale players see.
+    return MAX_SCORE / 10.0
 ## How much a spotless reputation raises the bar a game is measured against.
 ## Deliberately smaller than the goodwill it buys, so standing is still worth
 ## having -- it just stops being a free 1.7 points forever.
@@ -78,7 +91,7 @@ static func calculate_review(project: GameProject) -> float:
     # stays a real +/-0.4 review points instead of being flattened along with
     # everything else above the competent bar.
     score_100 += randf_range(-4.0, 4.0)
-    score_100 = clampf(score_100, 25.0, 98.0)
+    score_100 = clampf(score_100, MIN_SCORE, MAX_SCORE)
 
     project.review_score = snappedf(score_100 / 10.0, 0.1)
     return project.review_score

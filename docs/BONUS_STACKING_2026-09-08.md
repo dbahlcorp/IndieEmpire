@@ -92,6 +92,10 @@ it is the single lever on how rich the economy is. The changes above pushed a
 measured career's final cash to $123M; 11.0 brings it back to $57M, against the
 $45M the September 7 pass had targeted.
 
+> Re-measured after the Tiny-bar pass that followed this one: $120M at 9.3 and
+> $38M at 11.0. The choice was validated in full and the constant pinned by a
+> regression test — see `docs/QUALITY_ANCHOR_2026-09-08.md`.
+
 ## Result
 
     before  mean 7.84  median 8.00  stdev 1.37   9+: 24.3%   6.9% on the ceiling

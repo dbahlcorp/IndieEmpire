@@ -38,11 +38,27 @@ const QUALITY_EXPONENT := 4.0
 ## 7.8 and hits ran 9+; against the normalised scale the same exponent read
 ## every release as a third weaker and a third of them stopped breaking even.
 ##
-## Deliberately above the highest score a release can actually reach, so no
-## game ever sells at "full strength" -- it is a scale constant, not a target.
-## It is the single lever on how rich the whole economy is, because sales go as
-## the fourth power of it: at 9.3 a measured career finished on $123M, at 11.0
-## on $57M. Retune it with the balance probe, never by eye.
+## Deliberately above the highest score a release can actually reach
+## (ReviewSimulator.best_possible_score(), 9.8), so no game ever sells at "full
+## strength" -- it is a scale constant, not a target. Drop it below that ceiling
+## and the best releases sell at *over* full strength, which is where a
+## fourth-power curve is least affordable.
+##
+## It is the single lever on how rich the economy is, and it governs the first
+## decade specifically: past about 1995 releases run into MAX_ATTACH_RATE and
+## the anchor stops mattering, so a 2050 career finishes within 9% of the same
+## cash either way. Measured over eight seeds to 1996:
+##
+##            final cash    lost money    rev/cost    medium releases losing
+##     9.3          $120M          6.8%       13.6x                     0.0%
+##    11.0           $38M         11.9%        6.2x                     0.5%
+##
+## against the ~$45M the September 7 pass targeted. Bankruptcy is 25% either
+## way and always in April 1986, so this does not decide whether a career
+## survives -- only whether a surviving one is ever short of money again.
+##
+## Retune it with the balance probe, never by eye, and update QualityAnchorTest
+## and docs/QUALITY_ANCHOR_2026-09-08.md with it.
 const QUALITY_ANCHOR := 11.0
 ## The most of a platform's owners a single runaway hit can ever reach. Real
 ## attach rates rarely clear the low teens; this was 0.22 and, combined with

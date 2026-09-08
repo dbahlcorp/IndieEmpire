@@ -1,0 +1,65 @@
+==================================================================
+QUALITY_ANCHOR COMPARISON
+==================================================================
+                                                9.3           11.0
+  seeds / releases                          4 / 577        4 / 541
+
+REVIEW SCORE
+  mean                                         7.47           7.46
+  median                                       7.50           7.60
+  stdev                                        0.78           0.84
+  9.0+  (exceptional)                          0.2%           0.2%
+  8.0-8.9 (excellent)                         26.7%          25.0%
+  under 5.0 (disaster)                         1.4%           2.4%
+
+PROFITABILITY BY PROJECT SIZE  (median profit per release)
+  small  n=55/55                           $206,042        $55,529
+     small lost money                         27.3%          34.5%
+  medium  n=144/108                      $2,358,018     $1,029,164
+     medium lost money                         0.0%           0.9%
+  large  n=378/378                      $10,645,710    $10,261,631
+     large lost money                          1.6%           2.1%
+  all releases lost money                      3.6%           5.2%
+  median revenue / total cost                  3.8x           3.3x
+
+BANKRUPTCY
+  careers ending bankrupt                       25%            25%
+
+FINAL CASH ACROSS SEEDS
+  min                                        $1,644         $1,644
+  median                             $1,275,565,146 $1,166,978,094
+  max                                $1,306,528,650 $1,206,732,108
+
+REVENUE BY ERA  (median per release, and the studio's cash at the end of it)
+    9.3        1985-1989  n= 102  rev/release   $1,012,970   cash       $355,626
+    11.0       1985-1989  n=  70  rev/release     $198,170   cash         $5,443
+    9.3        1990-1994  n= 109  rev/release   $2,444,778   cash    $93,247,511
+    11.0       1990-1994  n= 105  rev/release   $1,146,518   cash    $28,322,003
+    9.3        1995-1999  n=  30  rev/release   $5,128,102   cash   $125,031,386
+    11.0       1995-1999  n=  30  rev/release   $5,394,442   cash    $54,940,679
+    9.3        2000-2004  n=  36  rev/release   $7,763,643   cash   $151,314,794
+    11.0       2000-2004  n=  36  rev/release   $7,761,758   cash    $78,907,319
+    9.3        2005-2009  n=  30  rev/release  $19,167,526   cash   $243,595,119
+    11.0       2005-2009  n=  30  rev/release  $19,465,512   cash   $159,435,295
+    9.3        2010-2014  n=  35  rev/release  $17,830,939   cash   $388,282,235
+    11.0       2010-2014  n=  36  rev/release  $17,903,904   cash   $290,939,451
+    9.3        2015-2019  n=  31  rev/release  $21,195,902   cash   $540,582,528
+    11.0       2015-2019  n=  30  rev/release  $22,242,709   cash   $469,374,180
+    9.3        2020-2024  n=  35  rev/release  $14,928,490   cash   $666,354,962
+    11.0       2020-2024  n=  36  rev/release  $14,666,162   cash   $582,973,502
+    9.3        2025-2029  n=  31  rev/release  $14,638,041   cash   $767,162,969
+    11.0       2025-2029  n=  30  rev/release  $14,652,838   cash   $673,676,000
+    9.3        2030-2034  n=  35  rev/release  $15,607,848   cash   $793,811,307
+    11.0       2030-2034  n=  35  rev/release  $15,614,542   cash   $702,552,166
+    9.3        2035-2039  n=  31  rev/release  $26,178,129   cash   $954,529,817
+    11.0       2035-2039  n=  31  rev/release  $26,165,490   cash   $855,979,687
+    9.3        2040-2044  n=  34  rev/release  $23,082,040   cash $1,016,780,399
+    11.0       2040-2044  n=  36  rev/release  $25,601,356   cash   $914,930,993
+    9.3        2045-2049  n=  32  rev/release  $30,056,424   cash $1,190,656,627
+    11.0       2045-2049  n=  30  rev/release  $29,135,232   cash $1,091,275,363
+    9.3        2050-2054  n=   6  rev/release  $44,671,457   cash $1,257,679,644
+    11.0       2050-2054  n=   6  rev/release  $44,738,322   cash $1,156,223,242
+
+LATE-GAME RUNAWAY  (cash growth once the studio is established)
+  9.3          1991    $77,024,474 -> 2051 $1,293,450,647   5%/yr compound
+  11.0         1991    $28,322,003 -> 2051 $1,191,818,188   6%/yr compound

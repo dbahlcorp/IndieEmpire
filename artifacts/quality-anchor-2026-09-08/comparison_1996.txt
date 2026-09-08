@@ -1,0 +1,43 @@
+==================================================================
+QUALITY_ANCHOR COMPARISON
+==================================================================
+                                                9.3           11.0
+  seeds / releases                          8 / 442        8 / 369
+
+REVIEW SCORE
+  mean                                         7.24           7.12
+  median                                       7.40           7.30
+  stdev                                        1.05           1.15
+  9.0+  (exceptional)                          0.2%           1.1%
+  8.0-8.9 (excellent)                         26.0%          23.0%
+  under 5.0 (disaster)                         5.0%           6.5%
+
+PROFITABILITY BY PROJECT SIZE  (median profit per release)
+  small  n=107/109                         $169,613        $29,628
+     small lost money                         27.1%          36.7%
+  medium  n=287/214                      $2,287,632     $1,021,452
+     medium lost money                         0.0%           0.5%
+  large  n=48/46                         $1,852,656     $1,892,694
+     large lost money                          2.1%           6.5%
+  all releases lost money                      6.8%          11.9%
+  median revenue / total cost                 13.6x           6.2x
+
+BANKRUPTCY
+  careers ending bankrupt                       25%            25%
+
+FINAL CASH ACROSS SEEDS
+  min                                        $1,644         $1,611
+  median                               $119,982,775    $38,027,096
+  max                                  $129,188,860    $61,375,773
+
+REVENUE BY ERA  (median per release, and the studio's cash at the end of it)
+    9.3        1985-1989  n= 198  rev/release   $1,071,212   cash       $155,020
+    11.0       1985-1989  n= 137  rev/release     $220,717   cash         $5,406
+    9.3        1990-1994  n= 220  rev/release   $2,444,174   cash    $91,208,110
+    11.0       1990-1994  n= 207  rev/release   $1,140,069   cash    $24,971,938
+    9.3        1995-1999  n=  24  rev/release   $5,022,928   cash   $120,676,568
+    11.0       1995-1999  n=  25  rev/release   $3,214,956   cash    $53,971,804
+
+LATE-GAME RUNAWAY  (cash growth once the studio is established)
+  9.3          1991    $74,981,491 -> 1997   $123,551,174   9%/yr compound
+  11.0         1991    $25,340,786 -> 1997    $56,027,503   14%/yr compound
