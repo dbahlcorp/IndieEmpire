@@ -94,7 +94,7 @@ and gold primary actions. No reference artwork was copied into the game.
 - Workstation textures remain alive between canvas draw calls, eliminating white
   rectangles in equipped offices. The news icon is tinted for the light clock bar.
 
-Validation: CashRunwayTest (23), OfficeFloorTest (97), EquipmentTest (54),
+Validation: CashRunwayTest (23), OfficeFloorTest (103), EquipmentTest (54),
 DevelopmentPhaseTest (101), PhaseD (66), and the rendered layout probe (25) passed.
 The layout probe covers bedroom and ten-person studios at 430 × 932, scroll reach,
 project-card bindings/focus and development controls. Desktop activation failed
