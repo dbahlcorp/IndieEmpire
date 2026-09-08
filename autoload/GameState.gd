@@ -76,6 +76,14 @@ var research_points: float = 0.0
 var experimented_feature_ids: Array = []
 var custom_engines: Array = []
 var next_engine_number: int = 1
+## Engine construction in flight, or {} for none. One at a time. Keys:
+## name, tech_ids, progress (0-100), engineer_ids, weeks_elapsed, target_weeks,
+## accrued_cost, base_engine_id (non-empty -> upgrading that engine). Assigned
+## engineers read as is_away(). See EngineManager / EngineSimulator.
+var active_engine_project: Dictionary = {}
+## engine_id -> games shipped on it. Drives team familiarity (capped). See
+## EngineSimulator.familiarity_level().
+var engine_familiarity: Dictionary = {}
 
 # --- Market ---
 var genre_trends: Dictionary = {}           # genre_id -> popularity multiplier
@@ -265,7 +273,7 @@ func reset_company() -> void:
     released_games.clear()
     next_id = 1
     # Clear technology before anyone is seeded -- Employee.is_away() consults
-    # ResearchManager, so no stale in-flight research must linger.
+    # ResearchManager and EngineManager, so no stale in-flight work must linger.
     EngineManager.reset_technology()
     ResearchManager.reset()
     CultureManager.seed_culture()

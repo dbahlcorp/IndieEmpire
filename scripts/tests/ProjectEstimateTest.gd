@@ -169,7 +169,7 @@ func _risk_flags_low_genre_experience() -> void:
 func _risk_flags_an_outdated_engine() -> void:
     section("risk: an engine that has not been touched in years")
     _company()
-    var engine := EngineManager.build("Old Engine", ["2d_renderer"])
+    var engine := EngineManager.finish_engine("Old Engine", ["2d_renderer"], 8000)
     if not check(not engine.is_empty(), "the starter engine could be built"):
         return
     engine["created_year"] = TimeManager.current_year - ProjectEstimateSimulator.ENGINE_OUTDATED_YEARS
@@ -180,7 +180,7 @@ func _risk_flags_an_outdated_engine() -> void:
         schedule, _assignments_for("team_a"), "adventure", "small", str(engine["id"]), [])
     check(_reasons_contain(risk, "outdated"), "an old engine is called out by name, not just scored")
 
-    var fresh := EngineManager.build("New Engine", ["audio_tools"])
+    var fresh := EngineManager.finish_engine("New Engine", ["audio_tools"], 8000)
     var fresh_risk := ProjectEstimateSimulator.risk_assessment(
         schedule, _assignments_for("team_a"), "adventure", "small", str(fresh["id"]), [])
     check(not _reasons_contain(fresh_risk, "outdated"), "a freshly built engine is not")
@@ -197,7 +197,7 @@ func _risk_flags_choosing_no_engine_when_one_exists() -> void:
     check(not _reasons_contain(before, "No custom engine"),
         "a studio with no engines at all is not nagged about not picking one")
 
-    EngineManager.build("Nova Engine", ["2d_renderer"])
+    EngineManager.finish_engine("Nova Engine", ["2d_renderer"], 8000)
     var after := ProjectEstimateSimulator.risk_assessment(
         schedule, _assignments_for("team_a"), "adventure", "small", "", [])
     check(_reasons_contain(after, "No custom engine"),

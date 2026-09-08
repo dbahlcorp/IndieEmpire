@@ -70,7 +70,7 @@ below:
   `DataManager` — including the technology tree (`data/technologies.json`,
   added by PA.2, which retired the old hardcoded `EngineManager.FEATURES`
   constant).
-- **Saves** are versioned (`SaveManager.SAVE_VERSION := 20`,
+- **Saves** are versioned (`SaveManager.SAVE_VERSION := 21`,
   `MIN_SUPPORTED_VERSION := 5`) with numbered migration branches
   (`if int(data.get("version", 0)) < 15: ...`). Every PA section that adds a
   `GameState` field needs a version bump and a migration branch in this same
@@ -100,7 +100,7 @@ below:
 | PA.1 | Game Creation & Project Decisions | **Implemented** (2026-09-08; pricing/marketing still out) | Low |
 | PA.2 | Research & Technology | **Implemented** (2026-09-08; balance pass deferred) | Low–Medium |
 | PA.3 | Game Features | **Implemented** (2026-09-08) | Complete |
-| PA.4 | Engine Progression | **Partial** | Medium |
+| PA.4 | Engine Progression | **Implemented** (2026-09-08; balance pass deferred) | Medium |
 | PA.5 | Content Expansion | **Partial** (breadth uneven) | Low–Medium (content authoring, not engineering) |
 | PA.6 | Onboarding & Progressive Disclosure | **Missing** | Medium–High |
 | PA.7 | Release/Review Presentation | **Partial** | Low–Medium |
@@ -411,70 +411,83 @@ optional future presentation/content work, not part of the Playable Alpha gate.
 
 ## PA.4 — Engine Progression
 
-### Current repository state
-`EngineLabScreen.gd` + `EngineManager.gd` let a studio research individual
-features, then combine researched features into a named, immutable,
-reusable custom engine (`build`/`build_cost` = `BASE_BUILD_COST +
-COST_PER_FEATURE * feature_count`). `NewGameScreen` lets any project pick
-any built engine. `effects_for` composes an engine's features into a single
-multiplier dictionary consumed by development.
+**Status: implemented, 2026-09-08.** Building an engine is now a project, not
+a menu purchase, and engines age, gather familiarity and take on a little
+technical debt — so a studio periodically weighs "ship another game on the
+current engine, license nothing and keep going, or spend weeks and money on a
+better one?"
 
-### Existing systems that can be reused
-Everything under PA.2; `GameState.custom_engines`/`next_engine_number`
-already persist multiple named engines per studio.
+**Construction is a project.** `EngineManager.begin_engine(name, tech_ids,
+engineer_ids)` creates `GameState.active_engine_project` (one at a time).
+Assigned engineers read as `Employee.is_away()` — the same hook trainees and
+researchers use, so they drop out of `TeamManager.working_members` and cannot
+hold a project role. `EngineManager.process_week()` (in `World.gd`'s tick
+after `ResearchManager`) accrues a weekly materials cost under
+`Ledger.Kind.ENGINE` and adds each engineer's programming-led output to
+progress; at the target it calls `finish_engine`, emits
+`EventBus.engine_completed`, and posts a news story. `EngineSimulator.estimate`
+gives the "18 weeks / $340K" figure shown before commit and drives the tick,
+so the two never drift.
 
-### Missing functionality
-- **No obsolescence pressure.** Nothing in `data/platforms.json` ever
-  requires a specific engine feature (there is no `required_tech` field on
-  platforms), so an engine built in 1986 remains exactly as viable in 2020
-  as a freshly built one except for the flat effect multipliers. A studio
-  is never pushed to keep researching.
-- **No engine identity beyond a name.** No generation/version label, no
-  visual badge, no "built for" genre affinity.
-- Engine selection is a bare dropdown in `NewGameScreen`; no comparison
-  view of what an engine's composed effects actually are before picking it
-  (the player has to go back to the Engine Lab to check).
+**Engines age and gain identity.** Each engine dict now carries `generation`
+(era bucket of its newest technology), `games_shipped`, and `modifications`.
+`EngineSimulator` computes: `age_drag` (+1.5%/yr effort, caps +15%),
+`tech_debt_multiplier` (grows with `modifications × age`, caps +12%),
+`familiarity_level` from `GameState.engine_familiarity` (shipments →
+0–4, capped), and one `condition()` call combining them into a `speed` and
+`bugs` multiplier (clamped to [0.80, 1.12] / [0.88, 1.25]) plus plain-language
+`notes`. A brand-new engine is a mild penalty (slower, buggier, wider
+estimate); a well-worn one a mild capped bonus. An old engine is never
+useless — the floor guarantees it.
 
-### Required data/model changes
-If platform gating is added: `required_tech: []` on platform entries in
-`data/platforms.json`, read the same way `game_features.json.requires_tech`
-already is.
+**Lightweight tech debt.** An UPGRADE action adds one researched technology to
+an existing engine via a short project and bumps `modifications`; debt is the
+only thing that reads that counter, and it stays mild.
 
-### Required simulation changes
-`PlatformManager.available_platforms` (or wherever platform eligibility is
-decided today — confirm exact call site before implementing) would need a
-tech check mirroring `FeatureSimulator.missing_tech`. This changes which
-platforms a studio can develop for, which is a real balance change and
-needs BalanceProbe re-measurement (PA.15) — it changes early-game platform
-choice pacing.
+**Integration.** `DevelopmentSimulator.advance_project` multiplies weekly
+progress by `condition.speed` and bug risk by `condition.bugs` (1.0 with no
+engine). `ProjectEstimateSimulator` threads `engine_id` through
+`schedule_and_cost` — familiarity tightens or widens the schedule half-width —
+and `risk_assessment` gives specific engine reasons (outdated by age or
+generation, new-engine learning cost, heavy modifications).
 
-### Required UI
-An engine-effects preview (reuse `EngineManager.effects_for`, already
-exists) surfaced directly in the engine dropdown row on `NewGameScreen`
-rather than requiring a screen switch.
+**UI.** `EngineLabScreen` is rebuilt: an IN DEVELOPMENT card (progress,
+engineers, weeks, spend, ADD ENGINEER / CANCEL), a YOUR ENGINES list (each
+card expands to generation / age / familiarity / games / modifications /
+capability summary / notes, with an UPGRADE picker), and a CREATE ENGINE form
+(name, technology multi-select grouped by capability, a live estimate, an
+engineer picker). `NewGameScreen` and `GreenlightScreen` gained an engine
+block: capabilities, **missing capabilities** for the chosen features
+(`EngineSimulator.missing_capabilities`), familiarity, and age/generation
+notes.
 
-### Save migration requirements
-None unless platform gating is added, and even then none — gating is
-computed at read time from existing `researched_engine_features`, not
-stored.
+**Persistence.** Save v21 adds `active_engine_project`, `engine_familiarity`,
+and the richer engine dict; a pre-v21 engine (only `feature_ids`) loads and
+back-fills `games_shipped` / familiarity from the shipped-games record.
 
-### Tests required
-An `EngineProgressionTest` (or extension of `EngineTest`) asserting: an
-engine's composed effects match the product of its features' individual
-effects (regression-proofs `effects_for`); if platform gating ships, a test
-that an ungated platform remains available on a fresh save (protects new
-players from an accidental total-lockout bug).
+`EngineProgressionTest` (new, 50 checks) covers engine creation, technology
+compatibility, feature support, development cost, development time,
+familiarity (with the cap), aging (with the cap and the still-usable floor),
+and save/load. `EngineTest` was rewritten onto the project flow;
+`ProjectEstimateTest`'s three instant `EngineManager.build` calls became
+`finish_engine`. The full suite is green.
 
-### Acceptance criteria
-The player can see an engine's effects without leaving the project-setup
-screen. If platform gating ships: a studio with zero engine tech can still
-start on at least one platform (no fresh-save deadlock), and BalanceProbe
-shows no meaningful shift in 1996 median cash versus the PA.15 baseline in
-`docs/MEDIOCRE_GAMES_2026-09-08.md`.
+**Deferred (follow-up):** a BalanceProbe re-measurement of engine-era pacing
+vs. 1996 median cash — the age/familiarity/debt multipliers shipped small and
+capped, same call PA.1–PA.3 made. Platform tech-gating (`required_tech` on
+platforms) is still noted below as a possible future obsolescence lever, not
+built here.
 
 ### Dependencies on other sections
-PA.2 (data move should land first — building progression pressure on top of
-a hardcoded catalog just means redoing it); PA.15 (re-measurement).
+PA.2 (the technology tree it builds on); PA.15 (the deferred BalanceProbe
+pass).
+
+### Possible follow-up: platform tech-gating
+`required_tech: []` on `data/platforms.json` entries, checked in
+`PlatformManager.available_platforms` the way `FeatureSimulator.missing_tech`
+checks features — a harder obsolescence pressure than the soft age drag PA.4
+shipped. A real balance change; would need BalanceProbe and a fresh-save
+deadlock guard.
 
 ---
 

@@ -13,6 +13,7 @@ extends Node
 ##     ContractManager   contract work advances, completes or runs late
 ##     TrainingManager   courses run down and people come back better
 ##     ResearchManager   research projects advance; a technology may complete
+##     EngineManager     an engine in development advances; it may complete
 ##     MoraleManager     morale and stress settle after the week's work
 ##     RetentionManager  people ask for things, or hand in notice
 ##     StudioEventManager an event may be raised, or its penalty ages off
@@ -48,6 +49,7 @@ func _on_week_advanced(year: int, month: int, week: int) -> void:
     ContractManager.process_week()
     TrainingManager.process_week()
     ResearchManager.process_week()
+    EngineManager.process_week()
     MoraleManager.process_week()
     RetentionManager.process_week()
     StudioEventManager.process_week()

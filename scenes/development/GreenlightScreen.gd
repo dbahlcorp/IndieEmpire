@@ -69,6 +69,24 @@ func _render_identity() -> void:
         "Scope: %s" % str(DataManager.get_size(size_id).get("name", "")), 15))
     identity_container.add_child(UiBuilder.label(
         "Engine: %s" % (EngineManager.engine_name(engine_id) if not engine_id.is_empty() else "No custom engine"), 15))
+    _render_engine(engine_id)
+
+func _render_engine(engine_id: String) -> void:
+    if engine_id.is_empty():
+        return
+    var engine := EngineManager.get_engine(engine_id)
+    var condition: Dictionary = _estimate.get("engine", EngineManager.condition_for(engine_id))
+    identity_container.add_child(UiBuilder.label(
+        "  %s · %d yrs · %s (%d shipped)" % [
+            EngineSimulator.generation_label(int(condition.get("generation", 1))),
+            int(condition.get("age_years", 0)),
+            str(condition.get("familiarity_label", "")),
+            EngineManager.shipments_for(engine_id)], 13))
+    var missing := EngineSimulator.missing_capabilities(engine, _draft.get("feature_ids", []))
+    for line in missing:
+        identity_container.add_child(UiBuilder.label("  ⚠ %s" % line, 13))
+    for note in condition.get("notes", []):
+        identity_container.add_child(UiBuilder.label("  • %s" % str(note), 13))
 
 func _render_features() -> void:
     UiBuilder.clear(features_container)

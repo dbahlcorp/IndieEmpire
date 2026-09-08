@@ -348,7 +348,8 @@ func _refresh() -> void:
         headcount, "" if headcount == 1 else "s"
     ]
 
-    var estimate := _estimate_schedule(size_id, platform_id, team_id, upfront + fee, _selected_feature_ids)
+    var estimate := _estimate_schedule(
+        size_id, platform_id, team_id, upfront + fee, _selected_feature_ids, engine_id)
     if estimate.is_empty():
         cost_text += "Estimated Development\n%d–%d weeks\n\nEstimated Cost\nUnknown until a team is picked" % [
             int(size.get("dev_weeks_min", 4)), int(size.get("dev_weeks_max", 10))
@@ -366,6 +367,7 @@ func _refresh() -> void:
         cost_text += "\n\nUpfront cost $%s" % Format.exact(upfront)
     if not engine_id.is_empty():
         cost_text += "\nUsing %s" % EngineManager.engine_name(engine_id)
+    cost_text += _engine_block(engine_id)
 
     if not team_id.is_empty() and ScopeSimulator.is_understaffed(headcount, ideal_min):
         var speed := ScopeSimulator.speed_multiplier(headcount, ideal_min)
@@ -438,9 +440,39 @@ func _build_budget_section(estimate: Dictionary) -> void:
                 "BUDGET WARNING\nAt this pace the project is likely to exceed its target by up to %s." % [
                     Format.money_exact(over)], 13, true))
 
+func _engine_block(engine_id: String) -> String:
+    ## Project integration: what the chosen engine can and cannot do for this
+    ## specific game, how well the team knows it, and any age concern.
+    if engine_id.is_empty():
+        if GameState.custom_engines.is_empty():
+            return ""
+        return "\n\nENGINE\nNo custom engine — using platform-default tools."
+
+    var engine := EngineManager.get_engine(engine_id)
+    var condition := EngineManager.condition_for(engine_id)
+    var text := "\n\nENGINE  %s\n%s · %d yrs old · %s (%d game%s shipped)" % [
+        str(engine.get("name", "Engine")),
+        EngineSimulator.generation_label(int(condition["generation"])),
+        int(condition["age_years"]), str(condition["familiarity_label"]),
+        EngineManager.shipments_for(engine_id),
+        "" if EngineManager.shipments_for(engine_id) == 1 else "s"]
+
+    var capabilities: Array[String] = []
+    for capability in EngineSimulator.capability_summary(engine):
+        capabilities.append(str(capability))
+    if not capabilities.is_empty():
+        text += "\nCapabilities: %s" % ", ".join(capabilities)
+
+    var missing := EngineSimulator.missing_capabilities(engine, _selected_feature_ids)
+    if not missing.is_empty():
+        text += "\n⚠ Missing: %s" % "; ".join(missing)
+    for note in condition["notes"]:
+        text += "\n• %s" % str(note)
+    return text
+
 func _estimate_schedule(
     size_id: String, platform_id: String, team_id: String, upfront: int,
-    feature_ids: Array = []
+    feature_ids: Array = [], engine_id: String = ""
 ) -> Dictionary:
     ## A real forecast, not a generic per-scope range: built from exactly the
     ## staff and roles currently chosen, the same way the actual project
@@ -451,7 +483,7 @@ func _estimate_schedule(
     if team_id.is_empty():
         return {}
     return ProjectEstimateSimulator.schedule_and_cost(
-        size_id, platform_id, team_id, _current_assignments(), upfront, feature_ids)
+        size_id, platform_id, team_id, _current_assignments(), upfront, feature_ids, engine_id)
 
 func _current_assignments() -> Dictionary:
     var assignments: Dictionary = {}

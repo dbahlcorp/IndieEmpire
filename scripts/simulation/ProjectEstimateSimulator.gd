@@ -46,7 +46,7 @@ static func workloads_for(assignments: Dictionary) -> Dictionary:
 
 static func schedule_and_cost(
         size_id: String, platform_id: String, team_id: String, assignments: Dictionary,
-        upfront: int, feature_ids: Array = []) -> Dictionary:
+        upfront: int, feature_ids: Array = [], engine_id: String = "") -> Dictionary:
     ## A real forecast, not a generic per-scope range: built from exactly the
     ## staff and roles actually chosen, the same way the actual project
     ## would be. Empty ({}) once there is nothing real to forecast from --
@@ -74,6 +74,12 @@ static func schedule_and_cost(
     var complexity_budget := FeatureSimulator.complexity_budget(size_id, feature_ids)
     if bool(complexity_budget.get("over_scoped", false)):
         half_width *= 1.0 + minf((float(complexity_budget["ratio"]) - 1.0) * 0.35, 0.65)
+    # A brand-new engine widens the forecast (nobody knows how it will
+    # behave); a well-worn one tightens it. See EngineSimulator.
+    var engine_condition := EngineManager.condition_for(engine_id)
+    if bool(engine_condition.get("has_engine", false)):
+        half_width *= [1.30, 1.12, 1.0, 0.92, 0.85][
+            clampi(int(engine_condition["familiarity"]), 0, 4)]
     var culture_progress := CultureSimulator.progress_multiplier(CultureManager.value("efficiency"))
 
     # Pre-production, fast and slow ends of the same weekly roll production
@@ -91,7 +97,7 @@ static func schedule_and_cost(
     # penalty.
     var work := DevelopmentSimulator.required_effort(size_id, feature_ids)
     var progress_scale := 100.0 / work
-    var prod_staff := float(effects.get("progress", 1.0))
+    var prod_staff := float(effects.get("progress", 1.0)) * float(engine_condition.get("speed", 1.0))
     var feature_effort := float(FeatureSimulator.effort_bonus(feature_ids))
     var feature_share := clampf(feature_effort / maxf(work, 1.0), 0.0, 0.80)
     prod_staff *= lerpf(
@@ -217,12 +223,23 @@ static func risk_assessment(
         points += 1
         reasons.append("Team has little %s experience." % DataManager.display_name(DataManager.genres, genre_id))
 
-    if _engine_is_outdated(engine_id):
-        points += 1
-        reasons.append("Engine is outdated.")
-    elif engine_id.is_empty() and not GameState.custom_engines.is_empty():
-        points += 1
-        reasons.append("No custom engine selected for this project.")
+    if engine_id.is_empty():
+        if not GameState.custom_engines.is_empty():
+            points += 1
+            reasons.append("No custom engine selected for this project.")
+    else:
+        var engine_condition := EngineManager.condition_for(engine_id)
+        if int(engine_condition["age_years"]) >= ENGINE_OUTDATED_YEARS \
+                or int(engine_condition["generation_gap"]) >= 1:
+            points += 1
+            reasons.append("Engine is outdated -- %s." % _outdated_detail(engine_condition))
+        if int(engine_condition["familiarity"]) == 0:
+            points += 1
+            reasons.append("New engine -- the team will lose time learning it and ship more bugs.")
+        if int(engine_condition["modifications"]) >= 3:
+            points += 1
+            reasons.append("Engine carries %d modifications and is getting harder to maintain." %
+                int(engine_condition["modifications"]))
 
     if float(estimate.get("half_width", 0.0)) >= WIDE_SCHEDULE_HALF_WIDTH:
         points += 1
@@ -252,14 +269,14 @@ static func _risk_label(points: int) -> String:
         return "Moderate"
     return "Low"
 
-static func _engine_is_outdated(engine_id: String) -> bool:
-    if engine_id.is_empty():
-        return false
-    var engine := EngineManager.get_engine(engine_id)
-    if engine.is_empty():
-        return false
-    var age := TimeManager.current_year - int(engine.get("created_year", TimeManager.current_year))
-    return age >= ENGINE_OUTDATED_YEARS
+static func _outdated_detail(condition: Dictionary) -> String:
+    var age := int(condition.get("age_years", 0))
+    var gap := int(condition.get("generation_gap", 0))
+    if gap >= 1:
+        return "%s, %d generation%s behind current technology" % [
+            EngineSimulator.generation_label(int(condition.get("generation", 1))),
+            gap, "" if gap == 1 else "s"]
+    return "built %d years ago" % age
 
 ## Bundle ------------------------------------------------------------------
 
@@ -272,11 +289,12 @@ static func full_estimate(
     var upfront := DevelopmentSimulator.get_upfront_cost(platform_id, size_id)
     var fee := DevelopmentSimulator.get_platform_fee(platform_id)
     var schedule := schedule_and_cost(
-        size_id, platform_id, team_id, assignments, upfront + fee, feature_ids)
+        size_id, platform_id, team_id, assignments, upfront + fee, feature_ids, engine_id)
     return {
         "upfront": upfront,
         "platform_fee": fee,
         "schedule": schedule,
+        "engine": EngineManager.condition_for(engine_id),
         "market": market_fit(theme_id, genre_id, platform_id),
         "experience": team_experience(genre_id, theme_id, platform_id),
         "risk": risk_assessment(schedule, assignments, genre_id, size_id, engine_id, feature_ids)

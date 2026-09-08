@@ -23,7 +23,8 @@ enum Kind {
     OTHER,
     OFFICE_CUSTOMIZATION,
     SEVERANCE,
-    EQUIPMENT
+    EQUIPMENT,
+    ENGINE
 }
 
 const KIND_NAMES := {
@@ -44,6 +45,7 @@ const KIND_NAMES := {
     Kind.OFFICE_CUSTOMIZATION: "Office customization",
     Kind.SEVERANCE: "Severance",
     Kind.EQUIPMENT: "Equipment",
+    Kind.ENGINE: "Engine development",
     Kind.OTHER: "Other"
 }
 

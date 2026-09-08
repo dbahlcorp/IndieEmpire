@@ -191,11 +191,11 @@ func is_active() -> bool:
 
 func is_away() -> bool:
     ## Employed and paid, but not available for project work this week -- on a
-    ## course, on leave, or assigned to a research project (a researcher
-    ## cannot also contribute to a game).
+    ## course, on leave, or assigned to research or engine development (that
+    ## person cannot also contribute to a game).
     return (
         is_training() or time_off_weeks > 0 or burnout_leave_weeks > 0
-        or ResearchManager.is_researching(id)
+        or ResearchManager.is_researching(id) or EngineManager.is_building(id)
     )
 
 func is_training() -> bool:

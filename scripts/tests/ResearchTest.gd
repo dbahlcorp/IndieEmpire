@@ -207,10 +207,11 @@ func _engine_building_requires_completed_engine_capable_tech() -> void:
     FinanceManager.earn(100_000, Ledger.Kind.OTHER, "engine seed")
     TimeManager.set_date(2000, 1, 1)
 
-    check(EngineManager.build("Too Soon", ["3d_renderer"]).is_empty(),
-        "an un-researched technology is rejected")
+    var engineer := _hire_researcher(60)
+    check(not bool(EngineManager.can_begin("Too Soon", ["3d_renderer"], [engineer.id]).get("ok", false)),
+        "an un-researched technology is rejected for engine building")
     _grant(["adv_2d", "3d_renderer"])
-    var engine := EngineManager.build("Composed", ["2d_renderer", "3d_renderer"])
+    var engine := EngineManager.finish_engine("Composed", ["2d_renderer", "3d_renderer"], 40_000)
     if check(not engine.is_empty(), "a completed engine-capable set builds"):
         var effects := EngineManager.effects_for(str(engine["id"]))
         var solo_2d := float(DataManager.get_technology("2d_renderer").get("engine_effects", {}).get("graphics", 1.0))

@@ -411,6 +411,9 @@ static func advance_project(project: GameProject) -> Dictionary:
     var culture_innovation := CultureSimulator.innovation_multiplier(
         CultureManager.value("creative_freedom"))
     var engine := EngineManager.effects_for(project.engine_id)
+    # How the engine itself is to work with this week: team familiarity, age
+    # and accumulated modifications. 1.0 with no custom engine. Small, capped.
+    var engine_condition := EngineManager.condition_for(project.engine_id)
 
     project.development_weeks += 1
     # The midpoint (11.0) matches the old flat randf_range(8, 14): a strong
@@ -428,6 +431,7 @@ static func advance_project(project: GameProject) -> Dictionary:
     project.development_progress = minf(
         project.development_progress
             + weekly_roll * progress_scale * float(staff["progress"]) * plan_drag * feature_capacity
+                * float(engine_condition["speed"])
                 * DevelopmentFocusSimulator.multiplier(
                     project, "production", "progress"),
         100.0
@@ -521,7 +525,8 @@ static func advance_project(project: GameProject) -> Dictionary:
     var bug_risk := crunch_bugs * culture_bugs * (
         (1.30 - float(staff["testing"]) * 0.32 - float(staff["programming"]) * 0.12)
         * (1.0 + float(staff["overload"]) * 0.8) * float(staff["chemistry_bug"])
-        * float(engine["bugs"]) * FeatureSimulator.bug_risk_multiplier(
+        * float(engine["bugs"]) * float(engine_condition["bugs"])
+        * FeatureSimulator.bug_risk_multiplier(
             project.feature_ids, project.size_id)
         * DevelopmentFocusSimulator.multiplier(project, "production", "bug_risk")
     )

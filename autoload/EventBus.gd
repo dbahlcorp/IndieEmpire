@@ -91,6 +91,8 @@ signal experience_level_up(kind: String, id: String, name: String, level: int)
 signal research_points_gained(amount: float, reason: String)
 signal research_started(tech_id: String, display_name: String)
 signal technology_researched(tech_id: String, display_name: String)
+signal engine_project_started(name: String)
+signal engine_completed(engine_id: String, name: String)
 
 # --- Feed and toasts ---
 signal news_posted(item: Dictionary)

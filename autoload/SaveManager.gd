@@ -10,7 +10,7 @@ signal game_saved(slot: String)
 const SAVE_DIR := "user://saves"
 const AUTOSAVE := "autosave"
 const MANUAL_SLOTS := ["save_1", "save_2", "save_3"]
-const SAVE_VERSION := 20
+const SAVE_VERSION := 21
 const MIN_SUPPORTED_VERSION := 5
 
 var has_active_company: bool = false
@@ -165,7 +165,9 @@ func _collect_save_data() -> Dictionary:
             "research_points": GameState.research_points,
             "experimented_feature_ids": GameState.experimented_feature_ids,
             "engines": GameState.custom_engines,
-            "next_number": GameState.next_engine_number
+            "next_number": GameState.next_engine_number,
+            "active_engine_project": GameState.active_engine_project,
+            "engine_familiarity": GameState.engine_familiarity
         },
         "market": {
             "genre_trends": GameState.genre_trends,
@@ -294,9 +296,36 @@ func _apply_save_data(data: Dictionary) -> void:
             var engine: Dictionary = entry.duplicate(true)
             engine["id"] = str(engine.get("id", ""))
             engine["name"] = str(engine.get("name", "Custom Engine"))
-            engine["feature_ids"] = _string_array(engine.get("feature_ids", []))
+            # v21: tech_ids is canonical; feature_ids kept as a synonym so
+            # FeatureSimulator.engine_features and effects_for keep working.
+            var tech_ids := _string_array(engine.get("tech_ids", engine.get("feature_ids", [])))
+            engine["tech_ids"] = tech_ids
+            engine["feature_ids"] = tech_ids
+            engine["modifications"] = maxi(int(engine.get("modifications", 0)), 0)
+            engine["games_shipped"] = maxi(int(engine.get("games_shipped", 0)), 0)
+            engine["generation"] = int(engine.get(
+                "generation", EngineSimulator.generation(engine)))
             GameState.custom_engines.append(engine)
     GameState.next_engine_number = int(technology.get("next_number", GameState.custom_engines.size() + 1))
+
+    GameState.engine_familiarity = _int_dictionary(technology.get("engine_familiarity", {}))
+    var saved_engine_project = technology.get("active_engine_project", {})
+    GameState.active_engine_project = {}
+    if saved_engine_project is Dictionary and not saved_engine_project.is_empty():
+        GameState.active_engine_project = {
+            "name": str(saved_engine_project.get("name", "Engine")),
+            "tech_ids": _string_array(saved_engine_project.get("tech_ids", [])),
+            "priced_ids": _string_array(saved_engine_project.get(
+                "priced_ids", saved_engine_project.get("tech_ids", []))),
+            "progress": maxf(float(saved_engine_project.get("progress", 0.0)), 0.0),
+            "engineer_ids": _string_array(saved_engine_project.get("engineer_ids", [])),
+            "weeks_elapsed": int(saved_engine_project.get("weeks_elapsed", 0)),
+            "target_weeks": maxi(int(saved_engine_project.get("target_weeks", 1)), 1),
+            "target_points": maxf(float(saved_engine_project.get("target_points", 100.0)), 1.0),
+            "accrued_cost": int(saved_engine_project.get("accrued_cost", 0)),
+            "base_engine_id": str(saved_engine_project.get("base_engine_id", ""))
+        }
+
 
     var market: Dictionary = data.get("market", {})
     GameState.genre_trends = _float_dictionary(market.get("genre_trends", {}))
@@ -426,6 +455,19 @@ func _apply_save_data(data: Dictionary) -> void:
     if int(data.get("version", 0)) < 15:
         for game in GameState.released_games:
             EmployeeManager.record_shipped_project(game)
+
+    # v21: engine familiarity was not tracked before. Rebuild it (and each
+    # engine's games_shipped) from the shipped record so a returning studio
+    # is not treated as a stranger to its own engines.
+    if int(data.get("version", 0)) < 21:
+        for game in GameState.released_games:
+            if game.engine_id.is_empty():
+                continue
+            GameState.engine_familiarity[game.engine_id] = int(
+                GameState.engine_familiarity.get(game.engine_id, 0)) + 1
+        for engine in GameState.custom_engines:
+            engine["games_shipped"] = int(GameState.engine_familiarity.get(
+                str(engine.get("id", "")), 0))
 
     GameState.active_projects.clear()
     for entry in data.get("active_projects", []):
