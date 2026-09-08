@@ -4,6 +4,16 @@ extends RefCounted
 const BASE_WEEKLY_COST := 380
 const BASE_POLISH_COST := 500
 
+## How much quality one unit of completed work is worth. Production quality is
+## banked per unit of work finished rather than per week elapsed -- see the
+## `content` term in advance_project() -- and this sets the exchange rate.
+##
+## Calibrated so a competent team still lands near its size's authored
+## `expected_quality`, which is what ReviewSimulator measures a release
+## against. Retuning it moves every review score, so measure with the balance
+## probe rather than adjusting it by eye.
+const QUALITY_PER_WORK_UNIT := 0.0667
+
 ## How much concept-and-planning work a size implies, authored rather than
 ## derived from the main "work" budget -- pre-production does not scale with
 ## a project the same way production does, so a fraction of "work" quietly
@@ -45,13 +55,31 @@ static func estimate_remaining(project: GameProject) -> Dictionary:
     ## estimate against.
     if project == null or project.released or project.current_phase() == "polish":
         return {}
+    return _estimate(project)
+
+static func schedule_drag() -> float:
+    ## What is slowing the studio down this week on top of the team itself.
+    ## A studio event -- a failed workstation, a burst pipe -- is a penalty, so
+    ## it stays outside the bonus cap at full weight: trouble should be felt.
+    ##
+    ## The upsides that used to sit beside it here (the plan, engine tooling,
+    ## culture) now go through staff_effects() instead, so that everything
+    ## bearing on pace resolves through one cap rather than two that multiply.
+    ##
+    ## Shared with the schedule estimate on purpose. These were two separate
+    ## copies of the same arithmetic and had already drifted -- the estimate
+    ## left the engine's progress bonus out, so a studio with build tools was
+    ## quoted a slower schedule than it actually ran.
+    return StudioEventManager.development_efficiency_multiplier()
+
+static func _estimate(project: GameProject) -> Dictionary:
 
     var size := DataManager.get_size(project.size_id)
     var staff := staff_effects(project)
     var lead := LeadershipSimulator.pick_lead(TeamManager.working_members(project.team_id))
     var leadership := float(lead.leadership) if lead != null else LeadershipSimulator.BASELINE
     var half_width := LeadershipSimulator.schedule_half_width(leadership)
-    var culture_progress := CultureSimulator.progress_multiplier(CultureManager.value("efficiency"))
+    var preprod_drag := schedule_drag()
 
     var preprod_remaining := maxf(100.0 - project.preproduction_progress, 0.0)
     var preprod_work := float(PREPRODUCTION_WORK.get(project.size_id, 45.0))
@@ -60,10 +88,10 @@ static func estimate_remaining(project: GameProject) -> Dictionary:
         project, "pre_production", "progress")
     var preprod_rate_fast := (
         (12.0 + half_width) * (100.0 / maxf(preprod_work, 1.0)) * preprod_staff
-        * culture_progress * preprod_focus)
+        * preprod_drag * preprod_focus)
     var preprod_rate_slow := (
         maxf(12.0 - half_width, 1.0) * (100.0 / maxf(preprod_work, 1.0)) * preprod_staff
-        * culture_progress * preprod_focus)
+        * preprod_drag * preprod_focus)
     var preprod_weeks_fast := preprod_remaining / maxf(preprod_rate_fast, 0.0001)
     var preprod_weeks_slow := preprod_remaining / maxf(preprod_rate_slow, 0.0001)
 
@@ -74,16 +102,15 @@ static func estimate_remaining(project: GameProject) -> Dictionary:
         else maxf(100.0 - project.development_progress, 0.0))
     var work := required_effort(project.size_id, project.feature_ids)
     var prod_staff := float(staff.get("progress", 1.0))
-    var plan_efficiency := (1.0 + project.production_efficiency_modifier) * (
-        StudioEventManager.development_efficiency_multiplier())
+    var plan_drag := schedule_drag()
     var production_focus := DevelopmentFocusSimulator.multiplier(
         project, "production", "progress")
     var prod_rate_fast := (
-        (11.0 + half_width) * (100.0 / work) * prod_staff * culture_progress
-        * plan_efficiency * production_focus)
+        (11.0 + half_width) * (100.0 / work) * prod_staff
+        * plan_drag * production_focus)
     var prod_rate_slow := (
-        maxf(11.0 - half_width, 1.0) * (100.0 / work) * prod_staff * culture_progress
-        * plan_efficiency * production_focus)
+        maxf(11.0 - half_width, 1.0) * (100.0 / work) * prod_staff
+        * plan_drag * production_focus)
     var prod_weeks_fast := prod_remaining / maxf(prod_rate_fast, 0.0001)
     var prod_weeks_slow := prod_remaining / maxf(prod_rate_slow, 0.0001)
 
@@ -280,14 +307,13 @@ static func advance_preproduction(project: GameProject) -> Dictionary:
 
     var leadership := _refresh_lead(project)
     var staff := staff_effects(project)
-    var culture_progress := CultureSimulator.progress_multiplier(CultureManager.value("efficiency"))
 
     var scale := 100.0 / maxf(PREPRODUCTION_WORK.get(project.size_id, 45.0), 1.0)
     var half_width := LeadershipSimulator.schedule_half_width(leadership)
     var weekly_roll := randf_range(12.0 - half_width, 12.0 + half_width)
     project.preproduction_progress = minf(
         project.preproduction_progress
-            + weekly_roll * scale * float(staff["preproduction_progress"]) * culture_progress
+            + weekly_roll * scale * float(staff["preproduction_progress"]) * schedule_drag()
                 * DevelopmentFocusSimulator.multiplier(
                     project, "pre_production", "progress"),
         100.0
@@ -330,9 +356,9 @@ static func advance_project(project: GameProject) -> Dictionary:
     var work := required_effort(project.size_id, project.feature_ids)
     var progress_scale := 100.0 / work
     var staff := staff_effects(project)
-    # A disciplined studio wastes less of the week; a meticulous one ships
-    # fewer bugs; an adventurous one takes more chances. All small.
-    var culture_progress := CultureSimulator.progress_multiplier(CultureManager.value("efficiency"))
+    # A disciplined studio wastes less of the week -- that one is folded into
+    # staff_effects(); a meticulous one ships fewer bugs; an adventurous one
+    # takes more chances. All small.
     var culture_bugs := CultureSimulator.bug_multiplier(CultureManager.value("quality_focus"))
     var culture_innovation := CultureSimulator.innovation_multiplier(
         CultureManager.value("creative_freedom"))
@@ -345,17 +371,16 @@ static func advance_project(project: GameProject) -> Dictionary:
     # faster one.
     var half_width := LeadershipSimulator.schedule_half_width(leadership)
     var weekly_roll := randf_range(11.0 - half_width, 11.0 + half_width)
-    # Set once, back at the end of pre-production: a clear plan speeds every
-    # week of production that follows, an unclear one drags on all of them.
-    # A studio event -- a failed workstation, say -- can drag on it too, for
-    # as long as the trouble lasts.
-    var plan_efficiency := (1.0 + project.production_efficiency_modifier) * (
-        StudioEventManager.development_efficiency_multiplier())
+    # The plan set at the end of pre-production speeds every week that follows
+    # -- that goes through staff_effects() with the rest of the pace bonuses.
+    # What is left here is a studio event dragging on the week, which is a
+    # penalty and so stays outside the cap.
+    var plan_drag := schedule_drag()
     var progress_before := project.development_progress
     project.development_progress = minf(
         project.development_progress
-            + weekly_roll * progress_scale * float(staff["progress"]) * culture_progress * plan_efficiency
-                * float(engine["progress"]) * DevelopmentFocusSimulator.multiplier(
+            + weekly_roll * progress_scale * float(staff["progress"]) * plan_drag
+                * DevelopmentFocusSimulator.multiplier(
                     project, "production", "progress"),
         100.0
     )
@@ -370,43 +395,78 @@ static func advance_project(project: GameProject) -> Dictionary:
     var genre_bonus := ExperienceManager.genre_bonus(project.genre_id)
     var theme_bonus := ExperienceManager.theme_bonus(project.theme_id)
     var platform_bonus := ExperienceManager.platform_bonus(project.platform_id)
-    var experience := genre_bonus * theme_bonus
     var output := float(staff["effective_team_output"])
 
+    # Quality is banked against the work actually finished this week, not
+    # against the calendar. It used to be a flat per-week amount while the
+    # finish line stayed fixed at 100% progress, which meant a *slower* team
+    # banked more quality for the same project: total quality came out
+    # proportional to work / pace, so the team's own craft largely cancelled
+    # out and every pace bonus quietly made the game worse. Capping those
+    # bonuses made reviews go up, which is how this was found.
+    #
+    # Paying per unit of work completed decouples the two. Speed now means
+    # throughput -- more games per year -- rather than worse games, and a
+    # better team makes a better game instead of a faster one.
+    #
+    # This is the same rule FeatureSimulator.apply_quality_potential() already
+    # used for chosen features; the core stats simply were not on it.
+    var built := (project.development_progress - progress_before) / 100.0
+    var content := built * work * QUALITY_PER_WORK_UNIT
+
+    # Each stat draws on a different mix of what the studio knows and what its
+    # engine can do, so each gets its own stack -- but every stack is bounded
+    # the same way, and within a category the parts add rather than multiply.
+    # Compatibility, the focus and team size stay outside: the first two are
+    # trade-offs and the third is capacity, not a bonus. See BonusStack.
+    var gameplay_bonus := BonusStack.combine({
+        BonusStack.KNOWLEDGE: [genre_bonus, theme_bonus]})
+    var technology_bonus := BonusStack.combine({
+        BonusStack.KNOWLEDGE: [platform_bonus],
+        BonusStack.STRATEGY: [engine["technology"]]})
+    var graphics_bonus := BonusStack.combine({
+        BonusStack.KNOWLEDGE: [platform_bonus],
+        BonusStack.STRATEGY: [engine["graphics"]]})
+    var story_bonus := BonusStack.combine({
+        BonusStack.KNOWLEDGE: [theme_bonus]})
+    var sound_bonus := BonusStack.combine({
+        BonusStack.STRATEGY: [engine["sound"]]})
+    var innovation_bonus := BonusStack.combine({
+        BonusStack.TEAM: [staff["innovation_modifier"], culture_innovation]})
+    var performance_bonus := BonusStack.combine({
+        BonusStack.STRATEGY: [engine["performance"]]})
+
     _add_focused_quality(project, "production", "gameplay",
-        randf_range(3.0, 7.0) * compatibility * experience * float(staff["design"]) * output)
+        randf_range(3.0, 7.0) * compatibility * float(staff["design"]) * output * gameplay_bonus * content)
     _add_focused_quality(project, "production", "technology",
-        randf_range(2.5, 6.0) * platform_bonus * float(staff["programming"])
-            * output * float(engine["technology"]))
+        randf_range(2.5, 6.0) * float(staff["programming"]) * output * technology_bonus * content)
     _add_focused_quality(project, "production", "graphics",
-        randf_range(2.0, 5.0) * platform_bonus * float(staff["art"])
-            * output * float(engine["graphics"]))
+        randf_range(2.0, 5.0) * float(staff["art"]) * output * graphics_bonus * content)
     _add_focused_quality(project, "production", "story",
-        randf_range(2.0, 6.0) * _story_weight(project.genre_id) * theme_bonus
-            * float(staff["writing"]) * output)
+        randf_range(2.0, 6.0) * _story_weight(project.genre_id)
+            * float(staff["writing"]) * output * story_bonus * content)
     _add_focused_quality(project, "production", "sound",
-        randf_range(1.5, 4.0) * float(staff["audio"]) * output * float(engine["sound"]))
+        randf_range(1.5, 4.0) * float(staff["audio"]) * output * sound_bonus * content)
     _add_focused_quality(project, "production", "innovation",
         randf_range(1.0, 4.0) * compatibility * float(staff["design"])
-            * float(staff["innovation_modifier"]) * output * culture_innovation)
+            * output * innovation_bonus * content)
     _add_focused_quality(project, "production", "performance",
-        randf_range(2.0, 5.0) * float(staff["programming"])
-            * output * float(engine["performance"]))
+        randf_range(2.0, 5.0) * float(staff["programming"]) * output * performance_bonus * content)
     _add_focused_quality(project, "production", "narrative_quality",
         randf_range(1.5, 4.0) * (float(staff["writing"]) * 0.80
-            + float(staff["design"]) * 0.20) * output)
+            + float(staff["design"]) * 0.20) * output * content)
     var polish_staff := (
         float(staff["polish_art"]) * 0.35 + float(staff["polish_testing"]) * 0.25
         + float(staff["polish_production"]) * 0.40
     )
     _add_focused_quality(project, "production", "polish",
-        randf_range(1.0, 3.0) * polish_staff * output)
+        randf_range(1.0, 3.0) * polish_staff * output * content)
     # Balance is a core stat like gameplay or technology, not a refinement
     # like polish -- a design-led team is already tuning as they build. Sized
     # to match its production-phase siblings, so a project that never enters
     # polish is not quietly punished on a stat it never had a fair shot at.
     _add_focused_quality(project, "production", "balance",
-        randf_range(2.0, 5.0) * float(staff["design"]) * output)
+        randf_range(2.0, 5.0) * float(staff["design"]) * output * content)
 
     # Tired people ship more bugs: the other half of the crunch bargain.
     var crunch_bugs := MoraleManager.crunch_bug_multiplier(project.team_id)
@@ -561,9 +621,18 @@ static func staff_effects(project: GameProject) -> Dictionary:
     var team := TeamManager.find_team(project.team_id)
     var chemistry := team.chemistry if team != null else 50.0
     var size := DataManager.get_size(project.size_id)
+    # Everything else that bears on how fast this team works, handed over so it
+    # resolves through the same single cap rather than multiplying on top of it.
     var effects := ProjectStaffSimulator.effects(
         project.role_assignments, team_employees, workloads, office_productivity, chemistry,
-        int(size.get("max_useful_staff", 99)), int(size.get("ideal_team_min", 1))
+        int(size.get("max_useful_staff", 99)), int(size.get("ideal_team_min", 1)),
+        {
+            BonusStack.TEAM: [
+                CultureSimulator.progress_multiplier(CultureManager.value("efficiency"))],
+            BonusStack.STRATEGY: [
+                1.0 + project.production_efficiency_modifier,
+                EngineManager.effects_for(project.engine_id)["progress"]]
+        }
     )
 
     # Crunch buys extra hours, at a cost paid in morale and stress each week.

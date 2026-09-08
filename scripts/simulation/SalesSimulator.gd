@@ -33,15 +33,17 @@ const CROWDING_EXPONENT := 0.35
 ## How sharply review score drives demand. Steep on purpose: a weak game should
 ## not quietly break even on a big platform.
 const QUALITY_EXPONENT := 4.0
-## The review score this steep curve is anchored on -- the score a release has
-## to hit to sell at full strength. Was a bare 10.0, which quietly assumed the
-## old, inflated scale where a competent studio averaged 7.8 and hits ran 9+.
-## Once ReviewSimulator.curve() moved that average to about 7.0, the same
-## exponent read every release as a third weaker than before and a third of
-## them stopped breaking even. 9.3 keeps commercial expectations calibrated to
-## what the review scale now means: sell at full strength only for a genuinely
-## exceptional game, not a merely competent one.
-const QUALITY_ANCHOR := 9.3
+## The review score this steep curve is anchored on. Was a bare 10.0, which
+## quietly assumed the old, inflated scale where a competent studio averaged
+## 7.8 and hits ran 9+; against the normalised scale the same exponent read
+## every release as a third weaker and a third of them stopped breaking even.
+##
+## Deliberately above the highest score a release can actually reach, so no
+## game ever sells at "full strength" -- it is a scale constant, not a target.
+## It is the single lever on how rich the whole economy is, because sales go as
+## the fourth power of it: at 9.3 a measured career finished on $123M, at 11.0
+## on $57M. Retune it with the balance probe, never by eye.
+const QUALITY_ANCHOR := 11.0
 ## The most of a platform's owners a single runaway hit can ever reach. Real
 ## attach rates rarely clear the low teens; this was 0.22 and, combined with
 ## how easily the multipliers below stacked, meant a good late-game release

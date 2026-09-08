@@ -9,6 +9,8 @@ const QUALITY_PER_WORK := 0.40
 ## Deliberately smaller than the goodwill it buys, so standing is still worth
 ## having -- it just stops being a free 1.7 points forever.
 const EXPECTATION_FROM_STANDING := 0.11
+## How far past its own size's quality bar a release can be credited for going.
+const OVER_DELIVERY_CAP := 1.35
 
 static func calculate_review(project: GameProject) -> float:
     var size := DataManager.get_size(project.size_id)
@@ -30,7 +32,11 @@ static func calculate_review(project: GameProject) -> float:
         GameState.consumer_reputation, 0.0, 100.0) / 100.0 * EXPECTATION_FROM_STANDING
 
     var quality_ratio := project.average_quality() / expected_quality
-    var quality := clampf(quality_ratio, 0.0, 1.6) * 62.0
+    # Over-delivery saturates. A veteran studio pointing a full team at a tiny
+    # project clears that project's bar by well over 2x -- measured p90 for
+    # Tiny is 2.30 -- and without this that is a free 9. Clearing your own bar
+    # by a third is already excellent; beyond that the reviewers stop caring.
+    var quality := clampf(quality_ratio, 0.0, OVER_DELIVERY_CAP) * 62.0
 
     var compatibility := _compatibility_bonus(project)
     var bug_penalty := minf(float(project.bugs) * 0.65, 18.0)
@@ -68,38 +74,40 @@ static func calculate_review(project: GameProject) -> float:
 ## Raw merit a competent studio reliably delivers -- the measured median across
 ## an eight-seed career. Maps to COMPETENT_SCORE, so the middle of the
 ## distribution sits where "good, not remarkable" should.
-const COMPETENT_MERIT := 77.0
+const COMPETENT_MERIT := 75.0
 const COMPETENT_SCORE := 72.0
-## What merit asymptotically approaches but never reaches. Deliberately above
-## the 98 display ceiling: if the curve levelled off at 100 the top two points
-## would flatten into each other and 9.5 would read the same as a landmark.
-const UNREACHABLE_SCORE := 108.0
-## Conversion rate *at* the competent bar. Near the middle a point of merit is
-## still worth most of a point of score, so ordinary improvement pays; the
-## curve then bends away on its own.
-const COMPETENT_RETURN := 0.85
+## Where the curve is steepest, and the floor and span it runs between. Neither
+## end is reachable: merit would have to be infinite. The floor sits above zero
+## because even a disaster is a game somebody finished.
+const CURVE_MIDPOINT := 64.0
+const CURVE_FLOOR := 20.0
+const CURVE_SPAN := 85.0
+## How sharply the curve rises through its midpoint.
+const CURVE_STEEPNESS := 0.041
 
 static func curve(merit: float) -> float:
-    ## Convert raw merit to a 0-100 review score with diminishing returns.
+    ## Convert raw merit to a 0-100 review score with diminishing returns at
+    ## both ends.
     ##
-    ## Merit is open-ended and clusters tightly: a mature studio turning out
-    ## competent work sits around 77, and everything from "solid" to "landmark"
-    ## was crammed into the 85-125 band. The old mapping read merit straight off
-    ## as the score, so that band became 8.5 to 9.8 -- a quarter of all releases
-    ## scored 9+ and 7% pinned the ceiling exactly.
+    ## Merit is open-ended. The old mapping read it straight off as the score,
+    ## so a quarter of all releases scored 9+ and 7% pinned the ceiling exactly.
     ##
-    ## This bends it instead. Around the competent bar a point of merit is worth
-    ## COMPETENT_RETURN of a point, so climbing out of the 5s and 6s still pays
-    ## properly. Past it the return decays smoothly towards nothing, so the last
-    ## stretch costs far more than the first: +14 merit over the bar buys about
-    ## +7 score, the next +14 buys about +4, and the next only +2. Reaching 9.6
-    ## takes roughly 120 merit -- every component at once, not one good project.
+    ## A logistic bends it instead. Through the middle a point of merit is worth
+    ## most of a point of score, so ordinary improvement pays properly. Above
+    ## the competent bar the return decays, so the last stretch costs far more
+    ## than the first: +14 merit over the bar buys about +10 score, the next +14
+    ## buys +8, then +6, then +4. Reaching 9.6 takes roughly 125 merit -- every
+    ## component at once, not one good project.
     ##
-    ## Exponential rather than a straight knee because a knee either flattens
-    ## the 8s (too steep) or leaves the 9s free (too shallow); the measured
-    ## merit spread needs the return to keep falling all the way up.
-    var head := UNREACHABLE_SCORE - COMPETENT_SCORE
-    return UNREACHABLE_SCORE - head * exp(-(merit - COMPETENT_MERIT) * COMPETENT_RETURN / head)
+    ## It compresses the *bottom* too, and that matters as much. Once quality
+    ## started accruing per unit of work completed rather than per week (see
+    ## DevelopmentSimulator.QUALITY_PER_WORK_UNIT) a weak team produced a
+    ## genuinely weak game instead of one flattered by taking a long time, and
+    ## the merit spread roughly doubled. An exponential, which only bends at the
+    ## top, turned that into 12% of releases sitting on the 2.5 floor. A curve
+    ## with two shoulders keeps a bad game bad without making it a catastrophe.
+    return CURVE_FLOOR + CURVE_SPAN / (
+        1.0 + exp(-(merit - CURVE_MIDPOINT) * CURVE_STEEPNESS))
 
 static func _credited_reputation(project: GameProject) -> int:
     ## The most famous name attached to this release, if any.

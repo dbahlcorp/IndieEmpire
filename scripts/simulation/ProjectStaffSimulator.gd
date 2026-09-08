@@ -72,7 +72,8 @@ static func effects(
     office_productivity: int = 0,
     chemistry: float = 50.0,
     max_useful_staff: int = 99,
-    ideal_team_min: int = 1
+    ideal_team_min: int = 1,
+    studio_pace: Dictionary = {}
 ) -> Dictionary:
     # What an unfilled role still produces. A one-person studio is not a studio
     # with no artist: the founder does the art too, just roughly. This has to
@@ -159,12 +160,30 @@ static func effects(
     # writing and audio. Production itself is not on this list: a producer's
     # contribution is coordination, already folded in below, not a sixth
     # source of raw output.
+    # The office, the producer, the lead, team chemistry and personal working
+    # styles all speed a team up, and they used to multiply -- a maxed studio
+    # collected +80% from these five alone. They now add under a cap.
+    #
+    # `studio_pace` folds in the parts the caller owns rather than this file --
+    # the studio's culture, its engine tooling, the pre-production plan -- so
+    # that everything bearing on the team's pace resolves through ONE cap. Two
+    # separately-capped stacks would just multiply, which is the whole problem.
+    # See BonusStack for why capacity and penalties are left out.
+    var pace_parts := {
+        BonusStack.FACILITIES: [office_bonus],
+        BonusStack.TEAM: [coordination, chemistry_speed, trait_speed]
+    }
+    for category in studio_pace:
+        var existing: Array = pace_parts.get(category, [])
+        pace_parts[category] = existing + Array(studio_pace[category])
+    var pace_bonus := BonusStack.combine(pace_parts)
+    result["pace_bonus"] = pace_bonus
     result["progress"] = clampf(
         (
             float(result["programming"]) + float(result["art"]) + float(result["design"])
             + float(result["writing"]) + float(result["audio"])
         ) / 5.0 * PRODUCTION_PACE
-        * office_bonus * coordination * chemistry_speed * trait_speed * team_output * scope_speed,
+        * pace_bonus * team_output * scope_speed,
         0.25, 8.0
     )
     # Pre-production is concept and planning. Design and writing set the
@@ -173,7 +192,7 @@ static func effects(
     result["preproduction_progress"] = clampf(
         (float(result["design"]) * 0.35 + float(result["writing"]) * 0.20
             + float(result["production"]) * 0.25 + float(result["programming"]) * 0.20)
-        * office_bonus * coordination * chemistry_speed * trait_speed * team_output * scope_speed,
+        * pace_bonus * team_output * scope_speed,
         0.20, 8.0
     )
     result["overload"] = maximum_overload
@@ -229,21 +248,31 @@ static func _contribution(
     # their own, a real edge with a good one -- see EquipmentSimulator.
     var equipment_factor := EquipmentSimulator.contribution_multiplier(
         employee.workstation_tier, skill)
-    var effectiveness := (
-        skill_factor * attribute_factor * experience_factor * morale_factor
-        * maxf(condition_factor, 0.20) * workload_efficiency * equipment_factor
-    )
+    # How good they are at this, and how much of it they can bring to bear
+    # today. Skill, attributes and accumulated experience are core competence
+    # -- the thing the player invests in most directly -- so they are not
+    # capped. Condition and workload are penalties, so they are not capped
+    # either. What *is* capped is the pile of situational percentages on top.
+    var trait_bonus := 1.0
     if skill == "programming" and "lone_wolf" in employee.trait_ids:
-        effectiveness *= 1.08
+        trait_bonus *= 1.08
     if skill == "testing" and "bug_hunter" in employee.trait_ids:
-        effectiveness *= 1.20
+        trait_bonus *= 1.20
     if skill == "production" and "visionary" in employee.trait_ids:
-        effectiveness *= 0.92
+        trait_bonus *= 0.92
     if "technical_genius" in employee.trait_ids:
         if skill == "programming":
-            effectiveness *= 1.15
+            trait_bonus *= 1.15
         elif skill == "testing":
-            effectiveness *= 1.10
+            trait_bonus *= 1.10
+    var situational := BonusStack.combine({
+        BonusStack.TEAM: [morale_factor, trait_bonus],
+        BonusStack.FACILITIES: [equipment_factor]
+    })
+    var effectiveness := (
+        skill_factor * attribute_factor * experience_factor
+        * maxf(condition_factor, 0.20) * workload_efficiency * situational
+    )
     return {
         "effectiveness": clampf(effectiveness, 0.12, 2.25),
         "skill": int(employee.get(skill)),

@@ -332,6 +332,20 @@ and innovation; programming drives technology, performance and safer code; art,
 writing and audio own their disciplines; QA discovers and removes bugs while
 adding polish; and production improves scheduling and softens overload penalties.
 
+Positive modifiers are bounded. Genre, theme and platform knowledge, chemistry,
+morale, traits, equipment, office comfort, producer and lead coordination,
+engine features, culture and the pre-production plan used to multiply into the
+same number, which took a maxed studio to +315% before headcount was counted at
+all. `BonusStack` sorts them into five categories, caps each, adds rather than
+multiplies them, and caps the total at +41%. Capacity, core competence,
+penalties and trade-offs deliberately stay outside it -- see
+`docs/BONUS_STACKING_2026-09-08.md`.
+
+Quality accrues per unit of work completed, not per week elapsed. Otherwise a
+slower team banks more quality for the same project, and the team's own craft
+cancels out of the result. Speed buys throughput -- more games per year -- not
+worse games.
+
 Team throughput follows a diminishing-return curve from 1.0x for one assigned
 contributor to 5.2x for twelve, with producers recovering a small amount of
 coordination overhead. Chemistry blends time together, teamwork, morale,
@@ -350,13 +364,15 @@ reach a bigger bar, not a better score for clearing the same one.
 
 Quality does not convert to a review score linearly. The scoring components add
 up to an open-ended *merit* figure, and `ReviewSimulator.curve()` bends that
-into a score with diminishing returns: around the competent bar a point of
-merit is worth most of a point of score, and past it the return decays towards
-nothing. Clearing the bar comfortably is a 7; clearing it by a mile is an 8;
-a 9 takes an exceptional release and 9.6+ takes a near-perfect one. A competent
-studio averages about 7.3 across a career rather than drifting up to 9 and
-staying there. See `docs/REVIEW_SCALE_2026-09-08.md` for the measured
-distribution.
+into a score with diminishing returns at both ends: through the middle a point
+of merit is worth most of a point of score, and past the competent bar the
+return decays towards nothing. Clearing the bar comfortably is a 7; clearing it
+by a mile is an 8; a 9 takes an exceptional release and 9.6+ takes a
+near-perfect one. Credit for over-delivering against your own size's bar
+saturates, so a veteran studio's tiny project is not a free 9. A competent
+studio averages about 7.1 across a career rather than drifting up to 9 and
+staying there. See `docs/REVIEW_SCALE_2026-09-08.md` and
+`docs/BONUS_STACKING_2026-09-08.md` for the measured distributions.
 
 Scope is named in the same currency development actually runs on: every size
 sets a required effort total, employees generate effort every week through

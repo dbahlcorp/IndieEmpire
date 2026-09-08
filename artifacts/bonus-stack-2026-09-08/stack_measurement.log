@@ -1,0 +1,86 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+=== StackProbe ===
+
+-- FOUNDER  (solo, bedroom, no XP, no engine) --
+    genre            x1.0000  (+0.0%)
+    theme            x1.0000  (+0.0%)
+    platform         x1.0000  (+0.0%)
+    engine_tech      x1.0000  (+0.0%)
+    engine_gfx       x1.0000  (+0.0%)
+    engine_progress  x1.0000  (+0.0%)
+    office           x1.0000  (+0.0%)
+    equipment        x1.0000  (+0.0%)
+    chemistry        x1.0000  (+0.0%)
+    coordination     x1.0000  (+0.0%)
+    culture          x1.0000  (+0.0%)
+    morale           x0.9250  (-7.5%)
+    experience_lvl   x1.0000  (+0.0%)
+    ----------------------------------------------
+    gameplay chain   x1.0000  (+0.0%)  knowledge
+    tech chain       x1.0000  (+0.0%)  platform + engine
+    craft chain      x0.9250  (-7.5%)  per-person craft
+    pace chain       x1.0000  (+0.0%)  team pace
+    total            x0.9250  (-7.5%)  EVERYTHING MULTIPLIED (the old way)
+      gameplay       x1.0000  (+0.0%)  knowledge, capped
+      tech           x1.0000  (+0.0%)  platform + engine, capped
+      craft          x0.9250  (-7.5%)  per-person craft, capped
+      pace           x1.0000  (+0.0%)  team pace, capped
+    capped total     x0.9250  (-7.5%)  CAPPED AND ADDED
+    reduction        1.00x less stacking than before
+
+-- MID      (5 staff, professional studio, some XP) --
+    genre            x1.0400  (+4.0%)
+    theme            x1.0200  (+2.0%)
+    platform         x1.0400  (+4.0%)
+    engine_tech      x1.1200  (+12.0%)
+    engine_gfx       x1.0600  (+6.0%)
+    engine_progress  x1.0700  (+7.0%)
+    office           x1.1200  (+12.0%)
+    equipment        x1.0200  (+2.0%)
+    chemistry        x1.0200  (+2.0%)
+    coordination     x1.0600  (+6.0%)
+    culture          x1.0060  (+0.6%)
+    morale           x1.0000  (+0.0%)
+    experience_lvl   x1.2600  (+26.0%)
+    ----------------------------------------------
+    gameplay chain   x1.0608  (+6.1%)  knowledge
+    tech chain       x1.1648  (+16.5%)  platform + engine
+    craft chain      x1.2852  (+28.5%)  per-person craft
+    pace chain       x1.3035  (+30.3%)  team pace
+    total            x2.0700  (+107.0%)  EVERYTHING MULTIPLIED (the old way)
+      gameplay       x1.0600  (+6.0%)  knowledge, capped
+      tech           x1.1400  (+14.0%)  platform + engine, capped
+      craft          x1.0200  (+2.0%)  per-person craft, capped
+      pace           x1.2360  (+23.6%)  team pace, capped
+    capped total     x1.5235  (+52.3%)  CAPPED AND ADDED
+    reduction        1.36x less stacking than before
+
+-- MAXED    (12 staff, campus, master XP, full engine, pro rigs) --
+    genre            x1.0800  (+8.0%)
+    theme            x1.0800  (+8.0%)
+    platform         x1.0800  (+8.0%)
+    engine_tech      x1.2096  (+21.0%)
+    engine_gfx       x1.1978  (+19.8%)
+    engine_progress  x1.1128  (+11.3%)
+    office           x1.2500  (+25.0%)
+    equipment        x1.0400  (+4.0%)
+    chemistry        x1.0500  (+5.0%)
+    coordination     x1.2000  (+20.0%)
+    culture          x1.0300  (+3.0%)
+    morale           x1.0750  (+7.5%)
+    experience_lvl   x1.3500  (+35.0%)
+    ----------------------------------------------
+    gameplay chain   x1.1664  (+16.6%)  knowledge
+    tech chain       x1.3064  (+30.6%)  platform + engine
+    craft chain      x1.5093  (+50.9%)  per-person craft
+    pace chain       x1.8052  (+80.5%)  team pace
+    total            x4.1517  (+315.2%)  EVERYTHING MULTIPLIED (the old way)
+      gameplay       x1.0800  (+8.0%)  knowledge, capped
+      tech           x1.1800  (+18.0%)  platform + engine, capped
+      craft          x1.1150  (+11.5%)  per-person craft, capped
+      pace           x1.2800  (+28.0%)  team pace, capped
+    capped total     x1.8188  (+81.9%)  CAPPED AND ADDED
+    reduction        2.28x less stacking than before
+
+StackProbe PASSED (1 checks)

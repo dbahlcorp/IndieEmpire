@@ -1,0 +1,66 @@
+========================================================================
+BALANCE REPORT -- AFTER -- bounded stacking + progress-proportional quality  (8 seeds, 368 releases)
+========================================================================
+
+REVIEW DISTRIBUTION
+   0.0- 4.0     3    0.8%  
+   4.0- 5.0    20    5.4%  ###
+   5.0- 6.0    30    8.2%  ####
+   6.0- 7.0    81   22.0%  #############
+   7.0- 8.0   146   39.7%  #######################
+   8.0- 9.0    77   20.9%  ############
+   9.0- 9.5    10    2.7%  #
+   9.5-10.1     1    0.3%  
+  mean 7.13  median 7.30  stdev 1.16  min 3.6  max 9.6
+  at the 9.8 review ceiling: 0 (0.0%)
+
+SALES CEILING (attach rate vs platform install base)
+  mean 2.61%  median 2.15%  max 8.00%
+  pinned at the 8% cap: 5 (1.4%)
+  distinct unit totals: 358 of 368 releases
+
+QUALITY RATIO BY SIZE  (1.0 = met the size's expected_quality bar)
+  size        n    mean  median     min     max  review
+  small     104    1.48    1.17    0.66    3.39    7.00
+  medium    231    0.96    0.98    0.62    1.24    7.14
+  large      33    1.03    1.03    0.90    1.12    7.49
+
+PROFITABILITY (per release: revenue + advance - development cost)
+  releases that lost money: 41 of 368 (11.1%)
+  median profit $1,040,636   mean $1,253,622   max $4,382,312
+  median revenue/total-cost ratio: 8.9x
+  wages as a share of a game's cost: median 78%  mean 67%
+  of the 314 releases built by paid staff, 7 lost money (2.2%)
+
+MARKET SATURATION
+  the studio's own games on sale at launch: median 6  mean 5.34  max 10
+  crowding: -20% per concurrent release, floored at 30%
+  slate         n   median units    crowding
+  1            65            931        100%
+  2            29        321,039         80%
+  3            14        289,278         60%
+  4            19        402,553         40%
+  5            27        320,936         30%
+  6            47        343,741         30%
+  7            68        228,733         30%
+  8            66        222,432         30%
+  9            28        394,985         30%
+  10            5        656,809         30%
+  genre demand at launch (1.0 = untouched): median 0.81  min 0.17
+  launched into a genre the studio had already crowded: 40%
+
+CASH CURVE (median across seeds)
+   year           cash  staff   payroll/mo    games avg rev
+   1986         $1,564    1.0           $0      2.5    4.24
+   1987        $27,470    1.0           $0      6.0    5.41
+   1988     $1,041,446    9.0      $31,638     10.5    6.69
+   1989     $6,112,790   18.0      $73,588     18.5    6.95
+   1990    $19,294,036   20.0      $89,075     29.0    6.95
+   1991    $30,302,758   20.0     $104,712     39.0    6.91
+   1992    $36,393,408   20.0     $127,900     49.5    6.94
+   1993    $46,135,770   20.0     $157,588     59.5    7.00
+   1994    $50,299,894   20.0     $198,762     62.5    7.05
+   1995    $53,770,492   20.0     $248,775     65.0    7.09
+   1996    $56,575,417   20.0     $257,450     67.0    7.12
+
+  final cash across seeds: min $24,368,829  median $56,575,417  max $94,439,624
