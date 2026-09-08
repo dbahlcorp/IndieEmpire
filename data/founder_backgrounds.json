@@ -1,0 +1,29 @@
+[
+  {
+    "id": "programmer",
+    "name": "Programmer",
+    "description": "Cut their teeth writing code long before they ever ran a studio.",
+    "skill_modifiers": {"programming": 20, "testing": 10, "design": -5}
+  },
+  {
+    "id": "designer",
+    "name": "Designer",
+    "description": "Came up thinking in systems and rules before anything else.",
+    "skill_modifiers": {"design": 20, "research": 10, "programming": -5}
+  },
+  {
+    "id": "artist",
+    "name": "Artist",
+    "description": "Built a portfolio and an eye for it long before the paperwork.",
+    "skill_modifiers": {"art": 20, "design": 10, "writing": -5}
+  },
+  {
+    "id": "generalist",
+    "name": "Generalist",
+    "description": "Never specialized -- a little of everything, nothing standout.",
+    "skill_modifiers": {
+      "programming": 5, "design": 5, "art": 5, "writing": 5,
+      "audio": 5, "production": 5, "testing": 5, "research": 5
+    }
+  }
+]

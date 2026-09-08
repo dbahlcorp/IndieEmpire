@@ -1,0 +1,152 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://scenes/development/NewGameScreen.gd" type="Script" id="1"]
+
+[node name="NewGameScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 34.0
+offset_right = -24.0
+offset_bottom = -34.0
+
+[node name="Scroll" type="ScrollContainer" parent="Margin"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="Heading" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "CREATE GAME"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+
+[node name="TitleLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Game title"
+
+[node name="TitleInput" type="LineEdit" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+placeholder_text = "Starfall"
+
+[node name="ThemeLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Theme"
+
+[node name="ThemeOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="GenreLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Genre"
+
+[node name="GenreOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="PlatformLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Platform"
+
+[node name="PlatformOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="SizeLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Size"
+
+[node name="SizeOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="EngineLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Engine"
+
+[node name="EngineOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="TeamLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Development team"
+
+[node name="TeamOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="RolesLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "PROJECT ROLES"
+theme_override_font_sizes/font_size = 18
+
+[node name="RoleAssignments" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="FeaturesLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "FEATURES"
+theme_override_font_sizes/font_size = 18
+
+[node name="FeaturesHint" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Optional. Each one adds development effort and bug risk, and can raise specific quality once built."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 13
+
+[node name="FeatureList" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="KnowledgeLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="CostLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Upfront development cost: $0"
+
+[node name="BudgetContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ErrorLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StartButton" type="Button" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+text = "START DEVELOPMENT"
+
+[node name="BackButton" type="Button" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "BACK"

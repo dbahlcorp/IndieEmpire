@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== TrainingTest ===
+
+-- the course list --
+
+-- sending somebody on a course --
+
+-- a trainee does no work --
+
+-- they come back better --
+
+-- teaching an expert less --
+
+-- self study for a poor studio --
+
+-- not while they are on a project --
+
+-- training survives a save --
+
+TrainingTest PASSED (54 checks)

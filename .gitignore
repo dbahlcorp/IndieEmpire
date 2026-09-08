@@ -1,0 +1,26 @@
+# Godot 4 editor cache and imported resources
+.godot/
+
+# Exported builds
+build/
+export/
+*.tmp
+
+# Throwaway output from headless measurement runs -- isolated Godot user
+# directories (per-run saves and engine logs) created by the balance probe.
+# Each run writes its own APPDATA tree; there are over a hundred of them and
+# they carry local machine paths. The measurements actually worth keeping are
+# the CSVs and reports that sit beside them, un-ignored below.
+artifacts/balance-2026-09-07/*
+!artifacts/balance-2026-09-07/csv/
+!artifacts/balance-2026-09-07/report_*.txt
+!artifacts/balance-2026-09-07/platforms_before_2050.json
+
+# Isolated Godot user directories created by headless test runs: per-run saves,
+# engine logs and shader caches. Machine-local scratch rather than project
+# content, and the shader-cache paths are long enough that git on Windows
+# cannot index them at all.
+**/Godot/app_userdata/
+
+# Claude Code session state (lockfiles carry a local PID and session id).
+.claude/

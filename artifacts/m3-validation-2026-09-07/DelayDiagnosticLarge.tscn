@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://artifacts/m3-validation-2026-09-07/DelayDiagnosticLarge.gd" type="Script" id="1"]
+
+[node name="DelayTest" type="Node"]
+script = ExtResource("1")
+
+

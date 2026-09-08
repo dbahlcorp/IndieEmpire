@@ -1,0 +1,49 @@
+========================================================================
+BALANCE REPORT -- AFTER (wages in a game's books)  (8 seeds, 333 releases)
+========================================================================
+
+REVIEW DISTRIBUTION
+   0.0- 4.0     1    0.3%  
+   4.0- 5.0    17    5.1%  ###
+   5.0- 6.0    20    6.0%  ###
+   6.0- 7.0    36   10.8%  ######
+   7.0- 8.0    99   29.7%  #################
+   8.0- 9.0    83   24.9%  ##############
+   9.0- 9.5    43   12.9%  #######
+   9.5-10.1    34   10.2%  ######
+  mean 7.79  median 7.90  stdev 1.37  min 3.9  max 9.8
+  at the 9.8 review ceiling: 22 (6.6%)
+
+SALES CEILING (attach rate vs platform install base)
+  mean 2.26%  median 1.33%  max 7.99%
+  pinned at the 8% cap: 5 (1.5%)
+  distinct unit totals: 333 of 333 releases
+
+QUALITY RATIO BY SIZE  (1.0 = met the size's expected_quality bar)
+  size        n    mean  median     min     max  review
+  small     100    0.94    0.95    0.66    1.29    6.47
+  medium    209    1.04    1.02    0.83    1.30    8.32
+  large      24    1.04    1.03    0.93    1.14    8.65
+
+PROFITABILITY (per release: revenue + advance - development cost)
+  releases that lost money: 45 of 333 (13.5%)
+  median profit $642,848   mean $1,137,498   max $6,029,315
+  median revenue/total-cost ratio: 6.1x
+  wages as a share of a game's cost: median 79%  mean 66%
+  of the 276 releases built by paid staff, 17 lost money (6.2%)
+
+CASH CURVE (median across seeds)
+   year           cash  staff   payroll/mo    games avg rev
+   1986         $4,050    1.0           $0      2.5    5.13
+   1987        $39,627    1.0           $0      6.0    5.68
+   1988       $251,183    4.5       $9,800     10.0    6.29
+   1989     $1,581,630   12.0      $41,975     15.5    6.74
+   1990    $11,438,074   12.0      $43,612     20.5    7.06
+   1991    $22,888,766   12.0      $59,788     26.5    7.33
+   1992    $29,726,074   12.0      $78,850     32.5    7.54
+   1993    $37,543,234   12.0     $101,225     37.5    7.71
+   1994    $42,718,178   12.0     $119,100     39.5    7.78
+   1995    $43,915,349   12.0     $137,488     40.5    7.80
+   1996    $44,865,429   12.0     $156,362     41.5    7.81
+
+  final cash across seeds: min $22,573,509  median $44,865,429  max $60,826,568

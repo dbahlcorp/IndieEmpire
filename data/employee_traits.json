@@ -1,0 +1,11 @@
+[
+  {"id": "perfectionist", "name": "Perfectionist", "description": "+10% polish contribution, -8% development speed"},
+  {"id": "workhorse", "name": "Workhorse", "description": "Handles overload better, burnout risk +15%"},
+  {"id": "team_player", "name": "Team Player", "description": "Team chemistry +8"},
+  {"id": "lone_wolf", "name": "Lone Wolf", "description": "Programming +8%, team chemistry -10"},
+  {"id": "visionary", "name": "Visionary", "description": "Innovation +12%, production -8%"},
+  {"id": "bug_hunter", "name": "Bug Hunter", "description": "QA effectiveness +20%"},
+  {"id": "fast_learner", "name": "Fast Learner", "description": "Experience gain +25%"},
+  {"id": "people_person", "name": "People Person", "description": "Softens the morale hit from overload, market value +3%"},
+  {"id": "technical_genius", "name": "Technical Genius", "description": "Programming +15%, testing +10%, market value +6%"}
+]

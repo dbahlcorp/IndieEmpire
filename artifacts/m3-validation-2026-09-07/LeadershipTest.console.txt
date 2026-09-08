@@ -1,0 +1,29 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== LeadershipTest ===
+
+-- pick_lead --
+
+-- a tie does not flicker --
+
+-- no team, no lead --
+
+-- a brilliant programmer is not necessarily a brilliant leader --
+
+-- the lead is kept current, not decided once --
+
+-- coordination --
+
+-- team chemistry --
+
+-- schedule consistency --
+
+-- consistency changes the swing, not the average --
+
+-- stress --
+
+-- the lead survives a save --
+
+LeadershipTest PASSED (30 checks)

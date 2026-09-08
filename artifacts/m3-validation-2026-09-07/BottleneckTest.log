@@ -1,0 +1,19 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== BottleneckTest ===
+
+-- nothing to flag once there is no real project to read --
+
+-- nobody covering a discipline at all is the worst kind of bottleneck --
+
+-- a role nobody is missing does not get invented as a bottleneck --
+
+-- the exact wording from the mock-up, either way --
+
+-- a real gap shows up on the screen itself, in the mock-up's own shape --
+
+-- no panel when BottleneckSimulator itself has nothing to say --
+
+BottleneckTest PASSED (24 checks)

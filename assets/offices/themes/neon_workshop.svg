@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Neon Workshop office theme</title><desc id="desc">Electric cyan and magenta lights, a neon gamepad sign and a perspective grid rug.</desc>
+  <defs><filter id="neon-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><clipPath id="neon-rug"><path d="m218 373 165-83 169 84-168 82Z"/></clipPath></defs>
+  <g filter="url(#neon-glow)" stroke-linecap="round" stroke-linejoin="round"><path d="M313 84c13-27 39-29 70-21 31-8 57-6 70 21l20 42c7 17-13 31-26 18l-24-24h-80l-24 24c-13 13-33-1-26-18Z" stroke="#48e8ef" stroke-width="7"/><path d="M340 92h25m-12-12v25M420 88h1M445 103h1" stroke="#ef5bd5" stroke-width="7"/></g>
+  <path d="m218 373 165-83 169 84-168 82Z" fill="#28345d" fill-opacity=".82" stroke="#48e8ef" stroke-width="6"/>
+  <g clip-path="url(#neon-rug)" stroke-width="3" opacity=".85"><path d="M255 292v190M307 276v210M360 266v230M414 266v230M469 278v208M520 295v185" stroke="#ef5bd5"/><path d="M190 324h390M190 347h390M190 373h390M190 403h390M190 438h390" stroke="#48e8ef"/></g>
+  <path d="M75 126h12v246H75ZM681 126h12v246h-12Z" fill="#48e8ef" filter="url(#neon-glow)"/><path d="M87 126h7v246h-7ZM674 126h7v246h-7Z" fill="#ef5bd5" filter="url(#neon-glow)"/>
+  <g stroke="#48e8ef" stroke-width="5"><path d="M115 350h62l-8 62h-46Z" fill="#242d50"/><path d="M128 350v-54m32 54v-82"/><circle cx="128" cy="286" r="12" fill="#ef5bd5"/><circle cx="160" cy="257" r="12" fill="#48e8ef"/></g>
+</svg>

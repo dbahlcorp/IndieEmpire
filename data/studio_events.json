@@ -1,0 +1,87 @@
+[
+  {
+    "id": "art_conference",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 12,
+    "cooldown_weeks": 30,
+    "roles": ["artist", "generalist"],
+    "conditions": ["employee_art > 45", "company_cash > 4000"],
+    "body": "{name} would like to attend an art conference.",
+    "choices": [
+      {
+        "label": "APPROVE",
+        "cost": 1200,
+        "outcome": "{name} comes back from the conference with a notebook full of ideas.",
+        "effects": [
+          {"kind": "skill_xp", "skill": "art", "amount": 60},
+          {"kind": "morale", "target": "employee", "amount": 8}
+        ]
+      },
+      {
+        "label": "DECLINE",
+        "default": true,
+        "outcome": "{name} accepts the answer, but it is noted.",
+        "effects": [
+          {"kind": "morale", "target": "employee", "amount": -3}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "coworker_conflict",
+    "type": "employee",
+    "title": "TEAM FRICTION",
+    "weight": 9,
+    "cooldown_weeks": 24,
+    "conditions": ["employee_team_size >= 2", "employee_morale < 72"],
+    "body": "{name} and another member of {their} team keep butting heads, and it is starting to show in the work.",
+    "choices": [
+      {
+        "label": "MEDIATE",
+        "cost": 0,
+        "outcome": "You sit them both down. It is an awkward hour, but they agree to keep it professional.",
+        "effects": [
+          {"kind": "team_chemistry", "amount": 10},
+          {"kind": "morale", "target": "team", "amount": 2},
+          {"kind": "morale", "target": "employee", "amount": -3}
+        ]
+      },
+      {
+        "label": "STAY OUT OF IT",
+        "default": true,
+        "outcome": "You leave them to sort it out themselves. The mood on the team stays sour for weeks.",
+        "effects": [
+          {"kind": "team_chemistry", "amount": -12},
+          {"kind": "morale", "target": "employee", "amount": -5},
+          {"kind": "morale", "target": "team", "amount": -3}
+        ]
+      }
+    ]
+  },
+  {
+    "id": "workstation_failure",
+    "type": "studio",
+    "title": "EQUIPMENT FAILURE",
+    "weight": 10,
+    "cooldown_weeks": 20,
+    "conditions": ["has_active_project == 1"],
+    "body": "A development workstation has failed.",
+    "choices": [
+      {
+        "label": "REPLACE",
+        "cost": 1800,
+        "outcome": "A replacement machine is on the desk by the end of the day.",
+        "effects": []
+      },
+      {
+        "label": "MAKE DO",
+        "default": true,
+        "outcome": "The team shares machines while a fix is arranged.",
+        "effects": [
+          {"kind": "dev_efficiency", "amount": -0.08, "weeks": 3}
+        ]
+      }
+    ]
+  }
+]

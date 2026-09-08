@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Executive Walnut office theme</title><desc id="desc">Walnut furnishings, brass lamps, a refined rug and framed studio awards.</desc>
+  <defs><linearGradient id="walnut" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8d4f32"/><stop offset=".52" stop-color="#5d3428"/><stop offset="1" stop-color="#9d6040"/></linearGradient><pattern id="executive-rug" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M21 3 39 21 21 39 3 21Z" fill="none" stroke="#d5ae63" stroke-width="3"/></pattern></defs>
+  <path d="m211 371 172-86 176 88-175 86Z" fill="#315f65" stroke="#4c2e25" stroke-width="7"/><path d="m236 372 147-72 151 74-150 70Z" fill="url(#executive-rug)" opacity=".9"/>
+  <g stroke="#4c2e25" stroke-width="6"><rect x="279" y="46" width="94" height="84" rx="5" fill="#f4e2b9"/><rect x="395" y="46" width="94" height="84" rx="5" fill="#f4e2b9"/></g><g fill="#d8ae55" stroke="#6e492d" stroke-width="4"><path d="m326 65 8 16 18 3-13 13 3 18-16-9-16 9 3-18-13-13 18-3Z"/><path d="M423 109h38M442 65v35M426 78h32"/></g>
+  <g stroke="#4c2e25" stroke-width="6"><path d="M107 207v169"/><path d="M72 211h70l-18-55H90Z" fill="#d7ae55"/><path d="M81 378h52"/></g><circle cx="107" cy="211" r="36" fill="#f4cf72" fill-opacity=".18"/>
+  <g stroke="#4c2e25" stroke-width="6"><path d="M623 226h70v179h-70Z" fill="url(#walnut)"/><path d="M623 282h70M623 339h70"/></g><g fill="#d7ae55"><circle cx="641" cy="262" r="9"/><path d="m665 247 13 26h-26Z"/><rect x="638" y="303" width="39" height="17" rx="4"/><path d="M643 390h30l-5-30h-20Z"/></g>
+  <path d="M163 385h64v31h-64Z" fill="url(#walnut)" stroke="#4c2e25" stroke-width="5"/><circle cx="195" cy="382" r="13" fill="#d7ae55" stroke="#4c2e25" stroke-width="4"/>
+</svg>

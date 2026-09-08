@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== PhaseB ===
+
+-- the game was closed and reopened --
+
+-- the catalogue --
+
+-- the workforce --
+
+-- the world --
+
+-- continuing the simulation --
+  now SEP 1996 - W3 | $132,854,693 | 51 games | 12 staff
+
+PhaseB PASSED (40 checks)

@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== TenPersonProbe ===
+
+-- controlled setup, not an earned-growth acceptance run --
+PROBE payroll/month=27625 entries=6 cash spent=226194
+
+-- studio screen bounds at configured mobile viewport --
+BOUNDS Margin/VBox/ClockBar rect=[P: (20.0, 30.0), S: (390.0, 48.0)] viewport=[P: (0.0, 0.0), S: (430.0, 932.0)]
+BOUNDS Margin/VBox/DevelopButton rect=[P: (20.0, 782.0), S: (390.0, 62.0)] viewport=[P: (0.0, 0.0), S: (430.0, 932.0)]
+BOUNDS Margin/VBox/NavBar rect=[P: (20.0, 854.0), S: (390.0, 58.0)] viewport=[P: (0.0, 0.0), S: (430.0, 932.0)]
+
+TenPersonProbe PASSED (54 checks)

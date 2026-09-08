@@ -1,0 +1,33 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== DelayDiagnostic ===
+
+-- the first look just records where things stand --
+
+-- a week or two of ordinary noise does not interrupt the player --
+
+-- a real slip is reported, and the tracked baseline moves to match it --
+
+-- a forecast that gets better moves the baseline down, without a notification --
+
+-- nothing left to forecast means nothing to check --
+
+-- a null project is handled quietly --
+
+-- an ordinary project still names something, never an empty list --
+
+-- a real bug pile-up is named plainly --
+
+-- a specific overloaded person is named, not just a vague warning --
+
+-- a real slip pauses the clock and fires the shared signal, from the world tick alone --
+DIAG before tick: forecast=95300 baseline=95298 phase=0.0
+DIAG after tick: forecast=95299 baseline=95298 phase=21.5847722116103 signals=0
+  FAIL a real slip pauses the clock and fires the shared signal, from the world tick alone: the signal actually fired from the plain world tick
+  FAIL a real slip pauses the clock and fires the shared signal, from the world tick alone: and the clock itself was paused -- the same way bankruptcy pauses it
+
+DelayDiagnostic FAILED: 2 of 29 checks
+  - a real slip pauses the clock and fires the shared signal, from the world tick alone: the signal actually fired from the plain world tick
+  - a real slip pauses the clock and fires the shared signal, from the world tick alone: and the clock itself was paused -- the same way bankruptcy pauses it

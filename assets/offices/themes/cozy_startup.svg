@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Cozy Startup office theme</title><desc id="desc">Warm string lights, a woven rug, floor lamp, cushions and a leafy plant.</desc>
+  <defs><radialGradient id="cozy-glow"><stop stop-color="#ffd787" stop-opacity=".56"/><stop offset="1" stop-color="#ffd787" stop-opacity="0"/></radialGradient><pattern id="cozy-weave" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M0 12h24M12 0v24" stroke="#f4c26a" stroke-width="3" opacity=".55"/></pattern></defs>
+  <path d="M90 61c150 52 286-31 500 12" stroke="#75452f" stroke-width="5" stroke-linecap="round"/>
+  <g fill="#ffd26a" stroke="#75452f" stroke-width="3"><circle cx="126" cy="69" r="9"/><circle cx="210" cy="78" r="9"/><circle cx="298" cy="70" r="9"/><circle cx="388" cy="65" r="9"/><circle cx="481" cy="66" r="9"/><circle cx="570" cy="75" r="9"/></g>
+  <g opacity=".7"><circle cx="126" cy="69" r="38" fill="url(#cozy-glow)"/><circle cx="388" cy="65" r="38" fill="url(#cozy-glow)"/><circle cx="570" cy="75" r="38" fill="url(#cozy-glow)"/></g>
+  <path d="m225 367 159-78 165 82-163 82Z" fill="#d9794c" stroke="#75452f" stroke-width="6"/><path d="m247 368 137-66 142 70-140 68Z" fill="url(#cozy-weave)" opacity=".9"/>
+  <g stroke="#75452f" stroke-width="6" stroke-linejoin="round"><path d="M655 180v194"/><path d="M621 184h68l-15-48h-38Z" fill="#f2b85d"/><path d="M631 375h48"/></g>
+  <g stroke="#315f65" stroke-width="5"><path d="M101 356c-9-73 18-117 54-146M114 328c40-20 53-51 52-84M105 297c-36-18-47-48-40-77"/><path d="M75 218c35 0 50 18 43 50-34 1-50-17-43-50ZM167 242c31 9 39 29 24 56-31-8-39-28-24-56Z" fill="#78a46b"/><path d="M142 208c29-7 47 7 48 36-29 8-47-6-48-36Z" fill="#8eb878"/></g><path d="M77 351h78l-10 59H88Z" fill="#c06d42" stroke="#75452f" stroke-width="5"/>
+  <g fill="#f6d696" stroke="#75452f" stroke-width="5"><path d="m567 390 48-15 19 36-48 15Z"/><path d="m184 393 45-19 22 35-45 20Z"/></g>
+</svg>

@@ -1,0 +1,43 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== ScopeTest ===
+
+-- three scopes for M3 --
+
+-- not Large/AAA yet --
+
+-- required effort climbs the same ladder every other scope stat does --
+
+-- staffed fraction --
+
+-- trying Medium with two people --
+
+-- understaffed is a real tax, not a project-ending one on its own --
+
+-- meeting or beating the ideal team is never punished --
+
+-- labels --
+
+-- team size label --
+
+-- it actually slows a real project, not just the maths in isolation --
+
+-- and it actually raises stress, not just in the maths --
+
+-- Tiny keeps exactly the numbers the rest of the economy was tuned against --
+
+-- a Tiny game with ten developers --
+
+-- brute-force staffing is never free, and never a total loss either --
+
+-- meeting or staying under the ideal ceiling is never penalised --
+
+-- overhead labels climb with how far over the ceiling the team is --
+
+-- it actually erodes coordination on a real project, not just the maths --
+
+-- and it actually costs more per week, not just in theory --
+
+ScopeTest PASSED (77 checks)

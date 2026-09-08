@@ -1,0 +1,107 @@
+[
+  {
+    "id": "action",
+    "name": "Action",
+    "unlock_year": 1985,
+    "unlock_games": 0,
+    "story_weight": 0.8
+  },
+  {
+    "id": "adventure",
+    "name": "Adventure",
+    "unlock_year": 1985,
+    "unlock_games": 0,
+    "story_weight": 1.25
+  },
+  {
+    "id": "rpg",
+    "name": "RPG",
+    "unlock_year": 1985,
+    "unlock_games": 1,
+    "story_weight": 1.25
+  },
+  {
+    "id": "strategy",
+    "name": "Strategy",
+    "unlock_year": 1986,
+    "unlock_games": 2,
+    "story_weight": 0.95
+  },
+  {
+    "id": "simulation",
+    "name": "Simulation",
+    "unlock_year": 1986,
+    "unlock_games": 3,
+    "story_weight": 0.95
+  },
+  {
+    "id": "puzzle",
+    "name": "Puzzle",
+    "unlock_year": 1987,
+    "unlock_games": 4,
+    "story_weight": 0.6
+  },
+  {
+    "id": "racing",
+    "name": "Racing",
+    "unlock_year": 1989,
+    "unlock_games": 6,
+    "story_weight": 0.6
+  },
+  {
+    "id": "shooter",
+    "name": "Shooter",
+    "unlock_year": 1992,
+    "unlock_games": 8,
+    "story_weight": 0.8
+  },
+  {
+    "id": "fighting",
+    "name": "Fighting",
+    "unlock_year": 1996,
+    "unlock_games": 14,
+    "story_weight": 0.4
+  },
+  {
+    "id": "horror",
+    "name": "Survival Horror",
+    "unlock_year": 1998,
+    "unlock_games": 18,
+    "story_weight": 1.0
+  },
+  {
+    "id": "mmo",
+    "name": "Online World",
+    "unlock_year": 2002,
+    "unlock_games": 26,
+    "story_weight": 0.9
+  },
+  {
+    "id": "sandbox",
+    "name": "Sandbox",
+    "unlock_year": 2008,
+    "unlock_games": 34,
+    "story_weight": 0.55
+  },
+  {
+    "id": "battle_royale",
+    "name": "Battle Royale",
+    "unlock_year": 2018,
+    "unlock_games": 44,
+    "story_weight": 0.25
+  },
+  {
+    "id": "immersive_vr",
+    "name": "Immersive VR",
+    "unlock_year": 2024,
+    "unlock_games": 52,
+    "story_weight": 0.85
+  },
+  {
+    "id": "neural_sim",
+    "name": "Neural Sim",
+    "unlock_year": 2036,
+    "unlock_games": 64,
+    "story_weight": 0.75
+  }
+]

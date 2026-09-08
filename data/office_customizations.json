@@ -1,0 +1,55 @@
+[
+  {
+    "id": "classic",
+    "name": "Classic Studio",
+    "description": "The familiar warm, practical Indie Empire workspace.",
+    "purchase_type": "included",
+    "price": 0,
+    "tint": "#ffffff",
+    "accent": "#e98d48"
+  },
+  {
+    "id": "cozy_startup",
+    "name": "Cozy Startup",
+    "description": "Warm lamps, softer walls and a late-night creative glow.",
+    "purchase_type": "cash",
+    "price": 1500,
+    "overlay": "res://assets/offices/themes/cozy_startup.svg",
+    "painted_sheet": "res://assets/offices/components_painted/cozy_startup/sheet.png",
+    "tint": "#fff1d0",
+    "accent": "#e8a34c"
+  },
+  {
+    "id": "eco_studio",
+    "name": "Eco Studio",
+    "description": "Fresh greens, natural materials and a calmer atmosphere.",
+    "purchase_type": "cash",
+    "price": 4500,
+    "overlay": "res://assets/offices/themes/eco_studio.svg",
+    "painted_sheet": "res://assets/offices/components_painted/eco_studio/sheet.png",
+    "tint": "#dcf3d7",
+    "accent": "#6f9b6a"
+  },
+  {
+    "id": "neon_workshop",
+    "name": "Neon Workshop",
+    "description": "Cool monitors and electric accents for an after-hours lab.",
+    "purchase_type": "cash",
+    "price": 8000,
+    "overlay": "res://assets/offices/themes/neon_workshop.svg",
+    "painted_sheet": "res://assets/offices/components_painted/neon_workshop/sheet.png",
+    "tint": "#dbefff",
+    "accent": "#6a74c9"
+  },
+  {
+    "id": "executive_walnut",
+    "name": "Executive Walnut",
+    "description": "Deep wood, brass details and a confident studio finish.",
+    "purchase_type": "cash",
+    "price": 14000,
+    "overlay": "res://assets/offices/themes/executive_walnut.svg",
+    "painted_sheet": "res://assets/offices/components_painted/executive_walnut/sheet.png",
+    "tint": "#f0d2b0",
+    "accent": "#a6633f"
+  }
+]

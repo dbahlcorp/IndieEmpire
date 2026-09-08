@@ -1,0 +1,194 @@
+[
+  {
+    "id": "engine_programming",
+    "skill": "programming",
+    "name": "Engine Programming",
+    "description": "Owns the systems every other programmer builds on top of."
+  },
+  {
+    "id": "gameplay_programming",
+    "skill": "programming",
+    "name": "Gameplay Programming",
+    "description": "Turns design's ideas into code that actually plays."
+  },
+  {
+    "id": "tools_programming",
+    "skill": "programming",
+    "name": "Tools Programming",
+    "description": "Builds the software the rest of the studio uses to work faster."
+  },
+  {
+    "id": "ai_programming",
+    "skill": "programming",
+    "name": "AI Programming",
+    "description": "Gives non-player characters something that looks like a mind."
+  },
+  {
+    "id": "systems_design",
+    "skill": "design",
+    "name": "Systems Design",
+    "description": "Builds the rules and mechanics everything else plays inside of."
+  },
+  {
+    "id": "level_design",
+    "skill": "design",
+    "name": "Level Design",
+    "description": "Shapes the spaces players actually move through."
+  },
+  {
+    "id": "narrative_design",
+    "skill": "design",
+    "name": "Narrative Design",
+    "description": "Weaves story into how the game is played, not just read."
+  },
+  {
+    "id": "economy_design",
+    "skill": "design",
+    "name": "Economy Design",
+    "description": "Balances what players earn, spend, and chase."
+  },
+  {
+    "id": "character_art",
+    "skill": "art",
+    "name": "Character Art",
+    "description": "Gives every face and silhouette on screen its own identity."
+  },
+  {
+    "id": "environment_art",
+    "skill": "art",
+    "name": "Environment Art",
+    "description": "Builds the worlds players spend their time in."
+  },
+  {
+    "id": "ui_art",
+    "skill": "art",
+    "name": "UI Art",
+    "description": "Makes every menu and HUD element read at a glance."
+  },
+  {
+    "id": "concept_art",
+    "skill": "art",
+    "name": "Concept Art",
+    "description": "Sets the look before anyone else starts building it."
+  },
+  {
+    "id": "narrative_writing",
+    "skill": "writing",
+    "name": "Narrative Writing",
+    "description": "Carries the story from beginning to end."
+  },
+  {
+    "id": "dialogue_writing",
+    "skill": "writing",
+    "name": "Dialogue Writing",
+    "description": "Gives every character a voice that sounds like them."
+  },
+  {
+    "id": "world_building",
+    "skill": "writing",
+    "name": "World-Building",
+    "description": "Fills in the history and detail behind the story itself."
+  },
+  {
+    "id": "technical_writing",
+    "skill": "writing",
+    "name": "Technical Writing",
+    "description": "Turns the game's own systems into text players can actually follow."
+  },
+  {
+    "id": "sound_design",
+    "skill": "audio",
+    "name": "Sound Design",
+    "description": "Builds every effect a player hears but never sees."
+  },
+  {
+    "id": "music_composition",
+    "skill": "audio",
+    "name": "Music Composition",
+    "description": "Scores the moments that need more than sound effects."
+  },
+  {
+    "id": "voice_direction",
+    "skill": "audio",
+    "name": "Voice Direction",
+    "description": "Gets the right performance out of every recorded line."
+  },
+  {
+    "id": "audio_implementation",
+    "skill": "audio",
+    "name": "Audio Implementation",
+    "description": "Wires sound into the game so it triggers exactly when it should."
+  },
+  {
+    "id": "scheduling",
+    "skill": "production",
+    "name": "Scheduling",
+    "description": "Keeps the whole build honest about how long things actually take."
+  },
+  {
+    "id": "team_coordination",
+    "skill": "production",
+    "name": "Team Coordination",
+    "description": "Keeps every discipline pointed at the same finish line."
+  },
+  {
+    "id": "risk_management",
+    "skill": "production",
+    "name": "Risk Management",
+    "description": "Sees trouble coming before it becomes a missed deadline."
+  },
+  {
+    "id": "budgeting",
+    "skill": "production",
+    "name": "Budgeting",
+    "description": "Keeps the build's spending honest against what it can actually afford."
+  },
+  {
+    "id": "manual_qa",
+    "skill": "testing",
+    "name": "Manual QA",
+    "description": "Finds the bugs no automated pass would ever catch."
+  },
+  {
+    "id": "automated_testing",
+    "skill": "testing",
+    "name": "Automated Testing",
+    "description": "Builds the checks that catch regressions before a human has to."
+  },
+  {
+    "id": "balance_testing",
+    "skill": "testing",
+    "name": "Balance Testing",
+    "description": "Makes sure the numbers feel fair, not just correct."
+  },
+  {
+    "id": "performance_testing",
+    "skill": "testing",
+    "name": "Performance Testing",
+    "description": "Chases down what's actually slowing the game down."
+  },
+  {
+    "id": "market_research",
+    "skill": "research",
+    "name": "Market Research",
+    "description": "Tracks what players actually want before the studio bets on it."
+  },
+  {
+    "id": "technical_research",
+    "skill": "research",
+    "name": "Technical Research",
+    "description": "Investigates what the studio's technology can be pushed to do."
+  },
+  {
+    "id": "player_research",
+    "skill": "research",
+    "name": "Player Research",
+    "description": "Watches how real players actually experience the build."
+  },
+  {
+    "id": "competitive_analysis",
+    "skill": "research",
+    "name": "Competitive Analysis",
+    "description": "Studies what everyone else is shipping, and why it's working."
+  }
+]

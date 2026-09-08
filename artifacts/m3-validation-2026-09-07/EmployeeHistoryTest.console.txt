@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== EmployeeHistoryTest ===
+
+-- a hire's first salary line is the offer they accepted --
+
+-- raises and promotions are both on the record --
+
+-- finishing a course is logged with what it taught --
+
+-- a release writes itself into every credited person's history --
+
+-- an abandoned project is worked on but never shipped --
+
+-- games shipped, average review and best game are read off the history --
+
+-- every history list round-trips with its types intact --
+
+-- a leaver keeps their record, and it survives a save --
+
+-- a pre-v15 save reconstructs history from games already shipped --
+
+EmployeeHistoryTest PASSED (60 checks)

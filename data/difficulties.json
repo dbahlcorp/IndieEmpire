@@ -1,0 +1,26 @@
+[
+  {
+    "id": "relaxed",
+    "name": "Relaxed",
+    "starting_cash": 25000,
+    "sales_multiplier": 1.2,
+    "expense_multiplier": 0.8,
+    "grace_weeks": 12
+  },
+  {
+    "id": "normal",
+    "name": "Normal",
+    "starting_cash": 10000,
+    "sales_multiplier": 1.0,
+    "expense_multiplier": 1.0,
+    "grace_weeks": 6
+  },
+  {
+    "id": "hard",
+    "name": "Hard",
+    "starting_cash": 7500,
+    "sales_multiplier": 0.9,
+    "expense_multiplier": 1.15,
+    "grace_weeks": 3
+  }
+]

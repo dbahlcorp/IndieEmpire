@@ -1,0 +1,110 @@
+[
+  {
+    "id": "cover_disk",
+    "name": "Cover Disk Demo",
+    "client": "Pixel Monthly",
+    "brief": "Cut a playable demo for the magazine's cover disk.",
+    "work": 30,
+    "weeks": 6,
+    "rate": 150,
+    "min_reputation": 0,
+    "min_games": 0,
+    "reputation_reward": 0.6
+  },
+  {
+    "id": "bug_squad",
+    "name": "Bug Fixing Contract",
+    "client": "Halcyon Software",
+    "brief": "Clean up another studio's bug list before their release.",
+    "work": 24,
+    "weeks": 5,
+    "rate": 165,
+    "min_reputation": 0,
+    "min_games": 0,
+    "reputation_reward": 0.4
+  },
+  {
+    "id": "arcade_port",
+    "name": "Arcade Cabinet Port",
+    "client": "Sunbelt Amusements",
+    "brief": "Port a cabinet game down to home hardware.",
+    "work": 48,
+    "weeks": 9,
+    "rate": 155,
+    "min_reputation": 0,
+    "min_games": 1,
+    "reputation_reward": 0.8
+  },
+  {
+    "id": "budget_filler",
+    "name": "Budget Compilation Filler",
+    "client": "Thrift Interactive",
+    "brief": "Three small games for a bargain-bin compilation.",
+    "work": 40,
+    "weeks": 8,
+    "rate": 140,
+    "min_reputation": 0,
+    "min_games": 0,
+    "reputation_reward": 0.4
+  },
+  {
+    "id": "shareware_episode",
+    "name": "Shareware Episode",
+    "client": "Meridian Shareware",
+    "brief": "Build an extra episode for an existing shareware title.",
+    "work": 95,
+    "weeks": 13,
+    "rate": 185,
+    "min_reputation": 12,
+    "min_games": 3,
+    "reputation_reward": 1.4
+  },
+  {
+    "id": "licensed_tie_in",
+    "name": "Licensed Tie-In",
+    "client": "Crown Pictures",
+    "brief": "A quick tie-in for a film nobody has seen yet.",
+    "work": 120,
+    "weeks": 15,
+    "rate": 175,
+    "min_reputation": 15,
+    "min_games": 4,
+    "reputation_reward": 1.2
+  },
+  {
+    "id": "engine_tools",
+    "name": "Engine Tooling",
+    "client": "Northgate Interactive",
+    "brief": "Write editor tooling for another studio's engine.",
+    "work": 110,
+    "weeks": 14,
+    "rate": 210,
+    "min_reputation": 20,
+    "min_games": 5,
+    "reputation_reward": 1.6
+  },
+  {
+    "id": "console_port",
+    "name": "Console Conversion",
+    "client": "Family Game System",
+    "brief": "Convert a hit computer game to console hardware.",
+    "work": 230,
+    "weeks": 22,
+    "rate": 230,
+    "min_reputation": 38,
+    "min_games": 8,
+    "reputation_reward": 2.4
+  },
+  {
+    "id": "publisher_subcontract",
+    "name": "Publisher Subcontract",
+    "client": "Atlas Publishing",
+    "brief": "Take over a troubled project and get it finished.",
+    "work": 300,
+    "weeks": 26,
+    "rate": 250,
+    "min_reputation": 50,
+    "min_games": 12,
+    "reputation_reward": 3.0
+  }
+]

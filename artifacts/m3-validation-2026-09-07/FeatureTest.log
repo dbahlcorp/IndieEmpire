@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== FeatureTest ===
+
+-- effort is a straight sum of what each feature asks for --
+
+-- bug risk stacks per feature, then applies once --
+
+-- two features that touch the same quality field add together --
+
+-- a feature is only available once its year and its tech are both met --
+
+-- a locked feature says what it is still waiting on --
+
+-- quality potential pays out exactly, in proportion to progress made --
+
+-- required effort is the size's own work plus whatever features add --
+
+-- more required effort estimates more development, same team, same everything else --
+
+-- a feature the studio cannot actually build is never attached --
+
+-- riskier features mean more bugs turn up over time, on average --
+
+FeatureTest PASSED (28 checks)

@@ -1,0 +1,49 @@
+class_name UiIcons
+extends RefCounted
+
+const PATHS := {
+    "studio": "res://assets/ui/icons/nav_studio.svg",
+    "games": "res://assets/ui/icons/nav_games.svg",
+    "market": "res://assets/ui/icons/nav_market.svg",
+    "news": "res://assets/ui/icons/nav_news.svg",
+    "staff": "res://assets/ui/icons/nav_staff.svg",
+    "company": "res://assets/ui/icons/nav_company.svg",
+    "play": "res://assets/ui/icons/control_play.svg",
+    "pause": "res://assets/ui/icons/control_pause.svg",
+    "cash": "res://assets/ui/icons/status_cash.svg",
+    "fans": "res://assets/ui/icons/status_fans.svg",
+    "reputation": "res://assets/ui/icons/status_reputation.svg",
+    "morale": "res://assets/ui/icons/status_morale.svg",
+    "energy": "res://assets/ui/icons/status_energy.svg",
+    "stress": "res://assets/ui/icons/status_stress.svg",
+    "capacity": "res://assets/ui/icons/office_capacity.svg",
+    "rent": "res://assets/ui/icons/office_rent.svg",
+    "comfort": "res://assets/ui/icons/office_comfort.svg",
+    "prestige": "res://assets/ui/icons/office_prestige.svg",
+    "payroll": "res://assets/ui/icons/cost_payroll.svg",
+    "utilities": "res://assets/ui/icons/cost_utilities.svg",
+    "skills": "res://assets/ui/icons/employee_skills.svg",
+    "attributes": "res://assets/ui/icons/employee_attributes.svg",
+    "experience": "res://assets/ui/icons/employee_experience.svg",
+    "projects": "res://assets/ui/icons/employee_projects.svg",
+    "best_game": "res://assets/ui/icons/employee_best_game.svg",
+    "traits": "res://assets/ui/icons/employee_traits.svg",
+    "remodel_walls": "res://assets/ui/remodel/category_walls.svg",
+    "remodel_flooring": "res://assets/ui/remodel/category_flooring.svg",
+    "remodel_desks": "res://assets/ui/remodel/category_desks.svg",
+    "remodel_seating": "res://assets/ui/remodel/category_seating.svg",
+    "remodel_computers": "res://assets/ui/remodel/category_computers.svg",
+    "remodel_lighting": "res://assets/ui/remodel/category_lighting.svg",
+    "remodel_storage": "res://assets/ui/remodel/category_storage.svg",
+    "remodel_lounge": "res://assets/ui/remodel/category_lounge.svg",
+    "remodel_plants": "res://assets/ui/remodel/category_plants.svg",
+    "remodel_decor": "res://assets/ui/remodel/category_decor.svg",
+    "remodel_place": "res://assets/ui/remodel/control_place.svg",
+    "remodel_move": "res://assets/ui/remodel/control_move.svg",
+    "remodel_rotate": "res://assets/ui/remodel/control_rotate.svg",
+    "remodel_remove": "res://assets/ui/remodel/control_remove.svg"
+}
+
+static func texture(id: String) -> Texture2D:
+    var path := str(PATHS.get(id, ""))
+    return load(path) as Texture2D if not path.is_empty() else null

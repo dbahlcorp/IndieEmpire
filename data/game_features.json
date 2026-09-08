@@ -1,0 +1,122 @@
+[
+  {
+    "id": "save_system",
+    "name": "Save System",
+    "unlock_year": 1985,
+    "effort": 25,
+    "bug_risk": 0.04,
+    "requires_tech": [],
+    "quality_potential": {"gameplay": 2},
+    "description": "Lets players stop and pick up where they left off."
+  },
+  {
+    "id": "multiple_endings",
+    "name": "Multiple Endings",
+    "unlock_year": 1985,
+    "effort": 30,
+    "bug_risk": 0.05,
+    "requires_tech": [],
+    "quality_potential": {"story": 5, "narrative_quality": 4},
+    "description": "The choices players make actually change how it ends."
+  },
+  {
+    "id": "character_creation",
+    "name": "Character Creation",
+    "unlock_year": 1986,
+    "effort": 45,
+    "bug_risk": 0.06,
+    "requires_tech": [],
+    "quality_potential": {"gameplay": 3, "graphics": 3},
+    "description": "Build your own hero before the story even starts."
+  },
+  {
+    "id": "dialogue_trees",
+    "name": "Dialogue Trees",
+    "unlock_year": 1987,
+    "effort": 40,
+    "bug_risk": 0.05,
+    "requires_tech": [],
+    "quality_potential": {"story": 6, "narrative_quality": 5},
+    "description": "Branching conversations instead of one-liners."
+  },
+  {
+    "id": "turn_based_combat",
+    "name": "Turn-Based Combat",
+    "unlock_year": 1987,
+    "effort": 55,
+    "bug_risk": 0.07,
+    "requires_tech": [],
+    "quality_potential": {"gameplay": 6},
+    "description": "A full combat system, not a bolted-on mini-game."
+  },
+  {
+    "id": "skill_trees",
+    "name": "Skill Trees",
+    "unlock_year": 1989,
+    "effort": 35,
+    "bug_risk": 0.04,
+    "requires_tech": [],
+    "quality_potential": {"gameplay": 4},
+    "description": "Meaningful choices in how a character grows."
+  },
+  {
+    "id": "boss_battles",
+    "name": "Boss Battles",
+    "unlock_year": 1990,
+    "effort": 30,
+    "bug_risk": 0.06,
+    "requires_tech": [],
+    "quality_potential": {"gameplay": 5, "innovation": 2},
+    "description": "Set-piece fights worth building a whole system for."
+  },
+  {
+    "id": "voice_acting",
+    "name": "Voice Acting",
+    "unlock_year": 1992,
+    "effort": 35,
+    "bug_risk": 0.03,
+    "requires_tech": ["advanced_audio"],
+    "quality_potential": {"sound": 8, "narrative_quality": 3},
+    "description": "Real performances instead of text boxes. Needs proper studio audio tools."
+  },
+  {
+    "id": "crafting_system",
+    "name": "Crafting System",
+    "unlock_year": 1991,
+    "effort": 50,
+    "bug_risk": 0.08,
+    "requires_tech": [],
+    "quality_potential": {"gameplay": 5, "innovation": 3},
+    "description": "Gathering and combining, with all the edge cases that implies."
+  },
+  {
+    "id": "procedural_generation",
+    "name": "Procedural Generation",
+    "unlock_year": 1993,
+    "effort": 60,
+    "bug_risk": 0.10,
+    "requires_tech": ["scripting"],
+    "quality_potential": {"innovation": 8, "gameplay": 3},
+    "description": "Content the team did not hand-place. Needs a real scripting runtime."
+  },
+  {
+    "id": "open_world",
+    "name": "Open World",
+    "unlock_year": 1994,
+    "effort": 90,
+    "bug_risk": 0.12,
+    "requires_tech": ["3d_renderer", "scripting"],
+    "quality_potential": {"gameplay": 6, "graphics": 6, "innovation": 4},
+    "description": "No loading screens between one part of the game and the next. A serious commitment."
+  },
+  {
+    "id": "achievements",
+    "name": "Achievements",
+    "unlock_year": 1995,
+    "effort": 15,
+    "bug_risk": 0.02,
+    "requires_tech": [],
+    "quality_potential": {"gameplay": 1},
+    "description": "Small goals that keep players coming back."
+  }
+]

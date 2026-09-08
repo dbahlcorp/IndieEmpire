@@ -1,0 +1,29 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== DeadlineTest ===
+
+-- optional means off by default --
+
+-- nothing in the simulation enforces it --
+
+-- the target survives a save --
+
+-- no target shown until the player asks for one --
+
+-- the panel shows target release and an estimated completion --
+
+-- a hopeless target is flagged with real decisions --
+
+-- a generous target does not cry wolf --
+
+-- clearing the target turns the feature back off --
+
+-- crunch is the same lever the Teams screen already offers --
+
+-- cutting a feature actually lightens the remaining work --
+
+-- delaying the release moves the target out to the current forecast --
+
+DeadlineTest PASSED (42 checks)

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://scenes/ui/NavBar.gd" type="Script" id="1"]
+
+[node name="NavBar" type="HBoxContainer"]
+custom_minimum_size = Vector2(0, 58)
+script = ExtResource("1")

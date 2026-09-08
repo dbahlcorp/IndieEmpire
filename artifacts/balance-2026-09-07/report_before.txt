@@ -1,0 +1,47 @@
+========================================================================
+BALANCE REPORT -- BEFORE  (6 seeds, 286 releases)
+========================================================================
+
+REVIEW DISTRIBUTION
+   0.0- 4.0     0    0.0%  
+   4.0- 5.0     0    0.0%  
+   5.0- 6.0     1    0.3%  
+   6.0- 7.0    13    4.5%  ##
+   7.0- 8.0    46   16.1%  #########
+   8.0- 9.0    89   31.1%  ##################
+   9.0- 9.5    38   13.3%  #######
+   9.5-10.1    99   34.6%  ####################
+  mean 8.75  median 8.90  stdev 1.00  min 5.6  max 9.8
+  at the 9.8 review ceiling: 82 (28.7%)
+
+SALES CEILING (attach rate vs platform install base)
+  mean 4.29%  median 4.75%  max 8.00%
+  pinned at the 8% cap: 48 (16.8%)
+  distinct unit totals: 109 of 286 releases
+
+QUALITY RATIO BY SIZE  (1.0 = met the size's expected_quality bar)
+  size        n    mean  median     min     max  review
+  small     100    1.38    1.35    0.97    1.87    8.93
+  medium    168    1.05    1.04    0.86    1.46    8.53
+  large      18    3.00    2.96    2.79    3.34    9.80
+
+PROFITABILITY (per release: revenue + advance - development cost)
+  releases that lost money: 9 of 286 (3.1%)
+  median profit $2,123,306   mean $2,128,749   max $5,111,626
+  median revenue/dev-cost ratio: 126.2x
+
+CASH CURVE (median across seeds)
+   year           cash  staff   payroll/mo    games avg rev
+   1986        $39,230    1.0           $0      3.0    6.86
+   1987     $6,177,696   12.0      $41,262      8.5    8.43
+   1988    $13,134,293   12.0      $47,350     15.5    8.82
+   1989    $27,437,778   12.0      $59,875     21.5    8.80
+   1990    $51,135,382   12.0      $72,100     27.5    8.75
+   1991    $64,953,974   12.0      $90,238     32.5    8.70
+   1992    $74,403,188   12.0     $102,425     38.0    8.67
+   1993    $84,045,024   12.0     $131,000     44.0    8.65
+   1994    $89,573,886   12.0     $139,075     46.0    8.68
+   1995    $90,771,579   12.0     $149,125     47.0    8.71
+   1996    $91,978,756   12.0     $158,288     48.0    8.73
+
+  final cash across seeds: min $79,276,563  median $91,978,756  max $96,787,245

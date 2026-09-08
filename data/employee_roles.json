@@ -1,0 +1,58 @@
+[
+  {
+    "id": "programmer",
+    "name": "Programmer",
+    "primary_skill": "programming",
+    "secondary_skill": "testing",
+    "base_salary": 2700
+  },
+  {
+    "id": "designer",
+    "name": "Designer",
+    "primary_skill": "design",
+    "secondary_skill": "research",
+    "base_salary": 2500
+  },
+  {
+    "id": "artist",
+    "name": "Artist",
+    "primary_skill": "art",
+    "secondary_skill": "design",
+    "base_salary": 2400
+  },
+  {
+    "id": "writer",
+    "name": "Writer",
+    "primary_skill": "writing",
+    "secondary_skill": "design",
+    "base_salary": 2200
+  },
+  {
+    "id": "audio_designer",
+    "name": "Audio Designer",
+    "primary_skill": "audio",
+    "secondary_skill": "art",
+    "base_salary": 2400
+  },
+  {
+    "id": "qa_tester",
+    "name": "QA Tester",
+    "primary_skill": "testing",
+    "secondary_skill": "programming",
+    "base_salary": 2000
+  },
+  {
+    "id": "producer",
+    "name": "Producer",
+    "primary_skill": "production",
+    "secondary_skill": "design",
+    "base_salary": 2800
+  },
+  {
+    "id": "generalist",
+    "name": "Generalist",
+    "primary_skill": "",
+    "secondary_skill": "",
+    "base_salary": 2300
+  }
+]

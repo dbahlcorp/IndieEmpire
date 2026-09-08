@@ -1,0 +1,33 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== PhaseA ===
+
+-- founding the studio --
+  played 528 weeks to JAN 1996 - W1
+  contracts taken: 0, delivered 0
+  staff requests granted: 31, people who left: 0
+  publishers used: { "thrift": 3, "meridian": 4, "northgate": 5, "atlas": 35 }
+  publisher cut taken: $290,674,811
+  rested before burnout: 0, currently signed off: 0
+  $93,691,604 | 12 staff | large_studio_floor | payroll $174,650/mo
+
+-- the studio survived and grew --
+
+-- a catalogue of finished games --
+  FAIL a catalogue of finished games: and some lost money (0) -- 0.0000 is not greater than 0.0000
+    best seller: Project 3, 304,000 copies, $1,751,982
+  FAIL a catalogue of finished games: average review is plausible (9.1) -- 9.0787 is outside 3.0000..9.0000
+
+-- a market that moved --
+
+-- a workforce that developed --
+
+-- complete catalogue and finances --
+
+-- saving and quitting --
+
+PhaseA FAILED: 2 of 55 checks
+  - a catalogue of finished games: and some lost money (0) -- 0.0000 is not greater than 0.0000
+  - a catalogue of finished games: average review is plausible (9.1) -- 9.0787 is outside 3.0000..9.0000

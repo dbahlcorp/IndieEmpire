@@ -1,0 +1,144 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource path="res://scenes/company/NewCompanyScreen.gd" type="Script" id="1"]
+[ext_resource path="res://scripts/ui/EmployeeAppearancePreview.gd" type="Script" id="2"]
+
+[node name="NewCompanyScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 34.0
+offset_right = -24.0
+offset_bottom = -34.0
+
+[node name="Scroll" type="ScrollContainer" parent="Margin"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VBox" type="VBoxContainer" parent="Margin/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="Heading" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "CREATE YOUR STUDIO"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 26
+
+[node name="NameLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Studio name"
+
+[node name="NameInput" type="LineEdit" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+placeholder_text = "Nova Forge Studios"
+
+[node name="FounderLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Founder"
+
+[node name="FounderInput" type="LineEdit" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+placeholder_text = "Your name"
+
+[node name="PronounLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Pronouns"
+
+[node name="PronounOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="AppearanceLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "CEO appearance"
+
+[node name="AppearanceRow" type="HBoxContainer" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 112)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="AppearancePreview" type="Control" parent="Margin/Scroll/VBox/AppearanceRow"]
+custom_minimum_size = Vector2(104, 112)
+layout_mode = 2
+script = ExtResource("2")
+
+[node name="AppearanceOption" type="OptionButton" parent="Margin/Scroll/VBox/AppearanceRow"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="BackgroundLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Founder background"
+
+[node name="BackgroundOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="BackgroundDetail" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 15
+
+[node name="TraitLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Founder trait"
+
+[node name="TraitOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="TraitDetail" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 15
+
+[node name="DiffLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = "Difficulty"
+
+[node name="DifficultyOption" type="OptionButton" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+
+[node name="DifficultyLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 15
+
+[node name="Spacer" type="Control" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StartButton" type="Button" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+text = "START COMPANY"
+theme_override_font_sizes/font_size = 20
+
+[node name="LoadButton" type="Button" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+text = "LOAD SAVE"
