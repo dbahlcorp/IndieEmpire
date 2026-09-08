@@ -49,6 +49,9 @@ var atmosphere_texture: Texture2D
 var actors: Array[Dictionary] = []
 var work_bubbles: Array[Dictionary] = []
 var elapsed := 0.0
+# The first people the room ever shows are already at work; anyone who appears
+# after that (a new hire, someone back from leave) walks in through the door.
+var _populated := false
 
 func _ready() -> void:
     # Retain textures for the canvas draw commands between frames.
@@ -85,6 +88,7 @@ func set_office(value: String) -> void:
     rebuild()
 
 func rebuild() -> void:
+    var first_population := not _populated
     var previous: Dictionary = {}
     for existing in actors:
         previous[(existing["employee"] as Employee).id] = existing
@@ -107,7 +111,7 @@ func rebuild() -> void:
         var actor := {
             "employee": employee,
             "desk": desks[index],
-            "position": desks[index] if previous.is_empty() else layout["entrance"],
+            "position": desks[index] if first_population else layout["entrance"],
             "route": [],
             "state": "walking",
             "arrival_state": "seated",
@@ -127,10 +131,11 @@ func rebuild() -> void:
             "rng": rng
         }
         actors.append(actor)
-        if previous.is_empty():
+        if first_population:
             _arrive(actor)
         else:
             _route_actor(actor, desks[index], "seated")
+    _populated = _populated or not actors.is_empty()
     queue_redraw()
 
 func _on_week_ticked(_year: int, _month: int, _week: int) -> void:

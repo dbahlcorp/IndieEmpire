@@ -163,14 +163,32 @@ func _employees_move_and_sit() -> void:
         view.queue_free()
         return
     var actor: Dictionary = view.actors[0]
-    var entrance: Vector2 = actor["position"]
-    for step in 80:
-        view._advance_actor(actor, 0.1)
-    check_not_equal(actor["position"], entrance, "the founder walked away from the entrance")
-    check_equal(actor["state"], "seated", "the founder reached and sat at their desk")
+    # Opening the studio shows a room already at work rather than staff
+    # marching in from the door every time the screen is built.
+    check_equal(actor["position"], actor["desk"],
+        "the first room ever shown starts with the founder at their desk")
+    check_equal(actor["state"], "seated", "and already seated, not walking in")
 
     var founder := EmployeeManager.founder()
     founder.time_off_weeks = 1
     view.rebuild()
     check_empty(view.actors, "employees on leave are physically absent")
+
+    # Anyone who appears after the room is on screen is a visible arrival, even
+    # when the room they walk into is empty.
+    founder.time_off_weeks = 0
+    view.rebuild()
+    if not check_equal(view.actors.size(), 1, "a returning employee comes back to the floor"):
+        view.queue_free()
+        return
+    var returning: Dictionary = view.actors[0]
+    var entrance: Vector2 = OfficeLayout.get_layout(view.office_id)["entrance"]
+    check_equal(returning["position"], entrance,
+        "an employee arriving after the room is on screen enters through the door")
+    check_equal(returning["state"], "walking", "and is walking rather than teleported into a chair")
+    for step in 80:
+        view._advance_actor(returning, 0.1)
+    check_not_equal(returning["position"], entrance, "the returning founder walked away from the entrance")
+    check_equal(returning["position"], returning["desk"], "along a route that ends at their own desk")
+    check_equal(returning["state"], "seated", "the returning founder reached and sat at their desk")
     view.queue_free()
