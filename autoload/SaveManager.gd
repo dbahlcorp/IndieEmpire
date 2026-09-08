@@ -10,7 +10,7 @@ signal game_saved(slot: String)
 const SAVE_DIR := "user://saves"
 const AUTOSAVE := "autosave"
 const MANUAL_SLOTS := ["save_1", "save_2", "save_3"]
-const SAVE_VERSION := 19
+const SAVE_VERSION := 20
 const MIN_SUPPORTED_VERSION := 5
 
 var has_active_company: bool = false
@@ -160,7 +160,10 @@ func _collect_save_data() -> Dictionary:
             "feature_knowledge": GameState.feature_knowledge
         },
         "technology": {
-            "researched_features": GameState.researched_engine_features,
+            "completed_technologies": GameState.completed_technologies,
+            "active_research": GameState.active_research,
+            "research_points": GameState.research_points,
+            "experimented_feature_ids": GameState.experimented_feature_ids,
             "engines": GameState.custom_engines,
             "next_number": GameState.next_engine_number
         },
@@ -261,11 +264,30 @@ func _apply_save_data(data: Dictionary) -> void:
     GameState.feature_knowledge = _int_dictionary(knowledge.get("feature_knowledge", {}))
 
     var technology: Dictionary = data.get("technology", {})
-    GameState.researched_engine_features = _string_array(
-        technology.get("researched_features", EngineManager.STARTER_FEATURES))
-    for starter_id in EngineManager.STARTER_FEATURES:
-        if not GameState.researched_engine_features.has(starter_id):
-            GameState.researched_engine_features.append(starter_id)
+    # v20 renamed researched_features -> completed_technologies and made
+    # research a timed project. Pre-v20 saves keep every id they had (the
+    # technology ids are unchanged) and simply have no in-flight research.
+    GameState.completed_technologies = _string_array(
+        technology.get("completed_technologies",
+            technology.get("researched_features", ResearchManager.starter_ids())))
+    for starter_id in ResearchManager.starter_ids():
+        if not GameState.completed_technologies.has(starter_id):
+            GameState.completed_technologies.append(starter_id)
+    GameState.research_points = float(technology.get("research_points", 0.0))
+    GameState.experimented_feature_ids = _string_array(
+        technology.get("experimented_feature_ids", []))
+    GameState.active_research = []
+    for entry in technology.get("active_research", []):
+        if not (entry is Dictionary):
+            continue
+        var tech_id := str(entry.get("tech_id", ""))
+        if DataManager.get_technology(tech_id).is_empty() or GameState.completed_technologies.has(tech_id):
+            continue
+        GameState.active_research.append({
+            "tech_id": tech_id,
+            "progress": maxf(float(entry.get("progress", 0.0)), 0.0),
+            "researcher_ids": _string_array(entry.get("researcher_ids", []))
+        })
     GameState.custom_engines.clear()
     for entry in technology.get("engines", []):
         if entry is Dictionary:

@@ -74,9 +74,10 @@ func _every_engine_feature() -> Dictionary:
     ## exactly the way EngineManager.effects_for() combines them -- by product,
     ## with nothing capping the result.
     var result := _blank_engine()
-    for item in EngineManager.FEATURES:
+    for item in DataManager.technologies:
+        var effects: Dictionary = item.get("engine_effects", {})
         for key in result:
-            result[key] = float(result[key]) * float(item.get(key, 1.0))
+            result[key] = float(result[key]) * float(effects.get(key, 1.0))
     return result
 
 func _show_stage(label: String, m: Dictionary) -> void:

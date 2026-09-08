@@ -14,6 +14,10 @@ var employee_traits: Array = []
 var office_customizations: Array = []
 var studio_events: Array = []
 var game_features: Array = []
+## The technology tree: nine branches of researchable capability, read through
+## get_technology(). Replaces the old hardcoded EngineManager.FEATURES -- see
+## ResearchManager / ResearchSimulator.
+var technologies: Array = []
 ## Specialization tracks within each of the eight skills -- e.g. programming
 ## splits into Engine, Gameplay, Tools and AI. Recorded now so a save already
 ## has somewhere to put a choice; the actual "choose a focus" moment (an
@@ -53,6 +57,7 @@ func _ready() -> void:
     office_customizations = _load_json_array("res://data/office_customizations.json")
     studio_events = _load_json_array("res://data/studio_events.json")
     game_features = _load_json_array("res://data/game_features.json")
+    technologies = _load_json_array("res://data/technologies.json")
     specializations = _load_json_array("res://data/specializations.json")
     founder_backgrounds = _load_json_array("res://data/founder_backgrounds.json")
     inflation = _load_json_array("res://data/inflation.json")
@@ -119,6 +124,26 @@ func get_studio_event(id: String) -> Dictionary:
 
 func get_game_feature(id: String) -> Dictionary:
     return _find_by_id(game_features, id)
+
+func get_technology(id: String) -> Dictionary:
+    return _find_by_id(technologies, id)
+
+func technologies_in_branch(branch: String) -> Array:
+    var found: Array = []
+    for entry in technologies:
+        if str(entry.get("branch", "")) == branch:
+            found.append(entry)
+    return found
+
+func technology_branches() -> Array:
+    ## Branch display names in first-seen order, so the Research screen groups
+    ## them the way the data file is authored rather than alphabetically.
+    var order: Array = []
+    for entry in technologies:
+        var branch := str(entry.get("branch", ""))
+        if not branch.is_empty() and branch not in order:
+            order.append(branch)
+    return order
 
 func get_specialization(id: String) -> Dictionary:
     return _find_by_id(specializations, id)

@@ -231,4 +231,5 @@ static func feature_names(feature_ids: Array) -> String:
 
 static func _tech_name(id: String) -> String:
     var technology := EngineManager.feature(id)
-    return str(technology.get("name", id.replace("_", " ").capitalize()))
+    return str(technology.get("display_name",
+        technology.get("name", id.replace("_", " ").capitalize())))

@@ -67,11 +67,10 @@ below:
 - **`EventBus.gd`** (57 signals today) is the only channel from simulation to
   UI. New cross-system facts are new signals here, not direct screen calls.
 - **Data-driven content** lives in `data/*.json` and is read through
-  `DataManager`. `autoload/EngineManager.gd`'s `FEATURES` constant is the one
-  significant exception — engine-tech data is hardcoded in GDScript instead
-  of JSON, unlike its sibling `data/game_features.json`. PA.2 below proposes
-  fixing that inconsistency rather than building around it.
-- **Saves** are versioned (`SaveManager.SAVE_VERSION := 19`,
+  `DataManager` — including the technology tree (`data/technologies.json`,
+  added by PA.2, which retired the old hardcoded `EngineManager.FEATURES`
+  constant).
+- **Saves** are versioned (`SaveManager.SAVE_VERSION := 20`,
   `MIN_SUPPORTED_VERSION := 5`) with numbered migration branches
   (`if int(data.get("version", 0)) < 15: ...`). Every PA section that adds a
   `GameState` field needs a version bump and a migration branch in this same
@@ -99,7 +98,7 @@ below:
 | # | Section | Status | Relative complexity |
 |---|---|---|---|
 | PA.1 | Game Creation & Project Decisions | **Implemented** (2026-09-08; pricing/marketing still out) | Low |
-| PA.2 | Research & Technology | **Partial** (works, not data-driven) | Low–Medium |
+| PA.2 | Research & Technology | **Implemented** (2026-09-08; balance pass deferred) | Low–Medium |
 | PA.3 | Game Features | **Implemented** (2026-09-08) | Complete |
 | PA.4 | Engine Progression | **Partial** | Medium |
 | PA.5 | Content Expansion | **Partial** (breadth uneven) | Low–Medium (content authoring, not engineering) |
@@ -279,75 +278,76 @@ levers need BalanceProbe re-measurement once built, since they touch
 
 ## PA.2 — Research & Technology
 
-### Current repository state
-`autoload/EngineManager.gd` defines a **hardcoded** `const FEATURES` array
-(8 entries, `2d_renderer` through `optimization`, 1985–1996), each with a
-`year`, `cost`, and one or more numeric effect multipliers
-(`graphics`/`sound`/`bugs`/`progress`/`technology`/`performance`).
-`can_research`/`research` gate on year-availability, not-already-researched,
-and affordability; researching is instant once affordable (no time cost,
-no staff assignment). `EngineLabScreen.gd` (121 lines) presents this list
-and lets the player spend cash to unlock each one.
+**Status: implemented, 2026-09-08.** The hardcoded `EngineManager.FEATURES`
+constant and its instant-cash "research" are gone. In their place: one
+data-driven technology tree, a single research-point resource earned from
+play, and research *projects* that consume weeks and a researcher's time.
 
-### Existing systems that can be reused
-`FinanceManager.spend`/`can_afford` for cost gating; `TimeManager.
-current_year` for era gating; the exact `DataManager`-driven JSON pattern
-already used for `data/game_features.json`, `data/training.json`, etc.
+`data/technologies.json` authors **40 technologies in nine branches**
+(Graphics, Gameplay, AI, Audio, Networking, Physics, Animation, World
+Technology, Development Tools), read through `DataManager.get_technology()` /
+`technologies_in_branch()`. Each node carries `research_cost`, `prerequisites`
+(AND; several nodes need ids from two or three different branches, so the tree
+is not a set of straight lines), an optional `min_year` era gate, an optional
+`researcher_min` skill floor, `unlocks` capability tags, and — for
+engine-capable nodes — an `engine_effects` multiplier block. The graphics
+branch is the brief's worked example verbatim: Basic 2D → Advanced 2D →
+Basic 3D → Texture Mapping → Dynamic Lighting → Shaders → Physically Based
+Rendering → Ray Tracing.
 
-### Missing functionality
-- **Not data-driven.** Every other content catalog in the game
-  (`game_features.json`, `training.json`, `contracts.json`, ...) lives in
-  `data/`; engine features are the one exception, hardcoded in
-  `EngineManager.gd`. This is the single clearest architectural
-  inconsistency in the repository and should be fixed before more engine
-  content is authored on top of it.
-- **No prerequisite chain among engine features themselves** (only
-  `game_features.json` references engine-tech ids via `requires_tech`;
-  engine features don't reference each other, so there's no "3D Graphics
-  requires 2D Graphics" style tree).
-- **No time cost.** Research is bought instantly; nothing simulates a
-  research effort/duration the way project development has one.
+`GameState.researched_engine_features` became `GameState.completed_technologies`
+(same shape). The eight old engine-feature ids are carried into the tree
+verbatim, so `data/game_features.json`'s `requires_tech` values and the
+engine-effect maths needed no id remap — the "feature integration" and
+"engine integration" the brief asks for are the same code path as before,
+pointed at the new completed-technology list.
 
-### Required data/model changes
-Move `EngineManager.FEATURES` to `data/engine_features.json` verbatim (same
-fields, `requires: []` array added for prerequisites), read through
-`DataManager` the same way `data/game_features.json` already is. This is a
-pure refactor with no behavior change and should ship with its own
-before/after test run rather than bundled into a feature commit.
+`ResearchSimulator.gd` (pure) owns cost/prerequisite/era/state rules, the
+weekly-progress maths and the earn formulas. `ResearchManager.gd` (new
+autoload, in `World.gd`'s tick right after `TrainingManager`) owns the point
+pool, the completed list and in-flight `active_research`. Starting research on
+an available technology assigns one or more employees who then read as
+`is_away()` — exactly like trainees, so a researcher drops straight out of
+`TeamManager.working_members` and cannot also carry a project role. Each week
+a project gains its researchers' skill-scaled output plus a capped draw
+(`POOL_WEEKLY_CAP`) on the pool; at `research_cost` it completes, moves to
+`completed_technologies`, and `EventBus.technology_researched` fires with a
+news story naming the new capability.
 
-### Required simulation changes
-None required for the data move itself. If a prerequisite chain is added,
-`EngineManager.can_research` gains a check against `requires` the same
-shape as `FeatureSimulator.missing_tech` already does for game features —
-reuse that function's structure rather than writing a second one.
+**Research points come only from play**, never a passive drip:
+`ResearchSimulator.points_for_release` (scaled by project size, review score
+and innovation), a flat `points_for_postmortem` award with a visible lesson
+line, and `points_for_experiments` — a one-time bonus the first time the
+studio ships each feature id (`GameState.experimented_feature_ids`).
 
-### Required UI
-None for the data move (screen reads through the same manager API).
-Prerequisite display on `EngineLabScreen` if that's added (locked/greyed
-entries with a "requires X" label, following the existing feature-picker
-pattern in `NewGameScreen._feature_row`).
+A new mobile-first **Research screen** (`scenes/company/ResearchScreen.*`,
+reached from the Company page, no new nav tab) shows an In Progress section
+and cards grouped by branch, each in one of four states —
+COMPLETED / RESEARCHING / AVAILABLE / LOCKED — with cost, plain-language
+capability unlocks, prerequisites, and a `Requires: …` line on locked cards.
+Raw `engine_effects` multipliers stay hidden. `EngineLabScreen` keeps engine
+*building* only, now iterating completed engine-capable technologies.
 
-### Save migration requirements
-None for the data move — `GameState.researched_engine_features` stores ids,
-which are unchanged.
+Save version 20 persists `completed_technologies`, `active_research`,
+`research_points` and `experimented_feature_ids`; a pre-v20 save's
+`researched_features` list loads straight into `completed_technologies`.
 
-### Tests required
-`EngineTest.gd` is currently 38 lines against a system with real
-year-gating, cost-gating and multiplicative effect composition
-(`effects_for`) — thin for what it covers. Extend it to assert every
-feature in the new JSON round-trips through `DataManager`, and pin
-`effects_for` composing correctly for a multi-feature engine (guards
-against a future data typo silently changing a multiplier).
+`ResearchTest` (new, 102 checks) covers data loading, prerequisites, era
+restrictions, cost, completion, employee assignment, unlock propagation,
+feature integration, engine integration, save/load and the point sources.
+`EngineTest` was rewritten onto the research flow. The full suite is green.
 
-### Acceptance criteria
-`EngineManager.FEATURES` no longer exists as a GDScript constant;
-`data/engine_features.json` is the single source of truth; every existing
-`EngineTest`/`AaaProjectTest`/acceptance-phase check involving engines still
-passes unmodified.
+**Deferred (follow-up, not this pass):** a BalanceProbe re-measurement of
+research-point pace and technology-count-by-1996 against the median-cash
+baseline in `docs/MEDIOCRE_GAMES_2026-09-08.md`. Earn and cost numbers
+shipped conservative; this is the same call PA.1 made for pricing. `min_year`
+gates and prerequisite chains keep era progression roughly on the real
+timeline in the meantime.
 
 ### Dependencies on other sections
-PA.4 (engine progression is built on this catalog); PA.5 (new technology
-entries are the natural way to expand content here).
+PA.4 (engine progression now builds on this tree); PA.5 (new technology
+entries follow the same JSON-authoring pattern); PA.15 (the deferred
+BalanceProbe pass).
 
 ---
 

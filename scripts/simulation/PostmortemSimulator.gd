@@ -71,7 +71,16 @@ static func analyse(project: GameProject) -> void:
     project.went_poorly = poorly
     project.lessons = _award_and_describe(project)
     project.lessons.append_array(_award_feature_knowledge(project))
+    project.lessons.append_array(_award_research_points(project))
     project.postmortem_reviewed = true
+
+static func _award_research_points(project: GameProject) -> Array[String]:
+    ## Studying a finished project teaches the team something reusable. A flat
+    ## point award, separate from the larger one shipping the game already
+    ## paid -- see ResearchSimulator.points_for_postmortem.
+    var amount := ResearchSimulator.points_for_postmortem(project)
+    ResearchManager.award_research_points(amount, "%s postmortem" % project.title)
+    return ["Research\n+%d research points from the postmortem" % int(round(amount))]
 
 static func _quality_rows(project: GameProject) -> Array:
     return [

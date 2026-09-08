@@ -171,7 +171,7 @@ func _populate_features() -> void:
 func _feature_selectable(id: String) -> bool:
     var feature := DataManager.get_game_feature(id)
     return not feature.is_empty() and FeatureSimulator.is_available(
-        feature, TimeManager.current_year, GameState.researched_engine_features,
+        feature, TimeManager.current_year, GameState.completed_technologies,
         FeatureSimulator.engine_features(_selected_id(engine_option)), _selected_feature_ids)
 
 func _feature_row(feature: Dictionary, id: String) -> Control:
@@ -180,7 +180,7 @@ func _feature_row(feature: Dictionary, id: String) -> Control:
     stack.add_theme_constant_override("separation", 4)
 
     var missing := FeatureSimulator.missing_requirements(
-        feature, TimeManager.current_year, GameState.researched_engine_features,
+        feature, TimeManager.current_year, GameState.completed_technologies,
         FeatureSimulator.engine_features(_selected_id(engine_option)), _selected_feature_ids)
     var locked := not missing.is_empty()
 
@@ -204,7 +204,8 @@ func _feature_row(feature: Dictionary, id: String) -> Control:
     if not technology.is_empty():
         var technology_names: Array[String] = []
         for tech_id in technology:
-            technology_names.append(str(EngineManager.feature(str(tech_id)).get("name", tech_id)))
+            technology_names.append(str(EngineManager.feature(str(tech_id)).get(
+                "display_name", tech_id)))
         detail += "\nTechnology: %s" % ", ".join(technology_names)
     if locked:
         detail += "\nRequires: %s" % ", ".join(missing)

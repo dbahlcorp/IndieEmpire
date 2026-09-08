@@ -17,7 +17,6 @@ func _refresh(message: String = "") -> void:
     UiBuilder.clear(list)
     _feature_checks.clear()
     _owned_engines()
-    _research()
     _builder(message)
 
 func _owned_engines() -> void:
@@ -34,48 +33,28 @@ func _owned_engines() -> void:
             Format.money_exact(int(engine.get("cost", 0)))
         ], 14))
 
-func _research() -> void:
-    list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.heading("TECHNOLOGY"))
-    for item in EngineManager.available_features():
-        var id := str(item["id"])
-        var researched := GameState.researched_engine_features.has(id)
-        var row := VBoxContainer.new()
-        row.add_child(UiBuilder.label("%s%s\n%s" % [
-            str(item["name"]), "  RESEARCHED" if researched else "",
-            str(item["description"])
-        ], 14))
-        if not researched:
-            var cost := FinanceManager.expense(int(item["cost"]))
-            var button := UiBuilder.button("RESEARCH — %s" % Format.money_exact(cost))
-            button.disabled = not FinanceManager.can_afford(cost)
-            button.pressed.connect(_research_feature.bind(id))
-            row.add_child(button)
-        list.add_child(row)
-
-    var future: Array[String] = []
-    for item in EngineManager.FEATURES:
-        if int(item["year"]) > TimeManager.current_year:
-            future.append("%d  %s" % [int(item["year"]), str(item["name"])])
-    if not future.is_empty():
-        list.add_child(UiBuilder.label("COMING TECHNOLOGY\n" + "\n".join(future.slice(0, 3)), 13, true))
-
 func _builder(message: String) -> void:
     list.add_child(UiBuilder.divider())
     list.add_child(UiBuilder.heading("BUILD AN ENGINE"))
+    list.add_child(UiBuilder.label(
+        "Research new technology in the Research screen; every engine-capable "
+        + "technology you have completed can go into an engine here.", 13, true))
     _name_input = LineEdit.new()
     _name_input.custom_minimum_size = Vector2(0, UiBuilder.TAP_HEIGHT)
     _name_input.placeholder_text = "Engine name"
     _name_input.text_changed.connect(func(_value): _update_build_state())
     list.add_child(_name_input)
 
-    for item in EngineManager.FEATURES:
+    var buildable := EngineManager.engine_capable_technologies()
+    if buildable.is_empty():
+        list.add_child(UiBuilder.label(
+            "No engine-capable technology researched yet.", 14, true))
+    for item in buildable:
         var id := str(item["id"])
-        if not GameState.researched_engine_features.has(id):
-            continue
         var check := CheckBox.new()
         check.custom_minimum_size = Vector2(0, UiBuilder.TAP_HEIGHT)
-        check.text = str(item["name"])
+        check.text = "%s  (%s)" % [
+            str(item.get("display_name", id)), str(item.get("branch", ""))]
         check.toggled.connect(func(_pressed): _update_build_state())
         list.add_child(check)
         _feature_checks[id] = check
@@ -105,11 +84,6 @@ func _update_build_state() -> void:
     _cost_label.text = "%d feature%s   Build cost %s" % [
         selected.size(), "" if selected.size() == 1 else "s", Format.money_exact(cost)]
     _build_button.disabled = not EngineManager.can_build(_name_input.text, selected)
-
-func _research_feature(id: String) -> void:
-    if EngineManager.research(id):
-        SaveManager.autosave()
-        _refresh("Research complete. This feature can now be used in every future engine.")
 
 func _build_engine() -> void:
     var engine := EngineManager.build(_name_input.text, _selected_features())

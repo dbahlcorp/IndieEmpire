@@ -122,6 +122,10 @@ func _experience() -> void:
 func _saves() -> void:
     list.add_child(UiBuilder.divider())
 
+    var research := UiBuilder.button("RESEARCH")
+    research.pressed.connect(_go.bind("res://scenes/company/ResearchScreen.tscn"))
+    list.add_child(research)
+
     var engines := UiBuilder.button("ENGINE LAB")
     engines.pressed.connect(_go.bind("res://scenes/company/EngineLabScreen.tscn"))
     list.add_child(engines)

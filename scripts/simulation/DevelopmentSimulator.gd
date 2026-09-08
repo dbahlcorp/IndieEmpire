@@ -297,7 +297,7 @@ static func start_project(
     for id in feature_ids:
         var feature := DataManager.get_game_feature(str(id))
         if not feature.is_empty() and FeatureSimulator.is_available(
-                feature, TimeManager.current_year, GameState.researched_engine_features,
+                feature, TimeManager.current_year, GameState.completed_technologies,
                 selected_engine_features, chosen):
             chosen.append(str(id))
     project.feature_ids = chosen

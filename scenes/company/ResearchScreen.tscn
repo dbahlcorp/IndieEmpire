@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource path="res://scenes/company/EngineLabScreen.gd" type="Script" id="1"]
+[ext_resource path="res://scenes/company/ResearchScreen.gd" type="Script" id="1"]
 
-[node name="EngineLabScreen" type="Control"]
+[node name="ResearchScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,13 +27,13 @@ theme_override_constants/separation = 10
 
 [node name="Heading" type="Label" parent="Margin/VBox"]
 layout_mode = 2
-text = "ENGINE LAB"
+text = "RESEARCH & TECHNOLOGY"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 27
 
 [node name="Subtitle" type="Label" parent="Margin/VBox"]
 layout_mode = 2
-text = "Combine researched technology into a reusable engine for future games."
+text = "Turn shipped games into research, and research into new capability."
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 14

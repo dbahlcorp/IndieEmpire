@@ -90,6 +90,7 @@ func _screens() -> void:
         "res://scenes/company/NewCompanyScreen.tscn", "res://scenes/company/SaveSlotScreen.tscn",
         "res://scenes/company/CeoCustomizationScreen.tscn",
         "res://scenes/company/EngineLabScreen.tscn",
+        "res://scenes/company/ResearchScreen.tscn",
         "res://scenes/company/CompanyScreen.tscn", "res://scenes/company/FinancialsScreen.tscn",
         "res://scenes/company/RecordsScreen.tscn", "res://scenes/company/GameOverScreen.tscn",
         "res://scenes/company/HiringScreen.tscn", "res://scenes/company/StaffScreen.tscn",

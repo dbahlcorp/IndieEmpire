@@ -1,64 +1,34 @@
 extends Node
 
-## Reusable studio technology. Features are researched once, then combined
-## into immutable custom engines that can be selected for future games.
-
-const FEATURES := [
-    {"id": "2d_renderer", "name": "2D Graphics", "year": 1985, "cost": 0,
-        "description": "A dependable sprite and tile renderer.", "graphics": 1.06},
-    {"id": "audio_tools", "name": "Audio Tools", "year": 1985, "cost": 0,
-        "description": "Reusable music and sound-effect playback.", "sound": 1.06},
-    {"id": "save_system", "name": "Save System", "year": 1986, "cost": 1800,
-        "description": "Battle-tested persistence and fewer integration bugs.", "bugs": 0.92},
-    {"id": "level_editor", "name": "Level Editor", "year": 1988, "cost": 3200,
-        "description": "Build content faster with in-house editing tools.", "progress": 1.07},
-    {"id": "advanced_audio", "name": "Advanced Audio", "year": 1990, "cost": 4500,
-        "description": "Mixing, streaming music and positional sound.", "sound": 1.12},
-    {"id": "3d_renderer", "name": "3D Graphics", "year": 1992, "cost": 7500,
-        "description": "Polygonal scenes with depth and lighting.", "graphics": 1.13, "technology": 1.08},
-    {"id": "scripting", "name": "Gameplay Scripting", "year": 1994, "cost": 9200,
-        "description": "A flexible runtime for complex game logic.", "technology": 1.12, "progress": 1.04},
-    {"id": "optimization", "name": "Performance Profiler", "year": 1996, "cost": 12000,
-        "description": "Find bottlenecks before players do.", "performance": 1.16, "bugs": 0.90}
-]
+## Custom engines: a studio combines technologies it has already researched
+## (see ResearchManager / data/technologies.json) into an immutable, named,
+## reusable engine that future games can select. Only technologies that carry
+## an "engine_effects" block are engine-capable.
 
 const STARTER_FEATURES := ["2d_renderer", "audio_tools"]
 const BASE_BUILD_COST := 2500
 const COST_PER_FEATURE := 650
 
 func reset_technology() -> void:
-    GameState.researched_engine_features = STARTER_FEATURES.duplicate()
+    ## Only the engines -- the completed-technology list is owned and reset by
+    ## ResearchManager, so a new studio starts with its starter techs but no
+    ## engines built on them yet.
     GameState.custom_engines.clear()
     GameState.next_engine_number = 1
 
 func feature(id: String) -> Dictionary:
-    for item in FEATURES:
-        if str(item["id"]) == id:
-            return item
-    return {}
+    ## Retained name: callers (FeatureSimulator._tech_name, NewGameScreen) only
+    ## want the display record for a technology id.
+    return DataManager.get_technology(id)
 
-func available_features() -> Array:
-    return FEATURES.filter(func(item): return int(item["year"]) <= TimeManager.current_year)
-
-func can_research(id: String) -> bool:
-    var item := feature(id)
-    return (
-        not item.is_empty()
-        and int(item["year"]) <= TimeManager.current_year
-        and not GameState.researched_engine_features.has(id)
-        and FinanceManager.can_afford(FinanceManager.expense(int(item["cost"])))
-    )
-
-func research(id: String) -> bool:
-    if not can_research(id):
-        return false
-    var item := feature(id)
-    var cost := FinanceManager.expense(int(item["cost"]))
-    if not FinanceManager.spend(cost, Ledger.Kind.OTHER, "%s research" % item["name"]):
-        return false
-    GameState.researched_engine_features.append(id)
-    EventBus.notify("RESEARCH COMPLETE", str(item["name"]))
-    return true
+func engine_capable_technologies() -> Array:
+    ## Completed technologies that can actually go into an engine.
+    var result: Array = []
+    for id in GameState.completed_technologies:
+        var tech := DataManager.get_technology(str(id))
+        if not tech.is_empty() and tech.has("engine_effects"):
+            result.append(tech)
+    return result
 
 func build_cost(feature_ids: Array) -> int:
     return FinanceManager.expense(BASE_BUILD_COST + feature_ids.size() * COST_PER_FEATURE)
@@ -67,7 +37,9 @@ func can_build(name: String, feature_ids: Array) -> bool:
     if name.strip_edges().is_empty() or feature_ids.is_empty():
         return false
     for id in feature_ids:
-        if not GameState.researched_engine_features.has(str(id)):
+        if not GameState.completed_technologies.has(str(id)):
+            return false
+        if not DataManager.get_technology(str(id)).has("engine_effects"):
             return false
     return FinanceManager.can_afford(build_cost(feature_ids))
 
@@ -107,9 +79,9 @@ func engine_name(id: String) -> String:
 func feature_names(feature_ids: Array) -> String:
     var names: Array[String] = []
     for id in feature_ids:
-        var item := feature(str(id))
+        var item := DataManager.get_technology(str(id))
         if not item.is_empty():
-            names.append(str(item["name"]))
+            names.append(str(item.get("display_name", item.get("name", id))))
     return ", ".join(names)
 
 func effects_for(engine_id: String) -> Dictionary:
@@ -119,7 +91,7 @@ func effects_for(engine_id: String) -> Dictionary:
     }
     var engine := get_engine(engine_id)
     for id in engine.get("feature_ids", []):
-        var item := feature(str(id))
+        var effects: Dictionary = DataManager.get_technology(str(id)).get("engine_effects", {})
         for key in result:
-            result[key] = float(result[key]) * float(item.get(key, 1.0))
+            result[key] = float(result[key]) * float(effects.get(key, 1.0))
     return result

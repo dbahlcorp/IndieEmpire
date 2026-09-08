@@ -60,7 +60,20 @@ var platform_genre_knowledge: Dictionary = {} # "platform|genre" -> shipments
 var feature_knowledge: Dictionary = {}       # "feature|genre" -> postmortems
 
 # --- Technology ---
-var researched_engine_features: Array = []
+## Completed technology ids from data/technologies.json. Starter techs are
+## always present. Gates game features (FeatureSimulator) and engine building
+## (EngineManager). Renamed from researched_engine_features in save v20.
+var completed_technologies: Array = []
+## In-flight research: [{tech_id, progress: float, researcher_ids: Array}].
+## See ResearchManager / ResearchSimulator.
+var active_research: Array = []
+## The pooled research resource, earned from shipping games, postmortems,
+## experimenting with unfamiliar features and innovation -- never a passive
+## drip. Spent down as active research draws on it.
+var research_points: float = 0.0
+## Feature ids the studio has already shipped at least once, so a genuinely
+## new feature choice can pay a one-time experimentation research bonus.
+var experimented_feature_ids: Array = []
 var custom_engines: Array = []
 var next_engine_number: int = 1
 
@@ -251,6 +264,10 @@ func reset_company() -> void:
     selected_project_id = ""
     released_games.clear()
     next_id = 1
+    # Clear technology before anyone is seeded -- Employee.is_away() consults
+    # ResearchManager, so no stale in-flight research must linger.
+    EngineManager.reset_technology()
+    ResearchManager.reset()
     CultureManager.seed_culture()
     EmployeeManager.seed_founder()
     TeamManager.seed_teams()
@@ -270,7 +287,6 @@ func reset_company() -> void:
     combo_knowledge.clear()
     platform_genre_knowledge.clear()
     feature_knowledge.clear()
-    EngineManager.reset_technology()
 
     genre_trends.clear()
     genre_saturation.clear()
