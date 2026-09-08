@@ -3,7 +3,7 @@ extends TestCase
 ## Guards SalesSimulator.QUALITY_ANCHOR against silent drift.
 ##
 ## This constant is the single lever on how rich the whole economy is -- sales
-## go as the fourth power of it -- and it is calibrated by measurement, not by
+## go as QUALITY_EXPONENT power of it -- and it is calibrated by measurement, not by
 ## reasoning. It has already been wrong twice: it was a bare 10.0 assuming the
 ## old inflated review scale, and it was briefly reported as having regressed to
 ## 9.3. Nothing in the code stopped either, because a number in a constant looks
@@ -19,13 +19,17 @@ const DOCUMENTED_ANCHOR := 11.0
 ## Median review across an eight-seed measured career.
 const COMPETENT_REVIEW := 7.3
 ## What that competent release sells at, as a share of full strength.
-const COMPETENT_STRENGTH := 0.194
+## Moved 0.194 -> 0.105 when QUALITY_EXPONENT was raised 4.0 -> 5.5 to make
+## mediocre releases economically mediocre. See
+## docs/MEDIOCRE_GAMES_2026-09-08.md.
+const COMPETENT_STRENGTH := 0.105
 
 func run() -> void:
     _the_anchor_is_a_scale_not_a_target()
     _a_competent_release_sells_at_the_measured_strength()
     _the_anchor_scales_everything_equally()
     _steepness_belongs_to_the_exponent()
+    _mediocre_games_are_economically_mediocre()
     _the_value_matches_the_documented_balance()
 
 func _the_anchor_is_a_scale_not_a_target() -> void:
@@ -33,7 +37,7 @@ func _the_anchor_is_a_scale_not_a_target() -> void:
     # The invariant, and not an arbitrary one: the anchor is the score at which
     # a game would sell at full strength, and the design is that nothing ever
     # does. If it drops below the printable ceiling, the best releases start
-    # selling at *over* full strength and the fourth-power curve runs away
+    # selling at *over* full strength and the steep quality curve runs away
     # exactly where it is least affordable.
     #
     # This is the check that catches the two values it has actually been wrong
@@ -79,12 +83,38 @@ func _steepness_belongs_to_the_exponent() -> void:
     var seven := SalesSimulator.review_multiplier(7.0)
     var eight := SalesSimulator.review_multiplier(8.0)
     var six := SalesSimulator.review_multiplier(6.0)
-    check_near(eight / seven, 1.71, 0.02,
+    check_near(eight / seven, 2.08, 0.02,
         "an 8.0 outsells a 7.0 by %.2fx" % (eight / seven))
-    check_near(seven / six, 1.85, 0.02,
+    check_near(seven / six, 2.33, 0.02,
         "a 7.0 outsells a 6.0 by %.2fx" % (seven / six))
     check_greater(SalesSimulator.review_multiplier(9.0) / SalesSimulator.review_multiplier(5.0), 8.0,
         "and the span from a bad game to a great one is worth chasing")
+
+func _mediocre_games_are_economically_mediocre() -> void:
+    section("the curve is steep enough that a mediocre game is a mediocre business")
+    # The property the 2026-09-08 pass bought, stated as the thing that was
+    # actually wrong rather than as the constant that fixed it: at the old 4.0
+    # a 6.8 returned 5.9x its cost and only 4% of staffed releases ever lost
+    # money. Sales are what has to separate the bands -- development cost is
+    # broadly flat in review score -- so the gaps below are what make a
+    # break-even 6.x and a profitable 7.x possible at the same time.
+    var mediocre := SalesSimulator.review_multiplier(6.8)
+    var competent := SalesSimulator.review_multiplier(7.5)
+    var strong := SalesSimulator.review_multiplier(8.5)
+    check_greater(competent / mediocre, 1.5,
+        "a 7.5 outsells a 6.8 by %.2fx, so the same cost is not the same business"
+            % (competent / mediocre))
+    check_greater(strong / competent, 1.9,
+        "and an 8.5 outsells that 7.5 by %.2fx again" % (strong / competent))
+    # Each step up the scale must be worth more than the one below it. A curve
+    # that flattened at the top would let a studio coast on volume, which is
+    # how the economy paid for a twenty-person team on 6.x releases before.
+    var previous := 0.0
+    for score in [5.5, 6.5, 7.5, 8.5]:
+        var gap := SalesSimulator.review_multiplier(score + 1.0) - SalesSimulator.review_multiplier(score)
+        check_greater(gap, previous,
+            "the point above %.1f is worth more than the point below it" % score)
+        previous = gap
 
 func _the_value_matches_the_documented_balance() -> void:
     section("the value still matches the balance it was measured against")

@@ -30,9 +30,40 @@ const REFERENCE_INSTALL_BASE := 12_000_000
 ## proportionally.
 const CROWDING_EXPONENT := 0.35
 
-## How sharply review score drives demand. Steep on purpose: a weak game should
-## not quietly break even on a big platform.
-const QUALITY_EXPONENT := 4.0
+## How sharply review score drives demand, and so where a release breaks even.
+## Steep on purpose: a weak game should not quietly break even on a big
+## platform.
+##
+## Raised from 4.0 on 2026-09-08. At 4.0 nothing below the very bottom of the
+## scale was economically mediocre -- a 6.8 returned 5.9x its cost, only 4% of
+## staffed releases lost money, and the studio's own back catalogue paid for a
+## twenty-person team regardless of what it shipped. Development cost had
+## stopped being a meaningful number next to expected sales.
+##
+## This is the shape lever, and the only one: QUALITY_ANCHOR scales every score
+## by the same factor and cannot change which score breaks even (see
+## QualityAnchorTest). Measured over sixteen seeds to 1996, median
+## revenue/total-cost by review band:
+##
+##             4.0    5.5     intent
+##     5.x    1.2x   0.5x     likely loss
+##     6.x    4.0x   0.9x     break-even to small profit
+##     7.x    8.2x   4.5x     healthy profit
+##     8.x   11.5x  15.4x     strong success
+##     9.x   36.6x  63.0x     major hit
+##
+## Trends, platform size and a crowded slate still move any individual release
+## either side of its band -- 42% of 6.0-6.5 releases and 2.5% of 7.x releases
+## come out the other way -- so this is the shape, not a guarantee.
+##
+## The cost is that a career is poorer and less forgiving: releases that lose
+## money went 12.9% -> 33.4%, median final cash at 1996 $48M -> $8.6M, and
+## bankruptcy over sixteen seeds 25% -> 31%. See
+## docs/MEDIOCRE_GAMES_2026-09-08.md.
+##
+## Retune it with the balance probe, never by eye, and update QualityAnchorTest
+## and that document with it.
+const QUALITY_EXPONENT := 5.5
 ## The review score this steep curve is anchored on. Was a bare 10.0, which
 ## quietly assumed the old, inflated scale where a competent studio averaged
 ## 7.8 and hits ran 9+; against the normalised scale the same exponent read
@@ -42,7 +73,7 @@ const QUALITY_EXPONENT := 4.0
 ## (ReviewSimulator.best_possible_score(), 9.8), so no game ever sells at "full
 ## strength" -- it is a scale constant, not a target. Drop it below that ceiling
 ## and the best releases sell at *over* full strength, which is where a
-## fourth-power curve is least affordable.
+## steep quality curve is least affordable.
 ##
 ## It is the single lever on how rich the economy is, and it governs the first
 ## decade specifically: past about 1995 releases run into MAX_ATTACH_RATE and
