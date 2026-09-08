@@ -1,0 +1,38 @@
+Quality-ratio drift by size and era. Tiny was the only size that drifted.
+
+=== BEFORE (bonus-stack pass) ===
+ratio median by size and era -- does the bar drift for every size, or only Tiny?
+       1985-19871988-19901991-19931994-1996
+small   0.96(66) 1.87(27) 1.94(11)        -
+medium         -0.95(102)0.98(118) 0.99(11)
+large          -        -  0.94(5) 1.04(28)
+
+team size actually assigned, by project size and era
+
+=== AFTER (this pass) ===
+ratio median by size and era -- does the bar drift for every size, or only Tiny?
+       1985-19871988-19901991-19931994-1996
+small   0.98(68) 1.41(29) 1.55(12)        -
+medium         - 0.95(89)0.98(123)  0.95(2)
+large          -        -  0.95(4) 1.02(29)
+
+team size actually assigned, by project size and era
+
+=== AFTER, with the team that built each release ===
+size    era           n   team  useful  pressure   ratio  review
+small   1985-1987    68      1       2      0.50    0.98    6.15
+small   1988-1990    29      3       2      1.50    1.41    8.10
+small   1991-1993    12      4       2      2.00    1.55    8.30
+medium  1988-1990    89     10       5      2.00    0.95    7.00
+medium  1991-1993   123     10       5      2.00    0.98    7.30
+medium  1994-1996     2     10       5      1.90    0.95    7.45
+large   1991-1993     4     10      10      1.00    0.95    7.05
+large   1994-1996    29     10      10      1.00    1.02    7.60
+
+=== late-Tiny score differentiation (was 70% pinned at 8.50) ===
+size       n   rat50   rat95  clipped    review distinct
+small    109    1.21    1.96      44%      7.70     45/109
+medium   214    0.97    1.11       0%      7.20     40/214
+large     33    1.01    1.10       0%      7.50     19/33
+
+late Tiny reviews: n=41  distinct=19  min=5.6 p25=7.7 med=8.2 p75=8.6 max=9.0

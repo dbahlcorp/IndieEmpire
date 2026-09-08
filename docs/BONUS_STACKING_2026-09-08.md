@@ -113,9 +113,11 @@ drifts upward as the studio compounds, which was the runaway.
 
 ## Known rough edge
 
-Tiny projects still show a quality ratio of 1.77 on average, because a mature
-studio's small projects massively clear a bar authored for a founder in a
-bedroom. `OVER_DELIVERY_CAP` clips the review consequence, so it does not read
-as a free 9 any more, but the underlying ratio is not meaningful for that size.
-Raising Tiny's bar would punish the early game, which is already the hardest
-part of a career, so it is left alone deliberately.
+Tiny projects still show a quality ratio well above 1.0, because a mature
+studio's small projects clear a bar authored for a founder in a bedroom.
+`OVER_DELIVERY_CAP` clips the review consequence, so it does not read as a free
+9, but the underlying ratio is not meaningful for that size.
+
+**Followed up in `docs/TINY_PROJECT_BAR_2026-09-08.md`.** The cause turned out
+to be `team_output` (1.0 for one person, 1.8 for two), not the bar drifting; the
+bar is correct at 28 and the early game depends on it.

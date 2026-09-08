@@ -14,6 +14,35 @@ const BASE_POLISH_COST := 500
 ## probe rather than adjusting it by eye.
 const QUALITY_PER_WORK_UNIT := 0.0667
 
+## How far past its own size's quality bar a project keeps absorbing effort at
+## full rate, before returns fall away. A scope holds what it holds: there is
+## only so much game in a Tiny game, and past a point extra craft has nothing
+## left to attach itself to.
+##
+## This is the quality half of what `max_useful_staff` already does for
+## throughput. Without it, Tiny was the one size whose team could vastly exceed
+## what its scope called for -- a cash-strapped veteran studio falling back to a
+## small project brought a dozen people's craft to a bar authored for a founder
+## in a bedroom. Measured ratios drifted 0.96 (1985-87) to 1.94 (1991-93), while
+## Medium and Large held 0.95-0.99 and 0.94-1.04 across the same career, because
+## those sizes are only ever attempted by teams sized for them. 70% of late
+## Tiny releases pinned the review-side over-delivery clamp and scored an
+## identical 8.5, which is both too high and completely undifferentiated.
+const SCOPE_ABSORPTION := 0.18
+
+static func scope_absorption(project: GameProject) -> float:
+    ## What share of this week's craft the project can still take on, given how
+    ## far past its size's bar it already is. 1.0 until the bar is met, then
+    ## decaying -- asymptotic rather than a wall, so a genuinely exceptional
+    ## small game can still pull ahead of a merely good one instead of every
+    ## over-resourced project landing on the same clipped number.
+    var expected := maxf(float(DataManager.get_size(
+        project.size_id).get("expected_quality", 100)), 1.0)
+    var over := project.average_quality() / expected - 1.0
+    if over <= 0.0:
+        return 1.0
+    return exp(-over / SCOPE_ABSORPTION)
+
 ## How much concept-and-planning work a size implies, authored rather than
 ## derived from the main "work" budget -- pre-production does not scale with
 ## a project the same way production does, so a fraction of "work" quietly
@@ -412,7 +441,7 @@ static func advance_project(project: GameProject) -> Dictionary:
     # This is the same rule FeatureSimulator.apply_quality_potential() already
     # used for chosen features; the core stats simply were not on it.
     var built := (project.development_progress - progress_before) / 100.0
-    var content := built * work * QUALITY_PER_WORK_UNIT
+    var content := built * work * QUALITY_PER_WORK_UNIT * scope_absorption(project)
 
     # Each stat draws on a different mix of what the studio knows and what its
     # engine can do, so each gets its own stack -- but every stack is bounded

@@ -31,13 +31,15 @@ var rested := 0
 ## How crowded the studio's own slate was when each game launched.
 var concurrent_at_launch := {}
 var genre_demand_at_launch := {}
+## How many people were on the team that actually built each release.
+var team_size_at_launch := {}
 
 func run() -> void:
 	_read_args()
 	seed(seed_value)
 	DirAccess.make_dir_recursive_absolute(out_dir)
 
-	games_csv.append("seed,index,year,size,platform,publisher,review,quality,expected_quality,quality_ratio,bugs,dev_weeks,polish_weeks,units,revenue,advance,dev_cost,labour_cost,profit,attach_pct,concurrent,genre_demand")
+	games_csv.append("seed,index,year,size,platform,publisher,review,quality,expected_quality,quality_ratio,bugs,dev_weeks,polish_weeks,units,revenue,advance,dev_cost,labour_cost,profit,attach_pct,concurrent,genre_demand,team_size,useful_staff")
 	years_csv.append("seed,year,cash,staff,payroll_mo,office,teams,rent_mo,released,avg_review,consumer_rep,fans")
 
 	_play()
@@ -103,7 +105,7 @@ func _record_game(game: GameProject) -> void:
 	var attach := 0.0
 	if base > 0:
 		attach = float(game.lifetime_sales) / float(base) * 100.0
-	games_csv.append("%d,%d,%d,%s,%s,%s,%.2f,%.1f,%.1f,%.3f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%d,%.3f" % [
+	games_csv.append("%d,%d,%d,%s,%s,%s,%.2f,%.1f,%.1f,%.3f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%d,%.3f,%d,%d" % [
 		seed_value, GameState.released_games.find(game), game.release_year,
 		game.size_id, game.platform_id,
 		game.publisher_id if not game.publisher_id.is_empty() else "self",
@@ -113,7 +115,9 @@ func _record_game(game: GameProject) -> void:
 		game.lifetime_sales, game.lifetime_revenue, game.advance,
 		game.total_cost(), game.labour_cost, game.profit(), attach,
 		int(concurrent_at_launch.get(game.id, 1)),
-		float(genre_demand_at_launch.get(game.id, 1.0))])
+		float(genre_demand_at_launch.get(game.id, 1.0)),
+		int(team_size_at_launch.get(game.id, 0)),
+		int(size.get("max_useful_staff", 99))])
 
 func _record_year() -> void:
 	years_csv.append("%d,%d,%d,%d,%d,%s,%d,%d,%d,%.2f,%.1f,%d" % [
@@ -257,6 +261,7 @@ func _work_team(team: StudioTeam) -> void:
 	project.critic_reviews = ReviewSimulator.critic_scores(project)
 	concurrent_at_launch[project.id] = GameState.games_on_market().size() + 1
 	genre_demand_at_launch[project.id] = MarketManager.demand_for(project.genre_id)
+	team_size_at_launch[project.id] = TeamManager.working_members(project.team_id).size()
 	SalesManager.release(project)
 
 func _start_project(team_id: String) -> void:

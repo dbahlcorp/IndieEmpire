@@ -70,8 +70,22 @@ static func market_reach_for(install_base: int) -> float:
 static func review_multiplier(score: float) -> float:
     return pow(score / QUALITY_ANCHOR, QUALITY_EXPONENT)
 
-static func reputation_change(score: float) -> float:
-    return (score - 5.5) * 1.4
+static func reputation_change(score: float, size_id: String = "") -> float:
+    ## Standing moves with what you shipped, not just how it reviewed. A well
+    ## received Tiny game is a nice thing to have made; it is not the same event
+    ## in a studio's life as a well received Medium one, and it used to move
+    ## reputation by exactly as much.
+    ##
+    ## That was the loop worth closing. Fans already scale with units sold, so a
+    ## small game's following looks after itself -- but reputation was flat in
+    ## size, which made cheap, fast, safe Tiny projects the most efficient way to
+    ## buy standing in the game. See `reputation_weight` in data/game_sizes.json.
+    return (score - 5.5) * 1.4 * reputation_weight(size_id)
+
+static func reputation_weight(size_id: String) -> float:
+    if size_id.is_empty():
+        return 1.0
+    return float(DataManager.get_size(size_id).get("reputation_weight", 1.0))
 
 static func word_of_mouth(project: GameProject, reputation: float) -> float:
     ## Players talk about games that are good, novel and not broken.

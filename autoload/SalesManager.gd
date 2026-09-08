@@ -41,7 +41,8 @@ func release(project: GameProject) -> void:
         GameState.games_on_market().size() + 1)
 
     # Reputation moves both ways: shipping badly costs the studio standing.
-    var reputation_change := SalesSimulator.reputation_change(project.review_score)
+    var reputation_change := SalesSimulator.reputation_change(
+        project.review_score, project.size_id)
     project.reputation_gained = reputation_change
     GameState.add_consumer_reputation(reputation_change)
 

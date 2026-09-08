@@ -13,7 +13,8 @@
     "max_useful_staff": 2,
     "dev_weeks_min": 4,
     "dev_weeks_max": 10,
-    "expected_quality": 28
+    "expected_quality": 28,
+    "reputation_weight": 0.6
   },
   {
     "id": "medium",
@@ -29,7 +30,8 @@
     "max_useful_staff": 5,
     "dev_weeks_min": 10,
     "dev_weeks_max": 20,
-    "expected_quality": 983
+    "expected_quality": 983,
+    "reputation_weight": 1.0
   },
   {
     "id": "large",
@@ -45,7 +47,8 @@
     "max_useful_staff": 10,
     "dev_weeks_min": 20,
     "dev_weeks_max": 40,
-    "expected_quality": 8387
+    "expected_quality": 8387,
+    "reputation_weight": 1.2
   },
   {
     "id": "aaa",
@@ -61,6 +64,7 @@
     "max_useful_staff": 20,
     "dev_weeks_min": 40,
     "dev_weeks_max": 80,
-    "expected_quality": 17500
+    "expected_quality": 17500,
+    "reputation_weight": 1.35
   }
 ]

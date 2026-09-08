@@ -10,7 +10,21 @@ const QUALITY_PER_WORK := 0.40
 ## having -- it just stops being a free 1.7 points forever.
 const EXPECTATION_FROM_STANDING := 0.11
 ## How far past its own size's quality bar a release can be credited for going.
-const OVER_DELIVERY_CAP := 1.35
+##
+## Tiny is the size this binds on, and it binds by design. Its bar is calibrated
+## for the founder alone in a bedroom, because the opening of a career depends
+## on those first games clearing it -- raising the bar to suit a properly
+## staffed two-person team was measured, and it put solo releases at 3.9 and
+## the studio never got off the ground. So a Tiny project built by two people
+## over-delivers by construction, and this is what stops that reading as a 9.
+##
+## It no longer flattens them, though, which was the real complaint. It used to
+## do the whole job alone: 70% of late Tiny releases pinned it and scored an
+## identical 8.5. With scope absorption compressing the range at the source
+## first, the ratio still clips but the rest of the merit -- bugs, polish,
+## balance, compatibility -- still separates them: 41 late Tiny releases now
+## land on 19 distinct scores between 5.6 and 9.0.
+const OVER_DELIVERY_CAP := 1.30
 
 static func calculate_review(project: GameProject) -> float:
     var size := DataManager.get_size(project.size_id)
@@ -32,10 +46,8 @@ static func calculate_review(project: GameProject) -> float:
         GameState.consumer_reputation, 0.0, 100.0) / 100.0 * EXPECTATION_FROM_STANDING
 
     var quality_ratio := project.average_quality() / expected_quality
-    # Over-delivery saturates. A veteran studio pointing a full team at a tiny
-    # project clears that project's bar by well over 2x -- measured p90 for
-    # Tiny is 2.30 -- and without this that is a free 9. Clearing your own bar
-    # by a third is already excellent; beyond that the reviewers stop caring.
+    # Clearing your own size's bar by a third is already excellent; past that
+    # the reviewers stop counting. See OVER_DELIVERY_CAP.
     var quality := clampf(quality_ratio, 0.0, OVER_DELIVERY_CAP) * 62.0
 
     var compatibility := _compatibility_bonus(project)
