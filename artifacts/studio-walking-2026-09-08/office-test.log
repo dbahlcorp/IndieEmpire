@@ -2,14 +2,6 @@ Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
 
 ERROR: Failed to read the root certificate store.
    at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
-SCRIPT ERROR: Parse Error: Cannot infer the type of "color" variable because the value doesn't have a set type.
-   at: GDScript::reload (res://scripts/ui/StudioRoomRenderer.gd:80)
-SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
-   at: GDScript::reload (res://scripts/ui/OfficeFloorView.gd:0)
-SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
-   at: GDScript::reload (res://scripts/tests/OfficeFloorTest.gd:0)
-ERROR: Failed to load script "res://scripts/tests/OfficeFloorTest.gd" with error "Compilation failed".
-   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
 === OfficeFloorTest ===
 
 -- physical office layouts --
@@ -21,41 +13,16 @@ ERROR: Failed to load script "res://scripts/tests/OfficeFloorTest.gd" with error
 -- employee conditions have visible reactions --
 
 -- active work becomes visible --
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
+ERROR: Could not write save autosave (error 12)
+   at: push_error (core/variant/variant_utility.cpp:1023)
    GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
-   GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
-   GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
-   GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
+       [0] save_game (res://autoload/SaveManager.gd:80)
+       [1] autosave (res://autoload/SaveManager.gd:73)
+       [2] assign_employee (res://autoload/TeamManager.gd:101)
+       [3] _active_project_emits_and_clears_a_bubble (res://scripts/tests/OfficeFloorTest.gd:90)
+       [4] run (res://scripts/tests/OfficeFloorTest.gd:14)
+       [5] _modular_portraits_are_stable_and_varied (res://scripts/tests/OfficeFloorTest.gd:48)
 
 -- employees move through the room --
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
-   GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
-   GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
-  FAIL employees move through the room: the founder walked away from the entrance -- should not have been (0.426667, 0.55)
 
-OfficeFloorTest FAILED: 1 of 97 checks
-  - employees move through the room: the founder walked away from the entrance -- should not have been (0.426667, 0.55)
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
-   GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
-SCRIPT ERROR: Invalid call. Nonexistent function 'floor_and_walls' in base 'GDScript'.
-   at: OfficeFloorView._draw (res://scripts/ui/OfficeFloorView.gd:481)
-   GDScript backtrace (most recent call first):
-       [0] _draw (res://scripts/ui/OfficeFloorView.gd:481)
+OfficeFloorTest PASSED (234 checks)

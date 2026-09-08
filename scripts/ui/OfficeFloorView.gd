@@ -484,6 +484,10 @@ func _draw() -> void:
         return
     var art_rect := _art_rect()
     ROOM_RENDERER.floor_and_walls(self, art_rect, floor_plan)
+    # Lighting and customization sit under every depth-sorted object. A room-
+    # sized texture drawn after this point can make a walking person disappear.
+    if atmosphere_texture != null:
+        draw_texture_rect(atmosphere_texture, art_rect, false)
     var drawables: Array[Dictionary] = []
     for prop in floor_plan["props"]:
         drawables.append({"kind": "furniture", "item": prop, "depth": OfficeLayout.project(Vector2(prop["cell"]) + Vector2(0.5, 0.5), floor_plan["dimensions"]).y})

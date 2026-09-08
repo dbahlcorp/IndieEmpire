@@ -144,6 +144,11 @@ func _layouts_match_offices() -> void:
             check(point is Vector2 and point.x >= 0.0 and point.x <= 1.0
                 and point.y >= 0.0 and point.y <= 1.0,
                 "%s navigation anchor is normalized" % office_id)
+        for desk in layout.get("desks", []):
+            var route := OfficeLayout.route(layout["entrance"], desk, layout)
+            check_not_empty(route, "%s has a route from its door to every desk" % office_id)
+            check(OfficeLayout.route_is_walkable(route, layout),
+                "%s routes keep employees out of furniture" % office_id)
 
 func _employees_move_and_sit() -> void:
     section("employees move through the room")
@@ -163,6 +168,8 @@ func _employees_move_and_sit() -> void:
         view.queue_free()
         return
     var actor: Dictionary = view.actors[0]
+    check(view.foreground_texture == null,
+        "no room-sized foreground can be painted over walking employees")
     # Opening the studio shows a room already at work rather than staff
     # marching in from the door every time the screen is built.
     check_equal(actor["position"], actor["desk"],

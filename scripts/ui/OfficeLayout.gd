@@ -82,8 +82,22 @@ static func route(from: Vector2, to: Vector2, layout: Dictionary) -> Array[Vecto
     var start := nearest_cell(from, layout)
     var target := nearest_cell(to, layout)
     var result: Array[Vector2] = []
+    if start == Vector2i(-1, -1) or target == Vector2i(-1, -1):
+        return result
     for cell in grid.get_id_path(start, target):
         var point := project(Vector2(cell) + Vector2(0.5, 0.5), dimensions)
         if point.distance_to(from) > 0.001:
             result.append(point)
     return result
+
+static func route_is_walkable(path: Array, layout: Dictionary) -> bool:
+    ## This is also useful to tests and future room editors: every projected
+    ## waypoint must resolve to a free navigation cell.
+    for waypoint in path:
+        if not waypoint is Vector2:
+            return false
+        var world := unproject(waypoint, layout["dimensions"])
+        var cell := Vector2i(floori(world.x), floori(world.y))
+        if not is_walkable(cell, layout):
+            return false
+    return true

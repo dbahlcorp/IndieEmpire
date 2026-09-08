@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+=== MobileLayoutTest ===
+
+-- expand only ever adds room, it never takes it away --
+
+-- iPhone SE -- 750 x 1334 physical, 523 x 932 logical --
+
+-- iPhone 15 Pro -- 1179 x 2556 physical, 430 x 932 logical --
+
+-- Pixel 8 -- 1080 x 2400 physical, 430 x 955 logical --
+
+-- tall 21:9 Android -- 1080 x 2520 physical, 430 x 1003 logical --
+
+-- iPad portrait -- 1536 x 2048 physical, 699 x 932 logical --
+
+-- foldable inner -- 1768 x 2208 physical, 746 x 932 logical --
+
+-- phone landscape -- 2400 x 1080 physical, 2071 x 931 logical --
+
+-- desktop default -- 1280 x 800 physical, 1491 x 932 logical --
+
+-- management screens stay within a readable measure at every width --
+
+MobileLayoutTest PASSED (184 checks)
