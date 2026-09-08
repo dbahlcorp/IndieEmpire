@@ -353,9 +353,10 @@ entries are the natural way to expand content here).
 
 ## PA.3 — Game Features
 
-**Status: implemented, 2026-09-08.** The existing partial feature path was
-extended rather than replaced. `data/game_features.json` now authors 19
-features in seven categories, including every feature named in the PA.3 brief.
+**Status: implemented, 2026-09-08. Re-verified 2026-09-08 (second pass).** The
+existing partial feature path was extended rather than replaced.
+`data/game_features.json` now authors 20 features in nine categories, including
+every feature named in the PA.3 brief.
 Every definition carries display/category copy, compound unlock requirements,
 research and selected-engine requirements, compatible eras, development
 effort, six discipline demands, bug risk, complexity, quality and innovation
@@ -391,6 +392,17 @@ development effort, discipline demand/execution, bug generation, soft genre
 interaction, over-scoping, full save/load of selections and outcomes, and
 postmortem knowledge. The full 53 regression suites plus all four connected
 acceptance phases pass after integration.
+
+**Second-pass verification (2026-09-08):** the shipped system was re-audited
+against the PA.3 brief end to end — data schema, tradeoff maths (effort → weeks
+→ cash cost via the weekly economy, plus bug risk, staffing and complexity),
+the over-scope warning wording, soft genre relevance, engine gating, the
+grouped selector with hidden multipliers, postmortem findings, and save
+round-tripping. All 57 committed suites (53 unit + 4 acceptance) pass;
+`FeatureTest` holds at 87 checks; no `SCRIPT ERROR`/`ERROR:` lines. One data
+defect was fixed: `data/game_sizes.json` had `complexity_min`/`complexity_max`
+authored twice per size object (a merge artifact — harmless to the parser,
+last-value-wins, but removed).
 
 No PA.3 functionality remains. Feature icons and post-launch DLC/patches remain
 optional future presentation/content work, not part of the Playable Alpha gate.
