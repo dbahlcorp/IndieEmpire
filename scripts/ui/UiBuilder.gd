@@ -144,3 +144,34 @@ static func score_bar(score: float) -> String:
 static func clear(container: Node) -> void:
     for child in container.get_children():
         child.queue_free()
+
+static func collapsible_section(title: String, expanded: bool = false) -> Dictionary:
+    ## A tap-to-expand card: the header always shows, the body only takes
+    ## space once opened. For long, optional content -- a feature list, a
+    ## priority picker -- on a portrait screen, where showing everything at
+    ## once pushes the primary action off the bottom. Returns {"panel",
+    ## "body", "header"}: add content to "body", add "panel" to your own
+    ## container, and set "header".text again if you want to show a live
+    ## summary (item count, current selection) after content changes.
+    var panel := PanelContainer.new()
+    var stack := VBoxContainer.new()
+    stack.add_theme_constant_override("separation", 6)
+
+    var header := Button.new()
+    header.custom_minimum_size = Vector2(0, TAP_HEIGHT)
+    header.add_theme_font_size_override("font_size", 15)
+    header.alignment = HORIZONTAL_ALIGNMENT_LEFT
+    header.text = "%s  %s" % ["▾" if expanded else "▸", title]
+
+    var body := VBoxContainer.new()
+    body.add_theme_constant_override("separation", 6)
+    body.visible = expanded
+
+    header.pressed.connect(func():
+        body.visible = not body.visible
+        header.text = "%s  %s" % ["▾" if body.visible else "▸", title])
+
+    stack.add_child(header)
+    stack.add_child(body)
+    panel.add_child(stack)
+    return {"panel": panel, "body": body, "header": header}

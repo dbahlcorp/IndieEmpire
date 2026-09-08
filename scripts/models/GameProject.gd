@@ -77,6 +77,10 @@ var expected_completion_index: int = 0
 ## The player's live direction for each stage. Missing choices are Balanced so
 ## projects from older saves continue without a migration penalty.
 var focus_choices: Dictionary = {}
+## The player's one-time whole-project emphasis, chosen at greenlight and
+## fixed for the build -- see ProjectPrioritySimulator. Missing choices are
+## Normal, the same free-pass convention focus_choices already uses.
+var priority_choices: Dictionary = {}
 
 # --- Quality ---
 var gameplay: float = 0.0
@@ -252,6 +256,7 @@ func to_dict() -> Dictionary:
     data["critic_reviews"] = critic_reviews
     data["role_assignments"] = role_assignments.duplicate()
     data["focus_choices"] = focus_choices.duplicate()
+    data["priority_choices"] = priority_choices.duplicate()
     return data
 
 static func from_dict(data: Dictionary) -> GameProject:
@@ -314,6 +319,11 @@ static func from_dict(data: Dictionary) -> GameProject:
             focus_id if DevelopmentFocusSimulator.is_valid(phase, focus_id)
             else DevelopmentFocusSimulator.DEFAULT_ID)
 
+    var saved_priorities: Dictionary = {}
+    if data.get("priority_choices", {}) is Dictionary:
+        saved_priorities = data.get("priority_choices", {})
+    project.priority_choices = ProjectPrioritySimulator.sanitize(saved_priorities)
+
     if project.id.is_empty():
         project.id = GameState.next_project_id()
     if project.word_of_mouth <= 0.0:
@@ -331,3 +341,8 @@ func set_focus(phase: String, focus_id_value: String) -> bool:
         return false
     focus_choices[phase] = focus_id_value
     return true
+
+func priority_level(category: String) -> String:
+    var value := str(priority_choices.get(category, ProjectPrioritySimulator.DEFAULT_LEVEL))
+    return value if ProjectPrioritySimulator.is_valid_level(value) \
+        else ProjectPrioritySimulator.DEFAULT_LEVEL

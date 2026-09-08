@@ -249,7 +249,7 @@ static func get_polish_cost(project: GameProject) -> int:
 static func start_project(
     title: String, theme_id: String, genre_id: String, platform_id: String,
     size_id: String, team_id: String = "team_a", assignments: Dictionary = {},
-    engine_id: String = "", feature_ids: Array = []
+    engine_id: String = "", feature_ids: Array = [], priority_choices: Dictionary = {}
 ) -> GameProject:
     var team := TeamManager.find_team(team_id)
     if team == null or not team.project_id.is_empty():
@@ -264,6 +264,14 @@ static func start_project(
     # default argument implies. Previously it could never validate.
     var resolved := assignments.duplicate() if not assignments.is_empty()         else TeamManager.default_assignments(team_id)
     if not TeamManager.valid_assignments(team_id, resolved):
+        return null
+    # An empty dictionary means "leave everything Normal", which is always
+    # within budget by construction -- see ProjectPrioritySimulator.BUDGET.
+    # Anything else has to actually respect the point budget: the picker UI
+    # already refuses to reach an invalid combination by tapping alone, but a
+    # caller that skips the UI (a stale draft, a future automation) does not
+    # get a free pass around the tradeoff.
+    if not priority_choices.is_empty() and not ProjectPrioritySimulator.is_within_budget(priority_choices):
         return null
     var upfront := get_upfront_cost(platform_id, size_id)
     var fee := get_platform_fee(platform_id)
@@ -289,6 +297,7 @@ static func start_project(
             chosen.append(str(id))
     project.feature_ids = chosen
     project.role_assignments = resolved
+    project.priority_choices = ProjectPrioritySimulator.sanitize(priority_choices)
     project.start_year = TimeManager.current_year
     project.start_month = TimeManager.current_month
     project.start_week = TimeManager.current_week
@@ -365,7 +374,8 @@ static func _complete_preproduction(project: GameProject, staff: Dictionary) -> 
     project.innovation += quality * 6.0 * DevelopmentFocusSimulator.quality_multiplier(
         project, "pre_production", "innovation")
     project.narrative_quality += quality * 5.0 * DevelopmentFocusSimulator.quality_multiplier(
-        project, "pre_production", "narrative_quality")
+        project, "pre_production", "narrative_quality") * ProjectPrioritySimulator.quality_multiplier(
+        project.priority_choices, "narrative_quality")
 
     project.production_efficiency_modifier = PreproductionSimulator.production_efficiency_modifier(
         effectiveness) + float(DevelopmentFocusSimulator.choice(
@@ -617,8 +627,13 @@ static func _discover_bugs(project: GameProject, testing_effectiveness: float, p
 
 static func _add_focused_quality(project: GameProject, phase: String, field: String,
         amount: float) -> void:
+    ## Two independent tradeoff layers compose here: the phase's own live
+    ## focus (DevelopmentFocusSimulator, changeable while this phase runs)
+    ## and the project's whole-build priority (ProjectPrioritySimulator, set
+    ## once at greenlight and fixed). Neither replaces the other.
     project.set(field, float(project.get(field)) + amount
-        * DevelopmentFocusSimulator.quality_multiplier(project, phase, field))
+        * DevelopmentFocusSimulator.quality_multiplier(project, phase, field)
+        * ProjectPrioritySimulator.quality_multiplier(project.priority_choices, field))
 
 static func _refresh_lead(project: GameProject) -> float:
     ## Whoever has the most leadership on the team leads -- not necessarily

@@ -16,13 +16,22 @@ const REQUIRED := 1.0
 
 static func find(project: GameProject) -> Dictionary:
     ## Empty once there is nothing worth flagging. Otherwise {"role_id",
-    ## "role_name", "required", "available", "recommendation"} -- required
-    ## and available both read 0..1(+) against a fully covered role's 1.0,
-    ## the same scale UiBuilder.meter() already expects as a percent.
+    ## "role_name", "required", "available", "staffed", "recommendation"} --
+    ## required and available both read 0..1(+) against a fully covered
+    ## role's 1.0, the same scale UiBuilder.meter() already expects as a
+    ## percent.
     if project == null or project.released:
         return {}
 
     var effects := DevelopmentSimulator.staff_effects(project)
+    return preview(project.role_assignments, effects)
+
+static func preview(role_assignments: Dictionary, effects: Dictionary) -> Dictionary:
+    ## The same worst-role search find() runs, but for a team that has not
+    ## started a project yet -- see ProjectEstimateSimulator.risk_assessment,
+    ## which needs this before a GameProject exists to read staff_effects()
+    ## from. Pass ProjectStaffSimulator.effects()'s own return value straight
+    ## through as effects.
     var contributions: Dictionary = effects.get("role_contributions", {})
 
     var worst_role_id := ""
@@ -34,7 +43,7 @@ static func find(project: GameProject) -> Dictionary:
         # Matches _team_text()'s own check: a role_assignments entry that no
         # longer resolves to a real employee -- gone, not just unnamed --
         # reads the same as never having been staffed at all.
-        var employee_id := str(project.role_assignments.get(role_id, ""))
+        var employee_id := str(role_assignments.get(role_id, ""))
         var staffed := EmployeeManager.find_employee(employee_id) != null
         var available := 0.0
         if staffed:
@@ -54,6 +63,7 @@ static func find(project: GameProject) -> Dictionary:
         "role_name": worst_role_name,
         "required": REQUIRED,
         "available": worst_available,
+        "staffed": worst_staffed,
         "recommendation": recommendation(worst_role_id, worst_staffed)
     }
 

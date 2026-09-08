@@ -141,10 +141,10 @@ custom_minimum_size = Vector2(0, 12)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="StartButton" type="Button" parent="Margin/Scroll/VBox"]
+[node name="ReviewButton" type="Button" parent="Margin/Scroll/VBox"]
 custom_minimum_size = Vector2(0, 62)
 layout_mode = 2
-text = "START DEVELOPMENT"
+text = "REVIEW PROJECT"
 
 [node name="BackButton" type="Button" parent="Margin/Scroll/VBox"]
 custom_minimum_size = Vector2(0, 52)

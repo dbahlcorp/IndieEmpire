@@ -12,7 +12,7 @@ extends Control
 @onready var knowledge_label: Label = $Margin/Scroll/VBox/KnowledgeLabel
 @onready var cost_label: Label = $Margin/Scroll/VBox/CostLabel
 @onready var budget_container: VBoxContainer = $Margin/Scroll/VBox/BudgetContainer
-@onready var start_button: Button = $Margin/Scroll/VBox/StartButton
+@onready var review_button: Button = $Margin/Scroll/VBox/ReviewButton
 @onready var back_button: Button = $Margin/Scroll/VBox/BackButton
 @onready var error_label: Label = $Margin/Scroll/VBox/ErrorLabel
 
@@ -23,6 +23,12 @@ var _selected_feature_ids: Array[String] = []
 ## Optional. 0 means the player has not chosen to set one at all.
 var _budget_target: int = 0
 var _cover_preview: GameCoverArt
+## The player's whole-project emphasis. See ProjectPrioritySimulator -- this
+## is a different, additional choice from the per-phase FocusOption the
+## development screen offers once a project is actually under way.
+var _priority_choices: Dictionary = ProjectPrioritySimulator.default_choices()
+var _priorities_body: VBoxContainer
+var _priorities_header: Button
 
 func _ready() -> void:
     GameClock.enter_menu()
@@ -33,6 +39,7 @@ func _ready() -> void:
     $Margin/Scroll/VBox.add_child(preview_center)
     $Margin/Scroll/VBox.move_child(preview_center, 1)
     _populate_options()
+    _build_priorities_section()
 
     title_input.text_changed.connect(_on_title_changed)
     theme_option.item_selected.connect(_on_choice_changed)
@@ -41,10 +48,55 @@ func _ready() -> void:
     size_option.item_selected.connect(_on_choice_changed)
     engine_option.item_selected.connect(_on_choice_changed)
     team_option.item_selected.connect(_on_team_changed)
-    start_button.pressed.connect(_on_start_pressed)
+    review_button.pressed.connect(_on_review_pressed)
     back_button.pressed.connect(_on_back_pressed)
 
+    _restore_draft()
     _refresh()
+
+func _restore_draft() -> void:
+    ## Coming back from the greenlight screen to change something keeps every
+    ## choice already made -- editing a project should not mean rebuilding it
+    ## from scratch. A draft left over from any other path (the player quit
+    ## mid-flow and started a fresh session) is not something a save carries
+    ## -- see ScreenRouter.draft_project -- so there is nothing stale to
+    ## worry about restoring by mistake.
+    var draft := ScreenRouter.draft_project
+    if draft.is_empty():
+        return
+
+    title_input.text = str(draft.get("title", ""))
+    _select_by_id(theme_option, str(draft.get("theme_id", "")))
+    _select_by_id(genre_option, str(draft.get("genre_id", "")))
+    _select_by_id(platform_option, str(draft.get("platform_id", "")))
+    _select_by_id(size_option, str(draft.get("size_id", "")))
+    _select_by_id(engine_option, str(draft.get("engine_id", "")))
+    _select_by_id(team_option, str(draft.get("team_id", "")))
+    _populate_roles(_selected_id(team_option))
+
+    var assignments: Dictionary = draft.get("assignments", {})
+    for role_id in assignments:
+        if _role_options.has(role_id):
+            _select_by_id(_role_options[role_id], str(assignments[role_id]))
+
+    var feature_ids: Array = draft.get("feature_ids", [])
+    _selected_feature_ids.clear()
+    for id in feature_ids:
+        _selected_feature_ids.append(str(id))
+    _populate_features()
+
+    _priority_choices = ProjectPrioritySimulator.sanitize(draft.get("priority_choices", {}))
+    _build_priorities_section()
+
+    _budget_target = int(draft.get("budget_target", 0))
+
+func _select_by_id(option: OptionButton, id: String) -> void:
+    if id.is_empty():
+        return
+    for i in option.item_count:
+        if str(option.get_item_metadata(i)) == id:
+            option.select(i)
+            return
 
 func _populate_options() -> void:
     _fill(theme_option, MarketManager.unlocked_themes(), "theme")
@@ -149,6 +201,81 @@ func _on_feature_toggled(pressed: bool, id: String) -> void:
         _selected_feature_ids.erase(id)
     _refresh()
 
+func _build_priorities_section() -> void:
+    ## An expandable card, not a wall of sliders: five simultaneous choices
+    ## on a portrait screen need progressive disclosure as much as the
+    ## feature list does. Built and inserted once, then rebuilt in place on
+    ## every change -- the same pattern _cover_preview already uses to live
+    ## outside the .tscn's own static nodes.
+    var vbox: VBoxContainer = $Margin/Scroll/VBox
+    if _priorities_body == null:
+        var card := UiBuilder.collapsible_section("PROJECT PRIORITIES", false)
+        vbox.add_child(card["panel"])
+        vbox.move_child(card["panel"], feature_list.get_index() + 1)
+        _priorities_body = card["body"]
+        _priorities_header = card["header"]
+
+    UiBuilder.clear(_priorities_body)
+    _priorities_body.add_child(UiBuilder.label(
+        "How this build leans. Every category starts Normal; raising one "
+        + "to High only fits the budget if another drops to Low.", 13))
+
+    for category in ProjectPrioritySimulator.CATEGORIES:
+        _priorities_body.add_child(_priority_row(category))
+
+    var used := ProjectPrioritySimulator.points_used(_priority_choices)
+    var remaining := ProjectPrioritySimulator.points_remaining(_priority_choices)
+    _priorities_body.add_child(UiBuilder.label(
+        "Priority points: %d used, %d remaining of %d" % [
+            used, remaining, ProjectPrioritySimulator.BUDGET], 12))
+
+    var customized := 0
+    for category in ProjectPrioritySimulator.CATEGORIES:
+        if str(_priority_choices.get(category, "")) != ProjectPrioritySimulator.DEFAULT_LEVEL:
+            customized += 1
+    var suffix := " (%d set)" % customized if customized > 0 else ""
+    _priorities_header.text = "%s  PROJECT PRIORITIES%s" % [
+        "▾" if _priorities_body.visible else "▸", suffix]
+
+func _priority_row(category: String) -> HBoxContainer:
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 8)
+    var label := UiBuilder.label(category.capitalize(), 14)
+    label.custom_minimum_size.x = 92
+    label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    row.add_child(label)
+
+    var group := ButtonGroup.new()
+    var current := str(_priority_choices.get(category, ProjectPrioritySimulator.DEFAULT_LEVEL))
+    for level_id in ProjectPrioritySimulator.LEVEL_ORDER:
+        var level_button := Button.new()
+        level_button.text = ProjectPrioritySimulator.level_name(level_id)
+        level_button.toggle_mode = true
+        level_button.button_group = group
+        level_button.custom_minimum_size = Vector2(0, UiBuilder.TAP_HEIGHT)
+        level_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        level_button.add_theme_font_size_override("font_size", 13)
+        var is_current: bool = (str(level_id) == current)
+        level_button.button_pressed = is_current
+        level_button.disabled = (
+            not is_current
+            and not ProjectPrioritySimulator.can_afford_level(_priority_choices, category, level_id)
+        )
+        level_button.toggled.connect(_on_priority_level_toggled.bind(category, level_id))
+        row.add_child(level_button)
+    return row
+
+func _on_priority_level_toggled(pressed: bool, category: String, level_id: String) -> void:
+    if not pressed:
+        return
+    if not ProjectPrioritySimulator.can_afford_level(_priority_choices, category, level_id):
+        # The button that could cause this is disabled before it can be
+        # tapped -- this is a defensive backstop, not the normal path.
+        _build_priorities_section()
+        return
+    _priority_choices[category] = level_id
+    _build_priorities_section()
+
 func _fill(option: OptionButton, items: Array, artwork_kind: String = "") -> void:
     option.clear()
     for item in items:
@@ -227,7 +354,7 @@ func _refresh() -> void:
     cost_label.text = cost_text
     _build_budget_section(estimate)
 
-    start_button.disabled = (
+    review_button.disabled = (
         not FinanceManager.can_afford(upfront + fee)
         or team_option.item_count == 0
     )
@@ -291,80 +418,13 @@ func _estimate_schedule(
     ## A real forecast, not a generic per-scope range: built from exactly the
     ## staff and roles currently chosen, the same way the actual project
     ## would be. So the player can financially plan before committing, not
-    ## just after.
-    var size := DataManager.get_size(size_id)
-    if size.is_empty() or team_id.is_empty():
+    ## just after. The maths itself lives in ProjectEstimateSimulator, shared
+    ## with GreenlightScreen's own estimate, so the two screens can never
+    ## quietly drift into showing different numbers for the same choices.
+    if team_id.is_empty():
         return {}
-    var employees := TeamManager.working_members(team_id)
-    if employees.is_empty():
-        return {}
-
-    var assignments := _current_assignments()
-    var workloads := _preview_workloads(assignments)
-    var office_productivity := OfficeManager.productivity()
-    var team := TeamManager.find_team(team_id)
-    var chemistry := team.chemistry if team != null else 50.0
-    var ideal_max := int(size.get("max_useful_staff", 99))
-    var ideal_min := int(size.get("ideal_team_min", 1))
-
-    var effects := ProjectStaffSimulator.effects(
-        assignments, employees, workloads, office_productivity, chemistry, ideal_max, ideal_min)
-
-    var lead := LeadershipSimulator.pick_lead(employees)
-    var leadership := float(lead.leadership) if lead != null else LeadershipSimulator.BASELINE
-    var half_width := LeadershipSimulator.schedule_half_width(leadership)
-    var culture_progress := CultureSimulator.progress_multiplier(CultureManager.value("efficiency"))
-
-    # Pre-production, fast and slow ends of the same weekly roll production
-    # itself uses.
-    var preprod_work := float(DevelopmentSimulator.PREPRODUCTION_WORK.get(size_id, 45.0))
-    var preprod_scale := 100.0 / maxf(preprod_work, 1.0)
-    var preprod_staff := float(effects.get("preproduction_progress", 1.0))
-    var preprod_fast := 100.0 / maxf(
-        (12.0 + half_width) * preprod_scale * preprod_staff * culture_progress, 0.01)
-    var preprod_slow := 100.0 / maxf(
-        maxf(12.0 - half_width, 1.0) * preprod_scale * preprod_staff * culture_progress, 0.01)
-
-    # Production. The plan-efficiency swing from pre-production is not known
-    # yet, so this assumes an unremarkable plan -- neither a bonus nor a
-    # penalty.
-    var work := DevelopmentSimulator.required_effort(size_id, feature_ids)
-    var progress_scale := 100.0 / work
-    var prod_staff := float(effects.get("progress", 1.0))
-    var prod_fast := 100.0 / maxf(
-        (11.0 + half_width) * progress_scale * prod_staff * culture_progress, 0.01)
-    var prod_slow := 100.0 / maxf(
-        maxf(11.0 - half_width, 1.0) * progress_scale * prod_staff * culture_progress, 0.01)
-
-    var weeks_min := maxi(int(ceil(preprod_fast + prod_fast)), 1)
-    var weeks_max := maxi(int(ceil(preprod_slow + prod_slow)), weeks_min)
-
-    var headcount := employees.size()
-    var multiplier := (
-        float(size.get("cost_multiplier", 1.0)) * DevelopmentSimulator.platform_cost_multiplier(platform_id)
-        * ScopeSimulator.cost_overhead_multiplier(headcount, ideal_max)
-    )
-
-    return {
-        "weeks_min": weeks_min,
-        "weeks_max": weeks_max,
-        "cost_min": upfront + _estimated_dev_cost(int(ceil(preprod_fast)), int(ceil(prod_fast)), multiplier),
-        "cost_max": upfront + _estimated_dev_cost(int(ceil(preprod_slow)), int(ceil(prod_slow)), multiplier)
-    }
-
-func _estimated_dev_cost(preprod_weeks: int, prod_weeks: int, multiplier: float) -> int:
-    var cost := 0
-    # Pre-production never ramps -- total_weeks() stays at zero throughout,
-    # exactly matching how the real weekly cost is actually calculated.
-    var preprod_base := DevelopmentSimulator.BASE_WEEKLY_COST + 15
-    for i in preprod_weeks:
-        cost += FinanceManager.expense(int(round(
-            float(preprod_base) * multiplier * DevelopmentSimulator.PREPRODUCTION_COST_SHARE)))
-    # Production ramps with each week actually spent building.
-    for week_index in range(1, prod_weeks + 1):
-        var base := DevelopmentSimulator.BASE_WEEKLY_COST + week_index * 15
-        cost += FinanceManager.expense(int(round(float(base) * multiplier)))
-    return cost
+    return ProjectEstimateSimulator.schedule_and_cost(
+        size_id, platform_id, team_id, _current_assignments(), upfront, feature_ids)
 
 func _current_assignments() -> Dictionary:
     var assignments: Dictionary = {}
@@ -372,15 +432,6 @@ func _current_assignments() -> Dictionary:
         var option: OptionButton = _role_options[role_id]
         assignments[role_id] = _selected_id(option)
     return assignments
-
-func _preview_workloads(assignments: Dictionary) -> Dictionary:
-    var workloads: Dictionary = {}
-    for role in TeamManager.PROJECT_ROLES:
-        var employee_id := str(assignments.get(role["id"], ""))
-        if employee_id.is_empty():
-            continue
-        workloads[employee_id] = int(workloads.get(employee_id, 0)) + int(role["workload"])
-    return workloads
 
 func _refresh_knowledge(theme_id: String, genre_id: String, platform_id: String) -> void:
     if theme_id.is_empty() or genre_id.is_empty():
@@ -436,11 +487,18 @@ func _on_team_changed(_index: int) -> void:
     _populate_roles(_selected_id(team_option))
     _refresh()
 
-func _on_start_pressed() -> void:
+func _build_draft() -> Dictionary:
+    ## Validates and assembles exactly what GreenlightScreen will need,
+    ## without touching the scene tree -- kept separate from
+    ## _on_review_pressed() so a test can call this directly instead of
+    ## going through the button press, which navigates and would tear the
+    ## calling scene down with it. Returns {} and sets error_label on any
+    ## failure; never sets ScreenRouter.draft_project itself, so a failed
+    ## attempt cannot clobber a previously valid draft.
     var title := title_input.text.strip_edges()
     if title.is_empty():
         error_label.text = "Give your game a title."
-        return
+        return {}
 
     var theme_id := _selected_id(theme_option)
     var genre_id := _selected_id(genre_option)
@@ -451,25 +509,39 @@ func _on_start_pressed() -> void:
 
     if theme_id.is_empty() or genre_id.is_empty() or platform_id.is_empty() or size_id.is_empty() or team_id.is_empty():
         error_label.text = "No valid options available right now."
-        return
-
+        return {}
 
     var assignments := _current_assignments()
     if not assignments.values().any(func(value): return not str(value).is_empty()):
         error_label.text = "Assign at least one person to the project."
+        return {}
+
+    return {
+        "title": title,
+        "theme_id": theme_id,
+        "genre_id": genre_id,
+        "platform_id": platform_id,
+        "size_id": size_id,
+        "team_id": team_id,
+        "engine_id": engine_id,
+        "feature_ids": _selected_feature_ids.duplicate(),
+        "assignments": assignments,
+        "priority_choices": _priority_choices.duplicate(),
+        "budget_target": _budget_target
+    }
+
+func _on_review_pressed() -> void:
+    var draft := _build_draft()
+    if draft.is_empty():
         return
 
-    var project := DevelopmentSimulator.start_project(
-        title, theme_id, genre_id, platform_id, size_id, team_id, assignments, engine_id,
-        _selected_feature_ids
-    )
-    if project == null:
-        error_label.text = "You cannot afford this project."
-        return
-    project.budget_target = _budget_target
-
-    SaveManager.autosave()
-    get_tree().change_scene_to_file("res://scenes/development/DevelopmentScreen.tscn")
+    # Nothing is greenlit yet -- the project is only ever created by
+    # GreenlightScreen pressing GREENLIGHT PROJECT, off exactly this same
+    # data. ScreenRouter carries it across the scene change the same way it
+    # already carries the other bits of cross-screen navigation state.
+    ScreenRouter.draft_project = draft
+    get_tree().change_scene_to_file("res://scenes/development/GreenlightScreen.tscn")
 
 func _on_back_pressed() -> void:
+    ScreenRouter.clear_draft_project()
     get_tree().change_scene_to_file("res://scenes/studio/TeamsScreen.tscn")
