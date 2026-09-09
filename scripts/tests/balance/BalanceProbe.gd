@@ -28,6 +28,9 @@ var granted := 0
 var hires := 0
 var office_moves := 0
 var rested := 0
+var research_started := 0
+var engines_started := 0
+var sequels_started := 0
 ## How crowded the studio's own slate was when each game launched.
 var concurrent_at_launch := {}
 var genre_demand_at_launch := {}
@@ -39,8 +42,8 @@ func run() -> void:
 	seed(seed_value)
 	DirAccess.make_dir_recursive_absolute(out_dir)
 
-	games_csv.append("seed,index,year,size,platform,publisher,review,quality,expected_quality,quality_ratio,bugs,dev_weeks,polish_weeks,units,revenue,advance,dev_cost,labour_cost,profit,attach_pct,concurrent,genre_demand,team_size,useful_staff")
-	years_csv.append("seed,year,cash,staff,payroll_mo,office,teams,rent_mo,released,avg_review,consumer_rep,fans")
+	games_csv.append("seed,index,year,size,platform,publisher,review,quality,expected_quality,quality_ratio,bugs,dev_weeks,polish_weeks,units,revenue,advance,dev_cost,labour_cost,profit,attach_pct,concurrent,genre_demand,team_size,useful_staff,features,engine,sequel,priority_high")
+	years_csv.append("seed,year,cash,staff,payroll_mo,office,teams,rent_mo,released,avg_review,consumer_rep,fans,research_done,research_active,engines,franchises,awards,loans")
 
 	_play()
 	_dump()
@@ -70,6 +73,7 @@ func _play() -> void:
 		_answer_people()
 		_look_after_people()
 		_grow()
+		_advance_progression()
 		_work()
 		TimeManager.advance_week()
 		weeks += 1
@@ -96,6 +100,8 @@ func _play() -> void:
 		GameState.released_games.size(), CompanyStats.average_review()])
 	print("  hires %d, granted %d, office moves %d, departures %d" % [
 		hires, granted, office_moves, GameState.departed_employees.size()])
+	print("  research started %d, engines started %d, sequels started %d" % [
+		research_started, engines_started, sequels_started])
 
 func _record_game(game: GameProject) -> void:
 	var size := DataManager.get_size(game.size_id)
@@ -105,7 +111,11 @@ func _record_game(game: GameProject) -> void:
 	var attach := 0.0
 	if base > 0:
 		attach = float(game.lifetime_sales) / float(base) * 100.0
-	games_csv.append("%d,%d,%d,%s,%s,%s,%.2f,%.1f,%.1f,%.3f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%d,%.3f,%d,%d" % [
+	var high_priorities := 0
+	for category in ProjectPrioritySimulator.CATEGORIES:
+		if game.priority_level(category) == "high":
+			high_priorities += 1
+	games_csv.append("%d,%d,%d,%s,%s,%s,%.2f,%.1f,%.1f,%.3f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%.2f,%d,%.3f,%d,%d,%d,%s,%d,%d" % [
 		seed_value, GameState.released_games.find(game), game.release_year,
 		game.size_id, game.platform_id,
 		game.publisher_id if not game.publisher_id.is_empty() else "self",
@@ -117,16 +127,21 @@ func _record_game(game: GameProject) -> void:
 		int(concurrent_at_launch.get(game.id, 1)),
 		float(genre_demand_at_launch.get(game.id, 1.0)),
 		int(team_size_at_launch.get(game.id, 0)),
-		int(size.get("max_useful_staff", 99))])
+		int(size.get("max_useful_staff", 99)), game.feature_ids.size(),
+		game.engine_id if not game.engine_id.is_empty() else "stock",
+		1 if game.is_sequel() else 0, high_priorities])
 
 func _record_year() -> void:
-	years_csv.append("%d,%d,%d,%d,%d,%s,%d,%d,%d,%.2f,%.1f,%d" % [
+	years_csv.append("%d,%d,%d,%d,%d,%s,%d,%d,%d,%.2f,%.1f,%d,%d,%d,%d,%d,%d,%d" % [
 		seed_value, TimeManager.current_year, GameState.cash,
 		EmployeeManager.active_employees().size(),
 		EmployeeManager.monthly_payroll(), GameState.office_id,
 		GameState.teams.size(), OfficeManager.monthly_rent(),
 		GameState.released_games.size(), CompanyStats.average_review(),
-		GameState.consumer_reputation, GameState.fans])
+		GameState.consumer_reputation, GameState.fans,
+		GameState.completed_technologies.size(), GameState.active_research.size(),
+		GameState.custom_engines.size(), GameState.franchises.size(),
+		CompanyStats.total_awards_won(), GameState.loans_taken])
 
 func _dump() -> void:
 	_write("%s/games_%d.csv" % [out_dir, seed_value], games_csv)
@@ -181,6 +196,38 @@ func _grow() -> void:
 	var candidate: Employee = GameState.labor_candidates[0]
 	if str(LaborMarketManager.make_offer(candidate, candidate.salary, 0.0).get("status", "")) == "accepted":
 		hires += 1
+
+func _advance_progression() -> void:
+	## A deliberately imperfect manager: it reserves progression work only when
+	## someone is idle and the studio has enough runway. This exercises research
+	## and engines without giving the probe free staff or instant unlocks.
+	if not GameState.active_research.is_empty() or EngineManager.has_active_project():
+		return
+	if EmployeeManager.active_employees().size() < 3:
+		return
+	var candidates: Array[Employee] = []
+	for employee in EmployeeManager.active_employees():
+		if not TeamManager.employee_has_active_role(employee.id) and not employee.is_away():
+			candidates.append(employee)
+	if candidates.is_empty():
+		return
+	var researcher := candidates[0]
+	if GameState.custom_engines.is_empty() \
+			and GameState.completed_technologies.size() >= ResearchManager.starter_ids().size() + 2 \
+			and EmployeeManager.active_employees().size() >= 5:
+		var tech_ids: Array = []
+		for tech in EngineManager.engine_capable_technologies():
+			tech_ids.append(str(tech.get("id", "")))
+			if tech_ids.size() >= 2:
+				break
+		if not tech_ids.is_empty() and EngineManager.begin_engine("Probe Engine", tech_ids, [researcher.id]):
+			engines_started += 1
+			return
+	for tech in ResearchManager.technologies():
+		var tech_id := str(tech.get("id", ""))
+		if ResearchManager.state_of(tech_id) == "available" and ResearchManager.start(tech_id, [researcher.id]):
+			research_started += 1
+			return
 
 func _can_carry_office(office_id: String) -> bool:
 	## can_move_to() only asks whether the move-in cost is affordable. The rent
@@ -296,6 +343,32 @@ func _start_project(team_id: String) -> void:
 			size_id = str(size.get("id", ""))
 
 	var platform_id := str(platforms[0].get("id", ""))
+	var engine_id := ""
+	if not GameState.custom_engines.is_empty():
+		engine_id = str(GameState.custom_engines.back().get("id", ""))
+	var feature_ids: Array = []
+	# A founder cannot safely absorb optional feature work. Add features only
+	# once a real team exists, matching the onboarding's progressive disclosure.
+	if headcount >= 3:
+		for feature in DataManager.game_features:
+			if feature_ids.size() >= 2:
+				break
+			if FeatureSimulator.is_available(feature, TimeManager.current_year,
+					GameState.completed_technologies, FeatureSimulator.engine_features(engine_id), feature_ids):
+				var trial := feature_ids.duplicate()
+				trial.append(str(feature.get("id", "")))
+				if not bool(FeatureSimulator.complexity_budget(size_id, trial)["over_scoped"]):
+					feature_ids = trial
+	var priorities := ProjectPrioritySimulator.default_choices()
+	var high_category := "gameplay" if genre_id in ["action", "sports", "simulation"] else "story"
+	var low_category := "audio" if high_category != "audio" else "graphics"
+	priorities[high_category] = "high"
+	priorities[low_category] = "low"
+	var series_id := ""
+	for franchise in FranchiseManager.selectable_franchises():
+		if franchise.fan_interest >= 55.0 and franchise.fatigue < 45.0 and randf() < 0.25:
+			series_id = franchise.id
+			break
 	var cost := DevelopmentSimulator.get_upfront_cost(platform_id, size_id)
 	cost += DevelopmentSimulator.get_platform_fee(platform_id)
 	if not FinanceManager.can_afford(cost * 2):
@@ -305,6 +378,9 @@ func _start_project(team_id: String) -> void:
 		if not FinanceManager.can_afford(cost * 2):
 			return
 
-	DevelopmentSimulator.start_project(
+	var started := DevelopmentSimulator.start_project(
 		"Project %d" % (GameState.released_games.size() + GameState.active_projects.size() + 1),
-		theme_id, genre_id, platform_id, size_id, team_id)
+		theme_id, genre_id, platform_id, size_id, team_id, {}, engine_id,
+		feature_ids, priorities, series_id)
+	if started != null and started.is_sequel():
+		sequels_started += 1

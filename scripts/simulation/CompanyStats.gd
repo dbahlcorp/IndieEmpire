@@ -50,6 +50,23 @@ static func highest_rated() -> GameProject:
 static func biggest_flop() -> GameProject:
     return _best_by("lifetime_sales", false)
 
+static func biggest_loss() -> GameProject:
+    var worst: GameProject = null
+    for game in GameState.released_games:
+        if worst == null or game.profit() < worst.profit():
+            worst = game
+    return worst
+
+static func overview() -> Array:
+    return [
+        {"icon": "games", "label": "Games released", "value": str(GameState.released_games.size())},
+        {"icon": "sales", "label": "Total sales", "value": Format.count(lifetime_units())},
+        {"icon": "cash", "label": "Revenue", "value": "$%s" % Format.count(lifetime_revenue())},
+        {"icon": "success", "label": "Awards", "value": str(total_awards_won())},
+        {"icon": "fans", "label": "Fans", "value": Format.count(GameState.fans)},
+        {"icon": "staff", "label": "Employees", "value": str(EmployeeManager.active_employees().size())},
+    ]
+
 static func most_expensive() -> GameProject:
     var best: GameProject = null
     for game in GameState.released_games:

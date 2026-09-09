@@ -1,9 +1,10 @@
-# Playable Alpha implementation plan
+# Mobile Playable Alpha implementation and acceptance tracker
 
-Roadmap only. Nothing in this document has been implemented. It is built from
-reading the current repository, not from an older design document, and every
-"existing" claim below was verified against actual files before being written
-down.
+Active tracker, audited against the repository on **2026-09-09**. The detailed
+sections preserve design rationale, but this summary is authoritative where
+older baseline wording conflicts with implementation that subsequently landed.
+Mobile Playable Alpha is not signed off until the physical-device gate in
+`docs/PLAYABLE_ALPHA_ACCEPTANCE.md` is completed.
 
 ## Target
 
@@ -31,27 +32,10 @@ Run:
 godot --headless --path . res://scripts/tests/<Suite>.tscn
 ```
 
-**54 of 54 committed suites pass** (50 `scripts/tests/*.tscn` unit suites +
-4 `scripts/tests/acceptance/Phase{A,B,C,D}.tscn` career-phase suites). No
-`SCRIPT ERROR` or `ERROR:` lines in any log.
-
-Two things in the working tree are not part of that count and should not be
-mistaken for regressions:
-
-- `scripts/tests/StudioWalkingSnapshot.gd`/`.tscn` are **untracked** (`git
-  status` shows `??`) — a local, uncommitted screenshot-capture fixture, not
-  a `TestCase` suite (it never prints `PASSED`/`FAILED`). It fails under
-  `--headless` because Godot's dummy renderer returns a null viewport
-  texture (`ERROR: Parameter "t" is null.` at `texture_2d_get`), which is an
-  environment limitation of headless screenshotting, not a code fault. It is
-  not part of the 54.
-- The working tree also carries **uncommitted edits** to
-  `scripts/ui/OfficeFloorView.gd`, `scripts/ui/OfficeLayout.gd` and
-  `scripts/tests/OfficeFloorTest.gd` (a foreground-occlusion fix for the
-  office-floor renderer, plus a `route_is_walkable` guard and two new
-  assertions) that this plan did not make and does not touch. `git diff`
-  shows the change; it is out of scope here and left as-is. `OfficeFloorTest`
-  still passes with it applied (234 checks in the baseline run above).
+Fresh baseline on 2026-09-09: Godot 4.7.2 imported the project successfully and
+**74 of 74 committed suites passed** before the Statistics work. The new
+`StatisticsTest` adds a 75th suite and passes 14 focused checks. A final full
+regression result is recorded in `docs/PLAYABLE_ALPHA_MOBILE_REPORT_2026-09-09.md`.
 
 ## Architecture already in place — reuse, do not duplicate
 
@@ -70,7 +54,7 @@ below:
   `DataManager` — including the technology tree (`data/technologies.json`,
   added by PA.2, which retired the old hardcoded `EngineManager.FEATURES`
   constant).
-- **Saves** are versioned (`SaveManager.SAVE_VERSION := 21`,
+- **Saves** are versioned (`SaveManager.SAVE_VERSION := 25`,
   `MIN_SUPPORTED_VERSION := 5`) with numbered migration branches
   (`if int(data.get("version", 0)) < 15: ...`). Every PA section that adds a
   `GameState` field needs a version bump and a migration branch in this same
@@ -90,28 +74,27 @@ below:
   allowlist, and Godot ships none).
 - **Regression tests** are `extends TestCase` scenes with `section()` /
   `check_*()` calls (see `scripts/tests/TestCase.gd`), one `.tscn` per
-  `.gd`, discovered by filename. New suites follow this pattern exactly so
-  they run the same way as the other 54.
+  `.gd`, discovered by filename. New suites follow this pattern exactly.
 
 ## Status at a glance
 
 | # | Section | Status | Relative complexity |
 |---|---|---|---|
-| PA.1 | Game Creation & Project Decisions | **Implemented** (2026-09-08; pricing/marketing still out) | Low |
-| PA.2 | Research & Technology | **Implemented** (2026-09-08; balance pass deferred) | Low–Medium |
-| PA.3 | Game Features | **Implemented** (2026-09-08) | Complete |
-| PA.4 | Engine Progression | **Implemented** (2026-09-08; balance pass deferred) | Medium |
-| PA.5 | Content Expansion | **Implemented** (2026-09-08) | Low–Medium (content authoring, not engineering) |
-| PA.6 | Onboarding & Progressive Disclosure | **Missing** | Medium–High |
-| PA.7 | Release, Reviews & Sales Presentation | **Implemented** (2026-09-08) | Low–Medium |
-| PA.8 | Audio & Feedback | **Mostly missing** | Medium (asset-bound) |
-| PA.9 | Studio Visual Feedback | **Substantially complete** | Low–Medium (polish only) |
-| PA.10 | Sequels & Franchises | **Implemented** (2026-09-09) | Medium–High |
-| PA.11 | Awards | **Implemented** (2026-09-09) | Medium |
-| PA.12 | Statistics & Graphs | **Missing UI, data exists** | Medium |
-| PA.13 | Financial Crisis/Recovery | **Implemented** (2026-09-09) | Medium |
-| PA.14 | Difficulty, Settings & Accessibility | **Implemented** (2026-09-09) | Medium (breadth, not depth) |
-| PA.15 | Human Playtest & Balance | **Process exists, needs a human gate + updated probe** | Low–Medium |
+| PA.1 | Game Creation & Project Decisions | **Implemented; automated validation passed** | Physical touch validation pending |
+| PA.2 | Research & Technology | **Implemented; automated validation passed** | Physical pacing validation pending |
+| PA.3 | Game Features | **Implemented; automated validation passed** | Physical discoverability pending |
+| PA.4 | Engine Progression | **Implemented; automated validation passed** | Physical pacing validation pending |
+| PA.5 | Content Expansion | **Implemented; content validation passed** | Human copy/repetition review pending |
+| PA.6 | Onboarding & Progressive Disclosure | **Implemented but not physically validated** | First-15-minute gate pending |
+| PA.7 | Release, Reviews & Sales Presentation | **Implemented but not physically validated** | Touch pacing/audio fatigue pending |
+| PA.8 | Audio, Haptics & Feedback | **Implemented but not physically validated** | iPhone audio/haptics pending |
+| PA.9 | Studio Visual Feedback | **Implemented but not physically validated** | Long-session performance pending |
+| PA.10 | Sequels & Franchises | **Implemented; automated validation passed** | Physical UX validation pending |
+| PA.11 | Awards | **Implemented; automated validation passed** | Physical ceremony UX pending |
+| PA.12 | Mobile Statistics | **Implemented; focused automated validation passed** | Physical scrolling/readability pending |
+| PA.13 | Financial Crisis/Recovery | **Implemented; automated validation passed** | Human comprehension pending |
+| PA.14 | Difficulty, Settings & Accessibility | **Partially validated** | Device accessibility/keyboard pending |
+| PA.15 | Human Playtest & Balance | **Partially implemented** | Physical connected playthrough blocked |
 
 ---
 
@@ -617,17 +600,12 @@ pattern once that system exists).
 ## PA.6 — Onboarding & Progressive Disclosure
 
 ### Current repository state
-**Nothing exists.** `docs/ASSET_UI_PLAN.md` Batch 4 lists "First-run
-onboarding and contextual explanations" as unchecked, and no code
-implements any part of it: no tutorial flag in `GameState`, no first-run
-detection, no contextual tooltip system, no guided first-project flow.
-
-This is also, concretely, the missing piece of the still-open **M3
-acceptance gate**: `docs/M3_ACCEPTANCE.md` states the player "must be able
-to explain the consequences from information available on screen" and that
-this has not yet been demonstrated. Onboarding work here directly serves
-that unmet M3 requirement as well as the Playable Alpha goal — it is not
-duplicate scope.
+**Implemented 2026-09-08; physical validation pending.** `TutorialManager`
+owns the persisted first-hour sequence, contextual lessons, focus treatment and
+skip behavior. The first project hides advanced setup and reveals research,
+technology, features, market, office, hiring and payroll progressively. See
+`docs/ONBOARDING.md`; `TutorialTest` passes. The connected first-15-minute and
+first-hour touch playthroughs remain part of PA.15.
 
 ### Existing systems that can be reused
 `Notifications.gd`'s toast system (`notification_requested` signal,
@@ -802,13 +780,12 @@ building this one independently).
 ## PA.8 — Audio & Feedback
 
 ### Current repository state
-`autoload/AudioManager.gd` (71 lines) crossfades a single music loop
-(`assets/audio/music/studio_day_loop.wav`) and a single ambience loop
-(`assets/audio/ambience/office_room_loop.wav`) based on which scene is
-active (`scene_uses_ambience`). `Settings.gd` has `music_volume` and
-`ambience_volume` sliders, persisted. **`assets/audio/` contains exactly
-these two files** — there is no UI SFX of any kind (no click, hire,
-release, sale-milestone, level-up, bankruptcy-warning, or error sound).
+**Implemented 2026-09-08; physical validation pending.** `AudioManager` owns
+music, office ambience, a bounded SFX pool and optional iOS haptic profiles.
+Feedback covers primary UI, research, technology, employees, releases, critic
+reveals, milestones, awards and financial danger without weekly-tick spam.
+Independent volumes, haptics and Reduced Motion persist in Settings. See
+`docs/AUDIO_AND_GAME_FEEL.md`; `AudioTest` passes.
 
 ### Existing systems that can be reused
 `AudioManager`'s player-pooling and fade infrastructure
@@ -868,6 +845,8 @@ cost driver and should be scoped/budgeted separately from the code work.
 ---
 
 ## PA.9 — Studio Visual Feedback
+
+**Status: implemented, 2026-09-08; physical performance validation pending.**
 
 ### Current repository state
 This is the most mature system on the list, and it was under active,
@@ -1049,14 +1028,10 @@ game); PA.12 (a franchise view naturally wants its own chart/breakdown).
 ## PA.11 — Awards
 
 ### Current repository state
-`Employee.gd:120-124` carries an `awards: Array` field
-(`{award_id, name, project_id, year}`) with an explicit comment: **"Nothing
-awards these yet."** No `data/awards.json`, no ceremony trigger, no
-`GameState`-level company awards list, no UI. `PostmortemSimulator.
-_award_and_describe` and `ExperienceManager.award()` both use "award" to
-mean *grant XP*, an unrelated meaning — name whatever new system is built
-here carefully (e.g. `AwardsManager`/`AwardsSimulator`) to avoid reading as
-the same concept in code review or in-repo search.
+**Implemented 2026-09-09; physical ceremony validation pending.** Authored
+award data, pure eligibility/scoring, annual ceremonies, persistent company and
+employee records, rewards, nominations/wins feedback and history UI are live.
+`AwardsTest` and `AwardsEconomyTest` pass.
 
 ### Existing systems that can be reused
 `Employee.awards` (the field already exists — populate it, don't
@@ -1128,19 +1103,22 @@ studio events — sequence after that pattern is proven out); PA.12
 
 ## PA.12 — Statistics & Graphs
 
+**Status: implemented, 2026-09-09; physical readability validation pending.**
+
 ### Current repository state
-The underlying time-series data mostly already exists, unrendered:
+The underlying time-series data is now presented through a mobile Statistics
+career scrapbook. The existing sources remain:
 `FinanceManager.annual_history()` returns permanent per-year income/expense/
 net records; `GameProject.weekly_sales` (confirm exact field name in
 `GameProject.gd` before implementing — README describes "its full sales
 curve" as already tracked) holds a release's week-by-week sales; `GameState.
 genre_trends`/`genre_saturation` track market movement; `ExperienceManager`
-tracks per-genre/theme XP over the studio's life. `CompanyStats.gd` (143
-lines) already aggregates lifetime totals and a "records" leaderboard
-(best-selling, highest-rated, biggest flop, most profitable, fastest-
-selling, longest-selling, largest fan gain — `RecordsScreen.gd` renders
-this as text). **None of this is charted** — every existing presentation is
-a number or a list, never a line/bar over time.
+tracks per-genre/theme XP over the studio's life. `CompanyStats` supplies six
+headline metrics and career records. `CareerChart` renders signed annual
+revenue/profit trends with 1Y/5Y/10Y/ALL selectors and both concise and full
+text equivalents. `RecordsScreen` now adds a bounded-by-default release
+timeline, franchise health/value cards, awards history and useful empty states.
+Per-game sales charts remain on Release Results and Game Detail.
 
 ### Existing systems that can be reused
 All of the data sources above — this section is purely "add
@@ -1205,14 +1183,11 @@ view); PA.14 (the textual-equivalent requirement is shared infrastructure).
 ## PA.13 — Financial Crisis/Recovery
 
 ### Current repository state
-The crisis *cliff* is built and tested: `FinanceManager.check_solvency`
-tracks `GameState.overdrawn_weeks` against a difficulty-dependent
-`GameState.grace_weeks()`, emits `company_bankruptcy_warning(weeks_left)`
-each week the studio is overdrawn but not yet out of grace, emits
-`company_recovered()` if cash returns positive within the grace window,
-and `declare_bankruptcy()` (clearing active projects, ending all sales,
-emitting `company_bankrupt`) if grace runs out. `GameOverScreen.gd` handles
-the terminal state. `CashRunwayTest` covers this.
+**Implemented 2026-09-09; human comprehension validation pending.** The staged
+crisis model diagnoses cash, burn, runway and the largest cost driver; the
+mobile recovery screen offers scoped actions with consequences. A capped,
+amortised emergency loan cannot reset insolvency and is covered by a dedicated
+economy guard. See `docs/FINANCIAL_CRISIS_2026-09-09.md`.
 
 ### Existing systems that can be reused
 The **exact pattern already used for schedule crises** is the right
@@ -1388,6 +1363,9 @@ equivalents are an accessibility deliverable as much as a statistics one).
 ---
 
 ## PA.15 — Human Playtest & Balance
+
+**Status: partially implemented. Automated gate passes; physical mobile gate
+has not been performed.**
 
 ### Current repository state
 The *automated* half of this is genuinely mature and was used twice in

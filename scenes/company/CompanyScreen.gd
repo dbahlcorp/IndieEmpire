@@ -136,7 +136,7 @@ func _saves() -> void:
         financials.pressed.connect(_go.bind("res://scenes/company/FinancialsScreen.tscn"))
         list.add_child(financials)
 
-    var records := UiBuilder.button("RECORDS")
+    var records := UiBuilder.button("STATISTICS")
     records.pressed.connect(_go.bind("res://scenes/company/RecordsScreen.tscn"))
     list.add_child(records)
 
