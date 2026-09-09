@@ -16,6 +16,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 MUSIC_PATH = ROOT / "assets" / "audio" / "music" / "studio_day_loop.wav"
 AMBIENCE_PATH = ROOT / "assets" / "audio" / "ambience" / "office_room_loop.wav"
+SFX_DIR = ROOT / "assets" / "audio" / "sfx"
 
 
 def midi(note: int) -> float:
@@ -205,8 +206,47 @@ def generate_ambience() -> None:
     normalize_and_write(AMBIENCE_PATH, audio, sample_rate, 0.36)
 
 
+def generate_sfx() -> None:
+    """Short UI cues; each is synthesized, original, and sample-free."""
+    sample_rate = 22_050
+    # name: (duration, [(time, MIDI note, note length, level, timbre)], noise level)
+    cues = {
+        "button_tap": (0.09, [(0.00, 69, 0.055, 0.18, "triangle")], 0.018),
+        "navigation": (0.16, [(0.00, 62, 0.07, 0.12, "sine"), (0.055, 69, 0.09, 0.14, "bell")], 0.0),
+        "money_gain": (0.32, [(0.00, 72, 0.13, 0.13, "bell"), (0.08, 76, 0.16, 0.15, "bell"), (0.16, 79, 0.15, 0.13, "bell")], 0.0),
+        "money_spent": (0.22, [(0.00, 67, 0.10, 0.12, "triangle"), (0.08, 60, 0.13, 0.13, "triangle")], 0.008),
+        "research_complete": (0.48, [(0.00, 60, 0.22, 0.10, "sine"), (0.10, 67, 0.25, 0.12, "bell"), (0.22, 72, 0.24, 0.14, "bell")], 0.0),
+        "technology_unlock": (0.58, [(0.00, 64, 0.18, 0.11, "bell"), (0.09, 68, 0.20, 0.12, "bell"), (0.18, 71, 0.22, 0.13, "bell"), (0.28, 76, 0.28, 0.15, "bell")], 0.0),
+        "employee_hired": (0.34, [(0.00, 67, 0.13, 0.12, "triangle"), (0.09, 71, 0.14, 0.13, "triangle"), (0.18, 74, 0.15, 0.14, "bell")], 0.0),
+        "employee_promotion": (0.46, [(0.00, 60, 0.14, 0.11, "bell"), (0.09, 67, 0.16, 0.12, "bell"), (0.18, 72, 0.26, 0.16, "bell")], 0.0),
+        "employee_resignation": (0.42, [(0.00, 64, 0.18, 0.11, "sine"), (0.14, 59, 0.26, 0.12, "sine")], 0.006),
+        "game_release": (0.62, [(0.00, 55, 0.16, 0.12, "soft_square"), (0.08, 62, 0.18, 0.12, "bell"), (0.18, 67, 0.22, 0.14, "bell"), (0.30, 74, 0.29, 0.17, "bell")], 0.01),
+        "review_reveal": (0.25, [(0.00, 62, 0.21, 0.13, "bell"), (0.04, 74, 0.18, 0.08, "sine")], 0.012),
+        "excellent_review": (0.55, [(0.00, 67, 0.18, 0.12, "bell"), (0.10, 71, 0.19, 0.13, "bell"), (0.20, 74, 0.32, 0.17, "bell")], 0.0),
+        "poor_review": (0.48, [(0.00, 62, 0.19, 0.11, "sine"), (0.14, 58, 0.31, 0.13, "triangle")], 0.008),
+        "sales_milestone": (0.45, [(0.00, 72, 0.12, 0.12, "bell"), (0.08, 76, 0.14, 0.13, "bell"), (0.16, 79, 0.27, 0.16, "bell")], 0.0),
+        "award_nomination": (0.52, [(0.00, 65, 0.18, 0.11, "bell"), (0.13, 72, 0.36, 0.15, "bell")], 0.0),
+        "award_win": (0.78, [(0.00, 60, 0.16, 0.11, "bell"), (0.10, 67, 0.18, 0.13, "bell"), (0.20, 72, 0.20, 0.15, "bell"), (0.32, 76, 0.43, 0.18, "bell")], 0.012),
+        "warning": (0.32, [(0.00, 66, 0.13, 0.13, "soft_square"), (0.15, 66, 0.15, 0.13, "soft_square")], 0.004),
+        "financial_crisis": (0.58, [(0.00, 57, 0.20, 0.13, "soft_square"), (0.19, 53, 0.20, 0.14, "soft_square"), (0.38, 48, 0.18, 0.15, "soft_square")], 0.012),
+        "bankruptcy": (0.90, [(0.00, 55, 0.27, 0.14, "sine"), (0.22, 50, 0.29, 0.15, "sine"), (0.46, 43, 0.40, 0.17, "soft_square")], 0.018),
+    }
+    rng = np.random.default_rng(20_260_908)
+    for name, (duration, notes, noise_level) in cues.items():
+        audio = np.zeros((int(duration * sample_rate), 2), dtype=np.float64)
+        for start, note, length, level, timbre in notes:
+            add_note(audio, start, length, sample_rate, note, level, timbre,
+                     pan=rng.uniform(-0.12, 0.12), attack=0.002, release=min(0.16, length * 0.72))
+        if noise_level > 0.0:
+            add_noise_hit(audio, rng, 0.0, min(duration, 0.12), sample_rate,
+                          noise_level, 0.0, 4200.0)
+        normalize_and_write(SFX_DIR / f"{name}.wav", audio, sample_rate, 0.62)
+
+
 if __name__ == "__main__":
     generate_music()
     generate_ambience()
+    generate_sfx()
     print(f"Wrote {MUSIC_PATH.relative_to(ROOT)}")
     print(f"Wrote {AMBIENCE_PATH.relative_to(ROOT)}")
+    print(f"Wrote {len(list(SFX_DIR.glob('*.wav')))} original SFX cues")

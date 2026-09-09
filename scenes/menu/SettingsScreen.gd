@@ -12,12 +12,19 @@ func _build() -> void:
     UiBuilder.clear(list)
 
     list.add_child(UiBuilder.heading("AUDIO"))
+    _volume_control("Master", Settings.master_volume,
+        func(value): Settings.set_master_volume(value))
     _volume_control("Music", Settings.music_volume,
         func(value): Settings.set_music_volume(value))
+    _volume_control("Sound effects", Settings.sfx_volume,
+        func(value): Settings.set_sfx_volume(value))
     _volume_control("Office ambience", Settings.ambience_volume,
         func(value): Settings.set_ambience_volume(value))
+    var haptics := UiBuilder.toggle("Subtle haptics on iOS", Settings.haptics_enabled)
+    haptics.toggled.connect(func(value): Settings.set_haptics_enabled(value))
+    list.add_child(haptics)
     list.add_child(UiBuilder.label(
-        "Music plays throughout the game. Office ambience fades in around the studio.", 13))
+        "Music continues across navigation. Office ambience scales with the workspace.", 13))
 
     list.add_child(UiBuilder.divider())
     list.add_child(UiBuilder.heading("DISPLAY"))
@@ -27,11 +34,23 @@ func _build() -> void:
     list.add_child(UiBuilder.label(
         "Dashboards show shortened numbers. Financial pages always show exact amounts.", 13))
 
+    var motion := UiBuilder.toggle("Reduce motion", Settings.reduced_motion)
+    motion.toggled.connect(func(value): Settings.set_reduced_motion(value))
+    list.add_child(motion)
+    list.add_child(UiBuilder.label(
+        "Release reveals, count-ups and charts appear instantly instead of animating.", 13))
+
     list.add_child(UiBuilder.divider())
     list.add_child(UiBuilder.heading("NOTIFICATIONS"))
     var toasts := UiBuilder.toggle("Show notifications", Settings.notifications_enabled)
     toasts.toggled.connect(_on_toasts_toggled)
     list.add_child(toasts)
+
+    var onboarding := UiBuilder.toggle("Contextual onboarding", Settings.onboarding_enabled)
+    onboarding.toggled.connect(func(value): Settings.set_onboarding_enabled(value))
+    list.add_child(onboarding)
+    list.add_child(UiBuilder.label(
+        "Turn this off to skip first-hour guidance and reveal every management area.", 13))
 
     list.add_child(UiBuilder.divider())
     list.add_child(UiBuilder.heading("SAVE DATA"))

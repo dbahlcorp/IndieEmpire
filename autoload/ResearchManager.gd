@@ -191,6 +191,7 @@ func _complete(entry: Dictionary) -> void:
         return
     GameState.completed_technologies.append(tech_id)
     var name := ResearchSimulator.display_name(tech)
+    EventBus.research_completed.emit(tech_id, name)
     EventBus.technology_researched.emit(tech_id, name)
     EventBus.notify("TECHNOLOGY RESEARCHED", name, true)
     NewsManager.post(

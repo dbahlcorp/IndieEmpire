@@ -120,6 +120,7 @@ static func button(text: String, height: int = TAP_HEIGHT) -> Button:
 static func major_button(text: String) -> Button:
     var node := button(text, MAJOR_HEIGHT)
     node.add_theme_font_size_override("font_size", 18)
+    node.set_meta("major_action", true)
     return node
 
 static func toggle(text: String, pressed: bool) -> CheckButton:
