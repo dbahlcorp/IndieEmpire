@@ -18,6 +18,7 @@ extends Control
 @onready var develop_button: Button = %DevelopButton
 @onready var postmortem_button: Button = %PostmortemButton
 @onready var event_button: Button = %EventButton
+@onready var crisis_button: Button = %CrisisButton
 @onready var awards_button: Button = %AwardsButton
 @onready var contracts_button: Button = %ContractsButton
 
@@ -31,6 +32,9 @@ func _ready() -> void:
     develop_button.pressed.connect(_on_develop_pressed)
     postmortem_button.pressed.connect(_on_postmortem_pressed)
     event_button.pressed.connect(_on_event_pressed)
+    crisis_button.pressed.connect(func():
+        ScreenRouter.return_scene = "res://scenes/studio/StudioScreen.tscn"
+        get_tree().change_scene_to_file("res://scenes/company/CrisisScreen.tscn"))
     awards_button.pressed.connect(_on_awards_pressed)
     contracts_button.pressed.connect(_on_contracts_pressed)
     office_button.pressed.connect(_on_office_pressed)
@@ -95,11 +99,20 @@ func _refresh() -> void:
         warning_label.text = "%d staff matter%s need answering" % [
             waiting, "" if waiting == 1 else "s"]
 
-    if FinanceManager.is_in_trouble():
-        warning_label.text = "FINANCIAL TROUBLE\nCash $%s. %d week%s to recover." % [
-            Format.exact(GameState.cash),
+    crisis_button.visible = FinanceManager.crisis_visible()
+    if FinanceManager.in_crisis():
+        crisis_button.text = "OPEN CRISIS PLAN"
+        warning_label.text = "%s\nCash %s. %d week%s to recover." % [
+            CrisisSimulator.level_label(GameState.crisis_level),
+            Format.money(GameState.cash),
             FinanceManager.weeks_of_grace_left(),
             "" if FinanceManager.weeks_of_grace_left() == 1 else "s"
+        ]
+    elif FinanceManager.crisis_visible():
+        crisis_button.text = "REVIEW FINANCES"
+        warning_label.text = "RUNWAY LOW\nCash %s at %s / month." % [
+            Format.money(GameState.cash),
+            Format.money(int(EmployeeManager.monthly_expenses()["total"]))
         ]
     _refresh_attention()
     contracts_button.visible = TutorialManager.system_visible("contracts")
@@ -351,7 +364,7 @@ func _refresh_attention() -> void:
     count += GameState.pending_postmortems().size()
     count += 1 if StudioEventManager.has_pending() else 0
     count += 1 if AwardsManager.has_unseen_ceremony() else 0
-    count += 1 if FinanceManager.is_in_trouble() else 0
+    count += 1 if FinanceManager.crisis_visible() else 0
     %AttentionButton.visible = count > 0
     %AttentionButton.text = "%d STUDIO MATTER%s · REVIEW" % [count, "S" if count != 1 else ""]
     _layout_surface.call_deferred()

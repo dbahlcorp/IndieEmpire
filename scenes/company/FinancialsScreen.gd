@@ -55,14 +55,32 @@ func _monthly_section() -> void:
         else &"WarningPanel" if runway < 4.0
         else &"ElevatedPanel")
     list.add_child(total)
-    if FinanceManager.is_in_trouble():
+
+    var loan := LoanManager.loan_summary()
+    if not loan.is_empty():
+        var debt := UiBuilder.info_card(
+            "Loan — %s outstanding" % Format.money_exact(int(loan["balance"])),
+            "%s / week for %d more week%s. Settlement %s." % [
+                Format.money_exact(int(loan["weekly_payment"])), int(loan["weeks_remaining"]),
+                "" if int(loan["weeks_remaining"]) == 1 else "s",
+                Format.money_exact(int(loan["payoff"]))], "expenses")
+        debt.theme_type_variation = &"WarningPanel"
+        list.add_child(debt)
+
+    if FinanceManager.crisis_visible():
         var weeks := FinanceManager.weeks_of_grace_left()
+        var body := "%d week%s remain to return the studio to positive cash." % [
+            weeks, "" if weeks == 1 else "s"] if FinanceManager.in_crisis() \
+            else "Runway is short. Review the studio's finances before it becomes a crisis."
         var warning := UiBuilder.info_card(
-            "Overdrawn — action required",
-            "%d week%s remain to return the studio to positive cash." % [
-                weeks, "" if weeks == 1 else "s"], "warning")
-        warning.theme_type_variation = &"DangerPanel"
+            "%s — options available" % CrisisSimulator.level_name(GameState.crisis_level), body, "warning")
+        warning.theme_type_variation = &"DangerPanel" if FinanceManager.in_crisis() else &"WarningPanel"
         list.add_child(warning)
+        var plan := UiBuilder.button("OPEN CRISIS PLAN")
+        plan.pressed.connect(func():
+            ScreenRouter.return_scene = "res://scenes/company/FinancialsScreen.tscn"
+            get_tree().change_scene_to_file("res://scenes/company/CrisisScreen.tscn"))
+        list.add_child(plan)
 
 func _annual_section() -> void:
     list.add_child(UiBuilder.divider())

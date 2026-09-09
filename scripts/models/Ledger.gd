@@ -24,7 +24,9 @@ enum Kind {
     OFFICE_CUSTOMIZATION,
     SEVERANCE,
     EQUIPMENT,
-    ENGINE
+    ENGINE,
+    LOAN,
+    LOAN_PAYMENT
 }
 
 const KIND_NAMES := {
@@ -46,6 +48,8 @@ const KIND_NAMES := {
     Kind.SEVERANCE: "Severance",
     Kind.EQUIPMENT: "Equipment",
     Kind.ENGINE: "Engine development",
+    Kind.LOAN: "Loan",
+    Kind.LOAN_PAYMENT: "Loan repayment",
     Kind.OTHER: "Other"
 }
 

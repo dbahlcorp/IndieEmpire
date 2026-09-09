@@ -80,6 +80,12 @@ signal company_fans_changed(fans: int)
 signal company_bankruptcy_warning(weeks_left: int)
 signal company_recovered()
 signal company_bankrupt()
+## The staged financial-crisis level changed (CrisisSimulator levels). Fires
+## only on a change, so listeners are not woken every overdrawn week. See
+## FinanceManager._update_crisis_level and PA.13.
+signal financial_crisis_changed(level: int)
+signal emergency_loan_taken(principal: int, weekly_payment: int)
+signal emergency_loan_settled(early: bool)
 signal employee_hired(employee: Employee)
 signal labor_market_refreshed()
 signal office_moved(office: Dictionary)

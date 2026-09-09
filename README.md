@@ -630,6 +630,40 @@ Company screen's statistics show total nominations, total awards and Game of
 the Year wins. Save format is v24; older careers load with an empty history and
 begin judging from the year they are opened in.
 
+## Financial crisis and recovery
+
+Money trouble is a management problem before it is a game over. `CrisisSimulator`
+grades the studio's cash position into four staged levels -- **Runway Low**
+(cash still positive but under two months of burn), **Financial Trouble**
+(overdrawn, most of the grace window intact), **Critical** (half the grace
+window gone) and **Insolvent** -- and `FinanceManager` only interrupts the
+player when the level *steps up*, not every overdrawn week. Runway Low is a
+quiet heads-up; Trouble and Critical pause the clock once and post a story.
+
+The crisis plan screen mirrors the schedule-slip panel: it shows cash, monthly
+burn, runway, the upcoming payroll, the active project's estimated completion,
+a conservative read of near-term income, and any debt -- then names the single
+biggest recurring cost (`CrisisSimulator.biggest_driver`, the financial analogue
+of `BottleneckSimulator`) and lists concrete levers with their consequences.
+Every lever reuses an existing system: cancel the active project, cut a feature
+to shrink its remaining scope, lay staff off, move to a cheaper office
+(`OfficeManager.downgrade` -- the office ladder now runs downward as well as up,
+blocked if the smaller space cannot hold the team), or take contract work.
+
+The one new mechanic is a capped **emergency loan** (`LoanSimulator` /
+`LoanManager`). One at a time, principal capped at 60% of the studio's best
+proven trading year (floor for a studio with no track record, hard ceiling of
+$250K), ~1%/week interest over a 52-week amortised schedule, and no lender will
+extend more than four across a whole career. The weekly repayment is drawn in
+the world tick right before the books settle, exactly like payroll, so a loan
+the studio cannot service just deepens the hole. Taking a loan adds cash and
+nothing else -- it never resets the overdrawn grace clock. `CrisisEconomyTest`
+plays a structurally insolvent studio that borrows the maximum every time it
+can and confirms it still goes bankrupt within months, not years; the regular
+balance probes are unchanged because they model no loan-taking manager.
+Bankruptcy itself is untouched: a badly run studio still runs out of grace and
+closes. Save format is v25 (loan, crisis level and lifetime loan count).
+
 ## M6 foundation
 
 The Engine Lab lets studios research era-appropriate technology and combine

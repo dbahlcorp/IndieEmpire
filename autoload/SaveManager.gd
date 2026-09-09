@@ -10,7 +10,7 @@ signal game_saved(slot: String)
 const SAVE_DIR := "user://saves"
 const AUTOSAVE := "autosave"
 const MANUAL_SLOTS := ["save_1", "save_2", "save_3"]
-const SAVE_VERSION := 24
+const SAVE_VERSION := 25
 const MIN_SUPPORTED_VERSION := 5
 
 var has_active_company: bool = false
@@ -144,7 +144,10 @@ func _collect_save_data() -> Dictionary:
             "founded_week": GameState.founded_week,
             "next_id": GameState.next_id,
             "overdrawn_weeks": GameState.overdrawn_weeks,
-            "bankrupt": GameState.bankrupt
+            "bankrupt": GameState.bankrupt,
+            "crisis_level": GameState.crisis_level,
+            "loan": GameState.loan,
+            "loans_taken": GameState.loans_taken
         },
         "date": {
             "year": TimeManager.current_year,
@@ -263,6 +266,11 @@ func _apply_save_data(data: Dictionary) -> void:
     GameState.next_id = int(company.get("next_id", 1))
     GameState.overdrawn_weeks = int(company.get("overdrawn_weeks", 0))
     GameState.bankrupt = bool(company.get("bankrupt", false))
+    # v25: financial crisis & recovery (PA.13). Older saves carry none of this;
+    # crisis_level is recomputed from cash and burn right after the load.
+    GameState.crisis_level = int(company.get("crisis_level", 0))
+    GameState.loans_taken = int(company.get("loans_taken", 0))
+    GameState.loan = _loan(company.get("loan", {}))
 
     var onboarding: Dictionary = data.get("onboarding", {})
     GameState.tutorial_completed.assign(_string_array(onboarding.get("completed", [])))
@@ -536,6 +544,26 @@ func _apply_save_data(data: Dictionary) -> void:
     GameState.select_project(selected)
 
     UnlockManager.refresh(false)
+    # Recompute the staged crisis level from the restored cash/burn without
+    # firing an escalation the player already saw before saving.
+    FinanceManager.refresh_crisis_level()
+
+func _loan(source) -> Dictionary:
+    ## Coerce a restored emergency loan back to native types. {} for no loan.
+    if not (source is Dictionary) or source.is_empty():
+        return {}
+    return {
+        "principal": int(source.get("principal", 0)),
+        "balance": float(source.get("balance", 0.0)),
+        "weekly_payment": int(source.get("weekly_payment", 0)),
+        "weekly_interest_rate": float(source.get(
+            "weekly_interest_rate", LoanSimulator.WEEKLY_INTEREST_RATE)),
+        "weeks_total": int(source.get("weeks_total", LoanSimulator.TERM_WEEKS)),
+        "weeks_remaining": int(source.get("weeks_remaining", 0)),
+        "taken_year": int(source.get("taken_year", 0)),
+        "taken_month": int(source.get("taken_month", 1)),
+        "taken_week": int(source.get("taken_week", 1)),
+    }
 
 func _award_ceremonies(source) -> Array:
     ## Coerce the awards history back to native types -- JSON has no integers, so

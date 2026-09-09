@@ -25,6 +25,7 @@ extends Node
 ##     EmployeeManager   monthly payroll settles
 ##     ExperienceManager (awarded on postmortem, nothing weekly yet)
 ##     UnlockManager     new content becomes available
+##     LoanManager       an emergency loan repayment is drawn, like payroll
 ##     FinanceManager    the books settle, then solvency is judged
 ##     NewsManager       stories are posted by the events above
 ##     SaveManager       the week is committed to disk
@@ -63,6 +64,7 @@ func _on_week_advanced(year: int, month: int, week: int) -> void:
     LaborMarketManager.process_week()
     EmployeeManager.process_week()
     UnlockManager.refresh()
+    LoanManager.process_week()
     FinanceManager.process_week()
     FinanceManager.check_solvency()
     SaveManager.autosave()

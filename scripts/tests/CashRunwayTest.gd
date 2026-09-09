@@ -9,9 +9,31 @@ func run() -> void:
     _formats_a_real_runway()
     _formats_no_burn_as_indefinite()
     _formats_a_negative_balance_as_overdrawn()
+    _the_diagnosis_names_the_largest_cost_driver()
     await _the_studio_screen_shows_the_panel()
     await _the_panel_tracks_a_real_hire()
     await _a_dire_runway_does_not_block_anything()
+
+func _the_diagnosis_names_the_largest_cost_driver() -> void:
+    section("the crisis diagnosis names the single biggest recurring cost")
+    var mixes := [
+        [{"salaries": 30_000, "rent": 4_000, "utilities": 700, "software": 300, "total": 35_000}, "payroll"],
+        [{"salaries": 2_000, "rent": 9_000, "utilities": 900, "software": 100, "total": 12_000}, "rent"],
+        [{"salaries": 1_500, "rent": 1_200, "utilities": 4_000, "software": 300, "total": 7_000}, "utilities"],
+        [{"salaries": 800, "rent": 900, "utilities": 400, "software": 3_000, "total": 5_100}, "software"],
+    ]
+    for entry in mixes:
+        var driver := CrisisSimulator.biggest_driver(entry[0], true, [])
+        check_equal(str(driver["kind"]), str(entry[1]),
+            "%s mix is diagnosed as %s" % [entry[1], entry[1]])
+        check_greater(float(driver["amount"]), 0.0, "with a real figure")
+        check(not str(driver["advice"]).strip_edges().is_empty(), "and a concrete next step")
+
+    var starved := CrisisSimulator.biggest_driver(
+        {"salaries": 20_000, "rent": 2_000, "utilities": 500, "software": 200, "total": 22_700},
+        false, ["Nightfall"])
+    check(str(starved.get("context", "")).contains("Nightfall"),
+        "and it flags when a project is burning money with no revenue behind it")
 
 func _company(starting_cash: int = 200_000) -> void:
     GameState.start_company("Nova", "Darren", "normal")

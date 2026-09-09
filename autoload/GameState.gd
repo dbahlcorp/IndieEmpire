@@ -151,6 +151,18 @@ var tutorial_skipped: bool = false
 # --- Solvency ---
 var overdrawn_weeks: int = 0
 var bankrupt: bool = false
+## Staged financial-crisis level, a CrisisSimulator level constant. Kept on
+## GameState so the warning stage survives a save and the UI does not have to
+## recompute it every frame. See FinanceManager and PA.13.
+var crisis_level: int = 0
+## The one outstanding emergency loan, or {} for none. Keys: principal, balance,
+## weekly_payment, weekly_interest_rate, weeks_total, weeks_remaining,
+## taken_year/month/week. See LoanManager and LoanSimulator.
+var loan: Dictionary = {}
+## How many emergency loans the studio has taken across its whole life. Lenders
+## stop extending credit past LoanSimulator.MAX_CAREER_LOANS, so a loan can
+## never become a permanent crutch.
+var loans_taken: int = 0
 
 func difficulty() -> Dictionary:
     var found := DataManager.get_difficulty(difficulty_id)
@@ -379,6 +391,9 @@ func reset_company() -> void:
 
     overdrawn_weeks = 0
     bankrupt = false
+    crisis_level = 0
+    loan = {}
+    loans_taken = 0
 
     MarketManager.seed_trends()
     PlatformManager.sync_year()

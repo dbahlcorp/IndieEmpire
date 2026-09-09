@@ -109,7 +109,7 @@ below:
 | PA.10 | Sequels & Franchises | **Implemented** (2026-09-09) | Medium–High |
 | PA.11 | Awards | **Implemented** (2026-09-09) | Medium |
 | PA.12 | Statistics & Graphs | **Missing UI, data exists** | Medium |
-| PA.13 | Financial Crisis/Recovery | **Partial** (cliff exists, no guided recovery) | Medium |
+| PA.13 | Financial Crisis/Recovery | **Implemented** (2026-09-09) | Medium |
 | PA.14 | Difficulty & Accessibility | **Partial** (difficulty done, accessibility not) | Medium (breadth, not depth) |
 | PA.15 | Human Playtest & Balance | **Process exists, needs a human gate + updated probe** | Low–Medium |
 

@@ -225,11 +225,21 @@ func _on_contract_failed(contract: Contract, abandoned: bool) -> void:
     EventBus.notify("CONTRACT LOST", contract.name, true)
 
 func _on_bankruptcy_warning(weeks_left: int) -> void:
-    post(FINANCIAL, "FINANCIAL TROUBLE",
-        "%s has run out of operating capital. You have %d week%s to return to positive cash." % [
+    var critical := GameState.crisis_level >= CrisisSimulator.CRITICAL
+    var headline := "CRISIS: %s NEAR COLLAPSE" % GameState.company_name.to_upper() if critical \
+        else "FINANCIAL TROUBLE"
+    post(FINANCIAL, headline,
+        "%s has run out of operating capital. %d week%s remain to return to positive cash. Open the crisis plan for options." % [
             GameState.company_name, weeks_left, "" if weeks_left == 1 else "s"])
-    EventBus.notify("FINANCIAL TROUBLE", "%d week%s to recover" % [
+    EventBus.notify("CRITICAL" if critical else "FINANCIAL TROUBLE", "%d week%s to recover" % [
         weeks_left, "" if weeks_left == 1 else "s"], true)
+
+func post_loan_taken(principal: int, weekly_payment: int) -> void:
+    post(FINANCIAL, "%s TAKES OUT A LOAN" % GameState.company_name.to_upper(),
+        ("%s borrowed %s in emergency financing, repayable at %s per week for %d weeks. "
+        + "It buys time, not a way out.") % [
+            GameState.company_name, Format.money_exact(principal),
+            Format.money_exact(weekly_payment), LoanSimulator.TERM_WEEKS])
 
 func _on_recovered() -> void:
     post(FINANCIAL, "BACK IN THE BLACK", "%s is solvent again." % GameState.company_name)

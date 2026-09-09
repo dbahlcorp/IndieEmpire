@@ -55,6 +55,59 @@ func move_to(office_id: String) -> bool:
     SaveManager.autosave()
     return true
 
+func cheaper_office() -> Dictionary:
+    ## The office one tier down, or {} if already at the bottom. The ladder is
+    ## walked one rung at a time downward, exactly as it is upward.
+    var current_tier := int(current_office().get("tier", 0))
+    if current_tier <= 0:
+        return {}
+    for office in DataManager.offices:
+        if int(office.get("tier", -1)) == current_tier - 1:
+            return office
+    return {}
+
+func can_downgrade() -> bool:
+    var target := cheaper_office()
+    if target.is_empty():
+        return false
+    # A smaller office cannot hold more people than it has desks.
+    return int(target.get("capacity", 0)) >= headcount()
+
+func downgrade_cost(target: Dictionary = {}) -> int:
+    ## Moving *out* is cheap next to moving up -- a deposit and a van, a small
+    ## fraction of what the smaller place would cost to move into fresh.
+    var office := target if not target.is_empty() else cheaper_office()
+    if office.is_empty():
+        return 0
+    var inflated := float(office.get("move_in_cost", 0)) * 0.15 * InflationSimulator.multiplier_for_year(
+        TimeManager.current_year)
+    return FinanceManager.expense(int(round(inflated)))
+
+func downgrade() -> Dictionary:
+    ## A crisis lever: give up space to cut rent now. Forced through even when
+    ## cash is tight -- that is the whole point of it.
+    if not can_downgrade():
+        return {"ok": false, "reason": "The next office down cannot hold the current team."}
+    var target := cheaper_office()
+    var cost := downgrade_cost(target)
+    var rent_before := monthly_rent()
+    if cost > 0:
+        FinanceManager.force_spend(cost, Ledger.Kind.OFFICE_MOVE,
+            "Move to %s" % target.get("name", "a smaller office"))
+    GameState.office_id = str(target.get("id", GameState.office_id))
+    sync_office_quality()
+    OfficeCustomizationManager.validate_remodel()
+    EventBus.office_moved.emit(target)
+    EventBus.notify("DOWNSIZED",
+        "The studio moved into %s to cut costs" % target.get("name", "a smaller office"), true)
+    SaveManager.autosave()
+    return {
+        "ok": true,
+        "cost": cost,
+        "rent_saved": maxi(rent_before - monthly_rent(), 0),
+        "office": str(target.get("name", "")),
+    }
+
 func sync_office_quality() -> void:
     GameState.office_quality = int(current_office().get("quality", 0))
 
