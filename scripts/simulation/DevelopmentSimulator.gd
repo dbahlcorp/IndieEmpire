@@ -252,7 +252,8 @@ static func get_polish_cost(project: GameProject) -> int:
 static func start_project(
     title: String, theme_id: String, genre_id: String, platform_id: String,
     size_id: String, team_id: String = "team_a", assignments: Dictionary = {},
-    engine_id: String = "", feature_ids: Array = [], priority_choices: Dictionary = {}
+    engine_id: String = "", feature_ids: Array = [], priority_choices: Dictionary = {},
+    series_id: String = ""
 ) -> GameProject:
     var team := TeamManager.find_team(team_id)
     if team == null or not team.project_id.is_empty():
@@ -303,6 +304,10 @@ static func start_project(
     project.feature_ids = chosen
     project.role_assignments = resolved
     project.priority_choices = ProjectPrioritySimulator.sanitize(priority_choices)
+    # A sequel: link it to the franchise now so development-time UI and the
+    # production-phase bonuses can read it. Ignored if the series is unknown.
+    if not series_id.is_empty() and FranchiseManager.attach_to_series(project, series_id):
+        project.entry_kind = "sequel"
     project.start_year = TimeManager.current_year
     project.start_month = TimeManager.current_month
     project.start_week = TimeManager.current_week
@@ -415,6 +420,16 @@ static func advance_project(project: GameProject) -> Dictionary:
     # and accumulated modifications. 1.0 with no custom engine. Small, capped.
     var engine_condition := EngineManager.condition_for(project.engine_id)
 
+    # PA.10 -- what a sequel inherits from its franchise. All null-safe: a
+    # standalone game, or a franchise's own first entry, gets 1.0 / 1.0 / 1.0.
+    var franchise := FranchiseManager.active_franchise(project)
+    var franchise_speed := 1.0 + FranchiseSimulator.team_familiarity_speed_bonus(franchise)
+    var franchise_quality := 1.0 + FranchiseSimulator.design_knowledge_quality_bonus(franchise)
+    var franchise_novelty := 1.0
+    if franchise != null:
+        franchise_novelty = FranchiseSimulator.novelty_multiplier(
+            franchise.weeks_since_last_release())
+
     project.development_weeks += 1
     # The midpoint (11.0) matches the old flat randf_range(8, 14): a strong
     # lead only narrows the swing around it, an absent or weak one widens it.
@@ -431,7 +446,7 @@ static func advance_project(project: GameProject) -> Dictionary:
     project.development_progress = minf(
         project.development_progress
             + weekly_roll * progress_scale * float(staff["progress"]) * plan_drag * feature_capacity
-                * float(engine_condition["speed"])
+                * float(engine_condition["speed"]) * franchise_speed
                 * DevelopmentFocusSimulator.multiplier(
                     project, "production", "progress"),
         100.0
@@ -464,7 +479,10 @@ static func advance_project(project: GameProject) -> Dictionary:
     # This is the same rule FeatureSimulator.apply_quality_potential() already
     # used for chosen features; the core stats simply were not on it.
     var built := (project.development_progress - progress_before) / 100.0
-    var content := built * work * QUALITY_PER_WORK_UNIT * scope_absorption(project)
+    # franchise_quality folds in a sequel's reused design knowledge -- small, and
+    # smaller than the review bar its franchise standing raises (see
+    # FranchiseSimulator). 1.0 for a standalone game.
+    var content := built * work * QUALITY_PER_WORK_UNIT * scope_absorption(project) * franchise_quality
 
     # Each stat draws on a different mix of what the studio knows and what its
     # engine can do, so each gets its own stack -- but every stack is bounded
@@ -501,7 +519,7 @@ static func advance_project(project: GameProject) -> Dictionary:
         randf_range(1.5, 4.0) * float(staff["audio"]) * output * sound_bonus * content)
     _add_focused_quality(project, "production", "innovation",
         randf_range(1.0, 4.0) * compatibility * float(staff["design"])
-            * output * innovation_bonus * content)
+            * output * innovation_bonus * content * franchise_novelty)
     _add_focused_quality(project, "production", "performance",
         randf_range(2.0, 5.0) * float(staff["programming"]) * output * performance_bonus * content)
     _add_focused_quality(project, "production", "narrative_quality",

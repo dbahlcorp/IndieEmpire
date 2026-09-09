@@ -15,6 +15,10 @@ func release(project: GameProject) -> void:
     var platform := DataManager.get_platform(project.platform_id)
     var size := DataManager.get_size(project.size_id)
 
+    # Read before FranchiseManager.register_release() moves the franchise on --
+    # a sequel's launch rides the anticipation the *earlier* entries built.
+    var franchise_multiplier := FranchiseManager.launch_demand_multiplier(project)
+
     project.released = true
     project.sales_active = true
     project.weeks_on_market = 0
@@ -28,6 +32,10 @@ func release(project: GameProject) -> void:
     project.retail_price = int(size.get("retail_price", 15))
     project.royalty = float(platform.get("royalty", 0.0))
     project.word_of_mouth = SalesSimulator.word_of_mouth(project, GameState.consumer_reputation)
+    # A sequel that reviews below its series' own standard is talked about worse
+    # than its raw score alone -- players hold it against the earlier entries.
+    project.word_of_mouth *= FranchiseSimulator.word_of_mouth_multiplier(
+        project.review_score, FranchiseManager.active_franchise(project))
     project.current_demand = SalesSimulator.base_demand(
         project, platform, size,
         PlatformManager.install_base(platform),
@@ -38,7 +46,8 @@ func release(project: GameProject) -> void:
         # This release plus everything of the studio's still on the shelf. It
         # is counted at launch, which is when a slate is either crowded or not;
         # what a game opens to shapes the whole curve that follows.
-        GameState.games_on_market().size() + 1)
+        GameState.games_on_market().size() + 1,
+        franchise_multiplier)
 
     # Reputation moves both ways: shipping badly costs the studio standing.
     var reputation_change := SalesSimulator.reputation_change(
@@ -48,6 +57,9 @@ func release(project: GameProject) -> void:
 
     MarketManager.register_release(project.genre_id, project.size_id)
     GameState.released_games.append(project)
+    # Turns a released original into an IP, or extends the franchise a sequel
+    # belongs to, and moves that franchise's fan interest / fatigue / reputation.
+    FranchiseManager.register_release(project)
     TeamManager.record_project_result(project)
     GameState.active_projects.erase(project)
     TeamManager.release_project(project)

@@ -58,6 +58,14 @@ static func calculate_review(project: GameProject) -> float:
     expected_quality *= 1.0 + clampf(
         GameState.consumer_reputation, 0.0, 100.0) / 100.0 * EXPECTATION_FROM_STANDING
 
+    # A sequel is also judged against its own series' standard, on top of the
+    # studio-wide bump above. This is the main thing stopping a franchise being
+    # a free ride: against SalesSimulator's steep quality curve a higher bar is
+    # a real cost, and a sequel has to actually be better to score the same.
+    # See FranchiseSimulator.expectation_multiplier. 1.0 for a standalone game.
+    expected_quality *= FranchiseSimulator.expectation_multiplier(
+        FranchiseManager.active_franchise(project))
+
     var quality_ratio := project.average_quality() / expected_quality
     # Clearing your own size's bar by a third is already excellent; past that
     # the reviewers stop counting. See OVER_DELIVERY_CAP.

@@ -19,6 +19,7 @@ extends Node
 ##     StudioEventManager an event may be raised, or its penalty ages off
 ##     SalesManager      games on the market sell another week
 ##     MarketManager     trends drift, saturation decays
+##     FranchiseManager  franchise fatigue and fan interest cool with time
 ##     LaborMarketManager candidates rotate
 ##     EmployeeManager   monthly payroll settles
 ##     ExperienceManager (awarded on postmortem, nothing weekly yet)
@@ -56,6 +57,7 @@ func _on_week_advanced(year: int, month: int, week: int) -> void:
     CultureManager.process_week()
     SalesManager.process_week()
     MarketManager.process_week()
+    FranchiseManager.process_week()
     LaborMarketManager.process_week()
     EmployeeManager.process_week()
     UnlockManager.refresh()

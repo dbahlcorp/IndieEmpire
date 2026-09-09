@@ -106,7 +106,7 @@ below:
 | PA.7 | Release, Reviews & Sales Presentation | **Implemented** (2026-09-08) | Low–Medium |
 | PA.8 | Audio & Feedback | **Mostly missing** | Medium (asset-bound) |
 | PA.9 | Studio Visual Feedback | **Substantially complete** | Low–Medium (polish only) |
-| PA.10 | Sequels & Franchises | **Missing** | Medium–High |
+| PA.10 | Sequels & Franchises | **Implemented** (2026-09-09) | Medium–High |
 | PA.11 | Awards | **Missing** (one placeholder field) | Medium |
 | PA.12 | Statistics & Graphs | **Missing UI, data exists** | Medium |
 | PA.13 | Financial Crisis/Recovery | **Partial** (cliff exists, no guided recovery) | Medium |
@@ -943,6 +943,23 @@ section's work begins, to avoid working on top of an unreviewed diff.
 ---
 
 ## PA.10 — Sequels & Franchises
+
+> **Implemented 2026-09-09.** `GameProject.series_id` / `sequel_number` /
+> `entry_kind`; persistent `Franchise` model in `GameState.franchises` (fan
+> interest, reputation, fatigue, last-release date, derived aggregates); pure
+> `FranchiseSimulator`; `FranchiseManager` autoload registering every release
+> and cooling fatigue / fan interest each world tick. Sequel benefits (launch
+> demand from fan interest, small reused-design-knowledge quality and team-
+> familiarity speed) and risks (a review bar raised by franchise reputation and
+> series length, fatigue that accumulates faster than a rushed cadence clears
+> it, reduced novelty, worse word of mouth when an entry trails its series).
+> NEW IP / SEQUEL choice on `NewGameScreen`, a "MAKE A SEQUEL" entry point on
+> `GameDetailScreen`, a Franchises list + per-franchise page, series badges on
+> `GamesScreen`, and franchise sections in the release presentation and
+> postmortem. Save v23 with backfill (each pre-PA.10 shipped game becomes its
+> own single-entry IP). `FranchiseTest` (55) + `FranchiseEconomyTest` (10, a
+> scripted five-entry series proving the bonus does not compound). Reserved
+> entry kinds (remake/remaster/spinoff/expansion) carry no mechanics yet.
 
 ### Current repository state
 **Does not exist beyond intent.** `GameProject.gd`'s class doc says a game

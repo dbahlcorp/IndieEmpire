@@ -12,25 +12,23 @@ func _ready() -> void:
 func _refresh() -> void:
     UiBuilder.clear(list)
 
-    list.add_child(UiBuilder.label(GameState.company_name.to_upper(), 20, true))
-    list.add_child(UiBuilder.label("Founded %s by %s\nAge %s\nDifficulty %s" % [
+    list.add_child(UiBuilder.info_card(GameState.company_name, "Founded %s by %s\n%s old  ·  %s difficulty" % [
         TimeManager.format_month(GameState.founded_year, GameState.founded_month),
         GameState.founder_name,
         TimeManager.company_age_label(),
         DataManager.display_name(DataManager.difficulties, GameState.difficulty_id)
-    ], 14, true))
+    ], "company"))
 
     var customize_ceo := UiBuilder.button("CUSTOMIZE CEO")
     customize_ceo.pressed.connect(_go.bind("res://scenes/company/CeoCustomizationScreen.tscn"))
     list.add_child(customize_ceo)
 
-    list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.status_row(
-        "cash", "Cash  $%s" % Format.count(GameState.cash), 16))
-    list.add_child(UiBuilder.status_row(
-        "fans", "Fans  %s" % Format.count(GameState.fans), 16))
-    list.add_child(UiBuilder.status_row(
-        "reputation", "Reputation  %.1f" % GameState.consumer_reputation, 16))
+    list.add_child(UiBuilder.stat_grid([
+        {"icon": "cash", "label": "Cash", "value": Format.money(GameState.cash)},
+        {"icon": "fans", "label": "Fans", "value": Format.count(GameState.fans)},
+        {"icon": "reputation", "label": "Reputation", "value": "%.1f" % GameState.consumer_reputation},
+        {"icon": "staff", "label": "Employees", "value": str(EmployeeManager.active_employees().size())}
+    ], 4 if get_viewport_rect().size.x >= 840 else 2))
 
     list.add_child(UiBuilder.divider())
     var stats := ""

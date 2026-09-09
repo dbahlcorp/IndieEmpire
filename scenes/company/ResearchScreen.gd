@@ -26,22 +26,34 @@ func _refresh() -> void:
     _in_progress()
     _by_branch()
 
-func _card() -> VBoxContainer:
+func _card(parent: Container = null) -> VBoxContainer:
     ## A panel added straight to the list, returning its content box.
     var panel := PanelContainer.new()
+    panel.theme_type_variation = &"ElevatedPanel"
+    panel.custom_minimum_size = Vector2(360, 0)
+    panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     var body := VBoxContainer.new()
     body.add_theme_constant_override("separation", 4)
     panel.add_child(body)
-    list.add_child(panel)
+    (parent if parent != null else list).add_child(panel)
     return body
 
 func _header() -> void:
-    list.add_child(UiBuilder.label("Research points  %d" % ResearchManager.points(), 18, true))
-    list.add_child(UiBuilder.label(ResearchManager.weekly_research_income_hint(), 13, true))
+    list.add_child(UiBuilder.stat_grid([
+        {"icon": "research", "label": "Research points", "value": str(ResearchManager.points())},
+        {"icon": "staff", "label": "Active projects", "value": str(ResearchManager.active().size())}
+    ], 2 if get_viewport_rect().size.x >= 620 else 1))
+    var income := UiBuilder.label(ResearchManager.weekly_research_income_hint(), 13, true)
+    income.theme_type_variation = &"MutedLabel"
+    list.add_child(income)
 
 func _in_progress() -> void:
     var active := ResearchManager.active()
     if active.is_empty():
+        list.add_child(UiBuilder.info_card(
+            "No active research",
+            "Choose an available technology below and assign a free researcher.",
+            "research"))
         return
     list.add_child(UiBuilder.divider())
     list.add_child(UiBuilder.heading("IN PROGRESS"))
@@ -89,21 +101,28 @@ func _in_progress() -> void:
 func _by_branch() -> void:
     for branch in DataManager.technology_branches():
         list.add_child(UiBuilder.divider())
-        list.add_child(UiBuilder.heading(branch))
+        list.add_child(UiBuilder.section_header(branch, "Technologies in this discipline"))
+        var grid := GridContainer.new()
+        grid.columns = 2 if get_viewport_rect().size.x >= 760 else 1
+        grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         for tech in DataManager.technologies_in_branch(branch):
-            _tech_card(tech)
+            _tech_card(tech, grid)
+        list.add_child(grid)
 
-func _tech_card(tech: Dictionary) -> void:
+func _tech_card(tech: Dictionary, parent: Container) -> void:
     var id := str(tech.get("id", ""))
     var state := ResearchManager.state_of(id)
-    var card := _card()
+    var card := _card(parent)
 
     var chip: String = {
         "completed": "COMPLETED", "researching": "RESEARCHING",
         "available": "AVAILABLE", "locked": "LOCKED"
     }.get(state, state.to_upper())
-    card.add_child(UiBuilder.label("%s   [%s]" % [
-        ResearchSimulator.display_name(tech), chip], 15))
+    card.add_child(UiBuilder.label(ResearchSimulator.display_name(tech), 17))
+    card.add_child(UiBuilder.status_chip(chip, {
+        "completed": "positive", "researching": "info",
+        "available": "special", "locked": "warning"
+    }.get(state, "info")))
     card.add_child(UiBuilder.label(str(tech.get("description", "")), 13))
 
     var facts: Array[String] = []

@@ -19,6 +19,10 @@ const OUTLINE := Color("#3c5558")
 const PANEL_EDGE := Color("#a77c4d")
 const GOLD := Color("#f0b34f")
 const GOLD_DARK := Color("#c5792f")
+const GREEN := Color("#4f956f")
+const GREEN_DARK := Color("#347054")
+const WARNING := Color("#d77b38")
+const SURFACE_DARK := Color("#18363b")
 
 var game_theme: Theme
 
@@ -37,6 +41,10 @@ func _build_theme() -> Theme:
 
     theme.default_font = regular
     theme.default_font_size = 15
+    theme.set_constant("separation", "VBoxContainer", 10)
+    theme.set_constant("separation", "HBoxContainer", 10)
+    theme.set_constant("h_separation", "GridContainer", 12)
+    theme.set_constant("v_separation", "GridContainer", 12)
     theme.set_font("font", "Label", regular)
     theme.set_color("font_color", "Label", INK)
     theme.set_color("font_shadow_color", "Label", Color(1, 1, 1, 0.35))
@@ -69,6 +77,15 @@ func _build_theme() -> Theme:
     theme.set_type_variation("CardValue", "Label")
     theme.set_font("font", "CardValue", bold)
     theme.set_color("font_color", "CardValue", INK)
+    theme.set_type_variation("PositiveLabel", "Label")
+    theme.set_font("font", "PositiveLabel", bold)
+    theme.set_color("font_color", "PositiveLabel", GREEN_DARK)
+    theme.set_type_variation("WarningLabel", "Label")
+    theme.set_font("font", "WarningLabel", bold)
+    theme.set_color("font_color", "WarningLabel", WARNING)
+    theme.set_type_variation("HeroValue", "Label")
+    theme.set_font("font", "HeroValue", bold)
+    theme.set_color("font_color", "HeroValue", TEAL_DARK)
 
     _add_button_type(theme, "Button", SKY, SKY_DARK, CREAM)
     theme.set_type_variation("PrimaryButton", "Button")
@@ -87,6 +104,14 @@ func _build_theme() -> Theme:
     theme.set_type_variation("ClockButton", "Button")
     _add_button_type(theme, "ClockButton", CREAM, Color("#e7cfa2"), TEAL_DARK, 12)
     theme.set_font("font", "ClockButton", bold)
+    theme.set_type_variation("ClockSpeedActive", "Button")
+    _add_button_type(theme, "ClockSpeedActive", ORANGE, ORANGE_DARK, Color.WHITE, 12)
+    theme.set_font("font", "ClockSpeedActive", bold)
+    theme.set_type_variation("DangerButton", "Button")
+    _add_button_type(theme, "DangerButton", RED, RED.darkened(0.18), Color.WHITE)
+    theme.set_font("font", "DangerButton", bold)
+    theme.set_type_variation("GhostButton", "Button")
+    _add_button_type(theme, "GhostButton", Color(1, 1, 1, 0.08), Color(1, 1, 1, 0.16), CREAM, 11)
 
     _add_button_type(theme, "OptionButton", CREAM, Color("#ead5aa"), INK)
     _add_button_type(theme, "CheckButton", CREAM, Color("#ead5aa"), INK)
@@ -100,6 +125,18 @@ func _build_theme() -> Theme:
 
     theme.set_stylebox("panel", "Panel", _box(PAPER, PANEL_EDGE, 14, 2, 5))
     theme.set_stylebox("panel", "PanelContainer", _box(PAPER, PANEL_EDGE, 14, 2, 5))
+    theme.set_type_variation("ElevatedPanel", "PanelContainer")
+    theme.set_stylebox("panel", "ElevatedPanel", _box(CREAM, PANEL_EDGE, 16, 2, 7))
+    theme.set_type_variation("DarkPanel", "PanelContainer")
+    theme.set_stylebox("panel", "DarkPanel", _box(SURFACE_DARK, Color("#527277"), 16, 2, 7))
+    theme.set_type_variation("PositivePanel", "PanelContainer")
+    theme.set_stylebox("panel", "PositivePanel", _box(Color("#e3f1df"), GREEN, 14, 2, 4))
+    theme.set_type_variation("WarningPanel", "PanelContainer")
+    theme.set_stylebox("panel", "WarningPanel", _box(Color("#fff0d2"), WARNING, 14, 2, 4))
+    theme.set_type_variation("DangerPanel", "PanelContainer")
+    theme.set_stylebox("panel", "DangerPanel", _box(Color("#f8dfd8"), RED, 14, 2, 4))
+    theme.set_type_variation("SpecialPanel", "PanelContainer")
+    theme.set_stylebox("panel", "SpecialPanel", _box(Color("#fff0c7"), GOLD_DARK, 14, 2, 4))
     theme.set_stylebox("background", "ProgressBar", _box(Color("#d8c7a6"), OUTLINE, 9, 1))
     theme.set_stylebox("fill", "ProgressBar", _box(Color("#6ab29c"), TEAL_DARK, 9, 1))
     theme.set_color("font_color", "ProgressBar", Color.WHITE)
@@ -109,6 +146,11 @@ func _build_theme() -> Theme:
     theme.set_color("font_color", "PopupMenu", INK)
     theme.set_stylebox("panel", "PopupMenu", _box(CREAM, OUTLINE, 10, 2, 4))
     theme.set_stylebox("hover", "PopupMenu", _box(Color("#f2c77e"), Color.TRANSPARENT, 6, 0))
+    theme.set_stylebox("panel", "TooltipPanel", _box(SURFACE_DARK, Color("#789397"), 9, 1, 4))
+    theme.set_color("font_color", "TooltipLabel", CREAM)
+    theme.set_font_size("font_size", "TooltipLabel", 13)
+    theme.set_stylebox("panel", "AcceptDialog", _box(PAPER, PANEL_EDGE, 16, 2, 8))
+    theme.set_stylebox("panel", "Window", _box(PAPER, PANEL_EDGE, 16, 2, 8))
     return theme
 
 func _add_button_type(theme: Theme, type: String, base: Color, pressed: Color,
@@ -163,6 +205,7 @@ func _style_scene(root: Node) -> void:
     _add_studio_context(control)
     _apply_mobile_safe_area(control)
     _style_tree(control)
+    _reveal_scene(control)
     if control.name != "StudioScreen":
         _fit_management_screen(control)
         if not control.resized.is_connected(_fit_management_screen.bind(control)):
@@ -204,12 +247,18 @@ func _style_button(button: Button) -> void:
         button.theme_type_variation = (
             &"NavButtonActive" if bool(button.get_meta("active_nav", false)) else &"NavButton")
     elif parent_name == &"ClockBar":
-        button.theme_type_variation = &"ClockButton"
+        button.theme_type_variation = (
+            &"ClockSpeedActive" if bool(button.get_meta("active_speed", false))
+            else &"ClockButton")
     elif button.name == &"BackButton" or button.text.begins_with("BACK"):
         button.theme_type_variation = &"SecondaryButton"
     elif button.custom_minimum_size.y >= 60.0 or button.name in [
             &"StartButton", &"ContinueButton", &"DevelopButton", &"ReleaseButton"]:
         button.theme_type_variation = &"PrimaryButton"
+    if not button.has_meta("motion_hooked"):
+        button.set_meta("motion_hooked", true)
+        button.mouse_entered.connect(_button_hover.bind(button, true))
+        button.mouse_exited.connect(_button_hover.bind(button, false))
 
 func _style_label(label: Label) -> void:
     var node_name := String(label.name)
@@ -226,6 +275,7 @@ func _style_label(label: Label) -> void:
 ## measure a line stops being comfortable to read, and no amount of screen makes
 ## that better -- extra width becomes margin instead.
 const MAX_MEASURE := 520.0
+const WIDE_MEASURE := 920.0
 
 func _fit_management_screen(root: Control) -> void:
     var margin := root.get_node_or_null("Margin") as MarginContainer
@@ -239,12 +289,15 @@ func _fit_management_screen(root: Control) -> void:
     # was `> 700`, which left a gap: a portrait tablet at 699 logical pixels
     # fell through to the fill branch and got a 659-pixel measure -- wider than
     # the wide branch would ever have allowed.
+    var measure := MAX_MEASURE
+    if bool(root.get_meta("wide_management", false)) and root.get_viewport_rect().size.x >= 960.0:
+        measure = WIDE_MEASURE
     var gutters := absf(original.x) + absf(original.y)
-    if root.get_viewport_rect().size.x >= MAX_MEASURE + gutters:
+    if root.get_viewport_rect().size.x >= measure + gutters:
         margin.anchor_left = 0.5
         margin.anchor_right = 0.5
-        margin.offset_left = -MAX_MEASURE * 0.5
-        margin.offset_right = MAX_MEASURE * 0.5
+        margin.offset_left = -measure * 0.5
+        margin.offset_right = measure * 0.5
     else:
         margin.anchor_left = 0.0
         margin.anchor_right = 1.0
@@ -260,6 +313,22 @@ func _fit_management_screen(root: Control) -> void:
         paper.offset_right = margin.offset_right + 12
         paper.offset_top = maxf(8, margin.offset_top - 12)
         paper.offset_bottom = minf(-8, margin.offset_bottom + 12)
+
+func _button_hover(button: Button, entered: bool) -> void:
+    if button.disabled or Settings.reduced_motion or DisplayServer.get_name() == "headless":
+        return
+    button.pivot_offset = button.size * 0.5
+    var tween := button.create_tween()
+    tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(button, "scale", Vector2.ONE * (1.015 if entered else 1.0), 0.12)
+
+func _reveal_scene(control: Control) -> void:
+    if Settings.reduced_motion or DisplayServer.get_name() == "headless":
+        return
+    control.modulate.a = 0.0
+    var tween := control.create_tween()
+    tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+    tween.tween_property(control, "modulate:a", 1.0, 0.18)
 
 func _add_studio_context(root: Control) -> void:
     if root.name in ["StudioScreen", "MainMenuScreen", "NewCompanyScreen", "BootScreen", "GameOverScreen"]:
@@ -288,4 +357,3 @@ func _add_studio_context(root: Control) -> void:
     paper.add_theme_stylebox_override("panel", _box(PAPER, PANEL_EDGE, 16, 2))
     root.add_child(paper)
     root.move_child(paper, 3)
-

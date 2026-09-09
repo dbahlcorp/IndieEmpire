@@ -51,6 +51,14 @@ func cycle_speed() -> void:
     speed_index = (speed_index + 1) % SPEEDS.size()
     state_changed.emit()
 
+func set_speed(index: int) -> void:
+    var next_index := clampi(index, 0, SPEEDS.size() - 1)
+    if speed_index == next_index:
+        return
+    speed_index = next_index
+    _accumulated = 0.0
+    state_changed.emit()
+
 func set_paused(value: bool) -> void:
     paused = value
     _accumulated = 0.0

@@ -25,31 +25,54 @@ func _ready() -> void:
 func _build() -> void:
     UiBuilder.clear(list)
 
+    var hero := PanelContainer.new()
+    hero.theme_type_variation = &"ElevatedPanel"
+    var hero_row := HBoxContainer.new()
+    hero_row.add_theme_constant_override("separation", 18)
     var cover := GameCoverArt.new().configure(game)
     cover.custom_minimum_size = Vector2(128, 168)
-    var cover_center := CenterContainer.new()
-    cover_center.add_child(cover)
-    list.add_child(cover_center)
-
-    list.add_child(UiBuilder.label("%s %s\n%s" % [
+    hero_row.add_child(cover)
+    var identity := VBoxContainer.new()
+    identity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    identity.alignment = BoxContainer.ALIGNMENT_CENTER
+    identity.add_child(UiBuilder.label("%s · %s" % [
         DataManager.display_name(DataManager.themes, game.theme_id),
-        DataManager.display_name(DataManager.genres, game.genre_id),
+        DataManager.display_name(DataManager.genres, game.genre_id)], 17))
+    identity.add_child(UiBuilder.label("%s\nReleased %s" % [
         DataManager.display_name(DataManager.platforms, game.platform_id)
-    ], 16, true))
-    list.add_child(UiBuilder.label("Released %s" % game.release_date_label(), 14, true))
+        , game.release_date_label()], 14))
+    var lifecycle := "CONCEPT  →  DEVELOPMENT  →  LAUNCH  →  "
+    lifecycle += "ON SALE" if game.sales_active else "END OF LIFE"
+    identity.add_child(UiBuilder.status_chip(
+        lifecycle, "positive" if game.sales_active else "info"))
     if not game.engine_id.is_empty():
-        list.add_child(UiBuilder.label("Built with %s" % EngineManager.engine_name(game.engine_id), 14, true))
+        identity.add_child(UiBuilder.label(
+            "Built with %s" % EngineManager.engine_name(game.engine_id), 13))
+    hero_row.add_child(identity)
+    hero.add_child(hero_row)
+    list.add_child(hero)
+
+    list.add_child(UiBuilder.stat_grid([
+        {"icon": "reputation", "label": "Review score", "value": "%.1f / 10" % game.review_score},
+        {"icon": "sales", "label": "Units sold", "value": Format.count(game.lifetime_sales)},
+        {"icon": "cash", "label": "Revenue", "value": Format.money(game.lifetime_revenue)},
+        {"icon": "cash", "label": "Profit", "value": Format.money(game.profit())},
+        {"icon": "cash", "label": "Development cost", "value": Format.money(game.total_cost())},
+        {"icon": "fans", "label": "Fans gained", "value": Format.count(game.fans_gained)}
+    ], 3 if get_viewport_rect().size.x >= 760 else 2))
     if not game.feature_ids.is_empty():
-        list.add_child(UiBuilder.label(
-            "FEATURES\n%s" % FeatureSimulator.feature_names(game.feature_ids).replace(", ", "\n"),
-            14, true))
+        var features := UiBuilder.info_card(
+            "Features", FeatureSimulator.feature_names(game.feature_ids), "technology")
+        list.add_child(features)
     list.add_child(UiBuilder.divider())
 
     _verdict()
+    _franchise()
     _reviews()
     _sales()
     _money()
     _development()
+    _actions()
 
 func _verdict() -> void:
     var verdict := ReleaseSummarySimulator.verdict(game)
@@ -75,6 +98,44 @@ func _bullet_list(items: Array) -> String:
     for item in items:
         text += "• %s\n" % str(item)
     return text.strip_edges()
+
+func _franchise() -> void:
+    var franchise := GameState.franchise_for_game(game)
+    if franchise == null:
+        return
+    list.add_child(UiBuilder.heading("FRANCHISE"))
+    list.add_child(UiBuilder.label("%s — entry %d of %d" % [
+        franchise.name, game.sequel_number, franchise.entry_count()], 15, true))
+    list.add_child(UiBuilder.label(
+        "Standing %s   Fan interest %s   Fatigue %s" % [
+            FranchiseSimulator.reputation_label(franchise.reputation),
+            FranchiseSimulator.fan_interest_label(franchise.fan_interest),
+            FranchiseSimulator.fatigue_label(franchise.fatigue)], 13))
+    var view := UiBuilder.button("VIEW FRANCHISE")
+    view.pressed.connect(func():
+        ScreenRouter.open_franchise(franchise.id, "res://scenes/studio/GameDetailScreen.tscn")
+        get_tree().change_scene_to_file("res://scenes/studio/FranchiseDetailScreen.tscn"))
+    list.add_child(view)
+    list.add_child(UiBuilder.divider())
+
+func _actions() -> void:
+    list.add_child(UiBuilder.divider())
+    var sequel := UiBuilder.button("MAKE A SEQUEL")
+    sequel.pressed.connect(_start_sequel)
+    list.add_child(sequel)
+
+func _start_sequel() -> void:
+    var franchise := GameState.franchise_for_game(game)
+    var series_id := franchise.id if franchise != null else game.series_id
+    ScreenRouter.draft_project = {
+        "title": FranchiseManager.suggested_sequel_title(franchise) if franchise != null else "%s 2" % game.title,
+        "theme_id": game.theme_id,
+        "genre_id": game.genre_id,
+        "platform_id": game.platform_id,
+        "series_id": series_id,
+    }
+    ScreenRouter.selected_team_id = ""
+    get_tree().change_scene_to_file("res://scenes/development/NewGameScreen.tscn")
 
 func _reviews() -> void:
     list.add_child(UiBuilder.heading("REVIEWS"))

@@ -4,6 +4,7 @@ extends Node
 ## that has to survive a change lives here.
 
 var selected_game_id: String = ""
+var selected_franchise_id: String = ""
 var selected_team_id: String = ""
 var selected_employee_id: String = ""
 var return_scene: String = "res://scenes/studio/StudioScreen.tscn"
@@ -19,6 +20,13 @@ func clear_draft_project() -> void:
 
 func selected_game() -> GameProject:
     return GameState.find_game(selected_game_id)
+
+func selected_franchise() -> Franchise:
+    return GameState.find_franchise(selected_franchise_id)
+
+func open_franchise(id: String, from_scene: String) -> void:
+    selected_franchise_id = id
+    return_scene = from_scene
 
 func open_game(id: String, from_scene: String) -> void:
     selected_game_id = id

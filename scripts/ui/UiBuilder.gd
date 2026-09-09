@@ -17,6 +17,16 @@ static func heading(text: String) -> Label:
     node.theme_type_variation = &"SectionHeading"
     return node
 
+static func section_header(title: String, subtitle: String = "") -> VBoxContainer:
+    var stack := VBoxContainer.new()
+    stack.add_theme_constant_override("separation", 2)
+    stack.add_child(heading(title))
+    if not subtitle.is_empty():
+        var helper := label(subtitle, 13)
+        helper.theme_type_variation = &"MutedLabel"
+        stack.add_child(helper)
+    return stack
+
 static func employee_header(employee: Employee, subtitle: String = "", portrait_size: int = 74) -> HBoxContainer:
     var row := HBoxContainer.new()
     row.add_theme_constant_override("separation", 10)
@@ -72,6 +82,75 @@ static func stat_card(icon_id: String, title: String, value: String) -> PanelCon
     card.add_child(row)
     return card
 
+static func stat_grid(items: Array, columns: int = 2) -> GridContainer:
+    var grid := GridContainer.new()
+    grid.columns = maxi(columns, 1)
+    grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    for item in items:
+        grid.add_child(stat_card(
+            str(item.get("icon", "info")),
+            str(item.get("label", "")),
+            str(item.get("value", ""))))
+    return grid
+
+static func info_card(title: String, body: String, icon_id: String = "info") -> PanelContainer:
+    var panel := PanelContainer.new()
+    panel.theme_type_variation = &"ElevatedPanel"
+    panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    var stack := VBoxContainer.new()
+    stack.add_theme_constant_override("separation", 7)
+    stack.add_child(status_row(icon_id, title.to_upper(), 16))
+    var copy := label(body, 14)
+    copy.theme_type_variation = &"MutedLabel"
+    stack.add_child(copy)
+    panel.add_child(stack)
+    return panel
+
+static func status_chip(text: String, tone: String = "info") -> PanelContainer:
+    var chip := PanelContainer.new()
+    chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    chip.theme_type_variation = {
+        "positive": &"PositivePanel", "warning": &"WarningPanel",
+        "danger": &"DangerPanel", "special": &"SpecialPanel"
+    }.get(tone, &"ElevatedPanel")
+    var copy := label(text.to_upper(), 11, true)
+    copy.theme_type_variation = {
+        "positive": &"PositiveLabel", "warning": &"WarningLabel",
+        "danger": &"DangerLabel"
+    }.get(tone, &"CardCaption")
+    chip.add_child(copy)
+    return chip
+
+static func empty_state(title: String, body: String, action_text: String = "") -> Dictionary:
+    var panel := PanelContainer.new()
+    panel.theme_type_variation = &"ElevatedPanel"
+    panel.custom_minimum_size = Vector2(0, 190)
+    var stack := VBoxContainer.new()
+    stack.alignment = BoxContainer.ALIGNMENT_CENTER
+    stack.add_theme_constant_override("separation", 10)
+    var title_label := label(title.to_upper(), 21, true)
+    title_label.theme_type_variation = &"SectionHeading"
+    stack.add_child(title_label)
+    var body_label := label(body, 15, true)
+    body_label.theme_type_variation = &"MutedLabel"
+    stack.add_child(body_label)
+    var action: Button = null
+    if not action_text.is_empty():
+        action = major_button(action_text)
+        action.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+        action.custom_minimum_size.x = 220
+        stack.add_child(action)
+    panel.add_child(stack)
+    return {"panel": panel, "action": action}
+
+static func action_card(title: String, body: String, action_text: String,
+        icon_id: String = "info") -> Dictionary:
+    var panel := info_card(title, body, icon_id)
+    var stack := panel.get_child(0) as VBoxContainer
+    var action := button(action_text)
+    stack.add_child(action)
+    return {"panel": panel, "action": action}
+
 static func progress_meter(title: String, value: int, icon_id: String) -> VBoxContainer:
     var stack := VBoxContainer.new()
     stack.add_theme_constant_override("separation", 4)
@@ -115,6 +194,14 @@ static func button(text: String, height: int = TAP_HEIGHT) -> Button:
     node.text = text
     node.custom_minimum_size = Vector2(0, maxi(height, TAP_HEIGHT))
     node.add_theme_font_size_override("font_size", 15)
+    return node
+
+static func icon_button(text: String, icon_id: String, tooltip: String = "") -> Button:
+    var node := button(text)
+    node.icon = UiIcons.texture(icon_id)
+    node.expand_icon = true
+    node.add_theme_constant_override("icon_max_width", 22)
+    node.tooltip_text = tooltip if not tooltip.is_empty() else text.capitalize()
     return node
 
 static func major_button(text: String) -> Button:

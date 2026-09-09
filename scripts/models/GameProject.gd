@@ -21,6 +21,18 @@ var feature_ids: Array[String] = []
 ## historical outcome of a shipped game.
 var feature_outcomes: Dictionary = {}
 var role_assignments: Dictionary = {}
+## Franchise membership (PA.10). Empty until the game is released (an original
+## becomes its own IP then) or the project is set up as a sequel. See
+## FranchiseManager and Franchise.
+var series_id: String = ""
+## 1-based position in its franchise's release order. 1 == the original.
+## Provisional while in development; re-derived from the final order at release.
+var sequel_number: int = 1
+## What kind of entry this is within its franchise. "original" or "sequel"
+## today; "remake" / "remaster" / "spinoff" / "expansion" are reserved for
+## future entry kinds and carry no distinct mechanics yet. See
+## FranchiseSimulator.ENTRY_KINDS.
+var entry_kind: String = "original"
 ## Who actually worked on this, refreshed every development week. Used after
 ## release -- once the team has moved on to something else -- to credit the
 ## right people for how the game went on to do.
@@ -152,10 +164,11 @@ const INT_FIELDS := [
     "expected_completion_index",
     "advance", "advance_remaining", "publisher_revenue",
     "release_year", "release_month", "release_week", "lifetime_sales",
-    "lifetime_revenue", "weeks_on_market", "retail_price", "fans_gained"
+    "lifetime_revenue", "weeks_on_market", "retail_price", "fans_gained",
+    "sequel_number"
 ]
 const STRING_FIELDS := ["id", "title", "genre_id", "theme_id", "platform_id", "size_id", "team_id",
-    "publisher_id", "lead_employee_id", "engine_id"]
+    "publisher_id", "lead_employee_id", "engine_id", "series_id", "entry_kind"]
 const BOOL_FIELDS := ["released", "sales_active", "postmortem_reviewed", "polishing"]
 const STRING_ARRAY_FIELDS := [
     "went_well", "went_poorly", "lessons", "credited_employee_ids", "feature_ids"
@@ -240,6 +253,12 @@ func start_date_label() -> String:
 func completion_date_label() -> String:
     return TimeManager.format_date(completion_year, completion_month, completion_week)
 
+func in_franchise() -> bool:
+    return not series_id.is_empty()
+
+func is_sequel() -> bool:
+    return sequel_number > 1
+
 func has_deadline() -> bool:
     return deadline_year > 0
 
@@ -282,6 +301,11 @@ static func from_dict(data: Dictionary) -> GameProject:
         # A save from before balance existed did all its tuning as part of
         # gameplay -- the closest existing measure of the same thing.
         project.balance = project.gameplay * 0.85
+    # sequel_number is 1-based; a pre-PA.10 save has no field and reads 0.
+    if project.sequel_number < 1:
+        project.sequel_number = 1
+    if project.entry_kind.is_empty():
+        project.entry_kind = "sequel" if project.sequel_number > 1 else "original"
     # Saves from before phases existed: a project already under way was never
     # in pre-production to begin with, so it should not be sent back to it.
     if not data.has("preproduction_progress") and (

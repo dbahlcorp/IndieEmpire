@@ -24,6 +24,7 @@ const BUDGET_STEP := 5000
 var project: GameProject
 var _announced_complete := false
 var _last_phase := ""
+var _metrics_grid: GridContainer
 
 func _ready() -> void:
     project = GameState.current_project
@@ -36,6 +37,7 @@ func _ready() -> void:
     release_button.pressed.connect(_on_release_pressed)
     abandon_button.pressed.connect(_on_abandon_pressed)
     abandon_confirm.confirmed.connect(_on_abandon_confirmed)
+    _setup_metrics()
 
     EventBus.week_ticked.connect(_on_week)
     EventBus.project_schedule_slipped.connect(_on_schedule_slipped)
@@ -103,18 +105,7 @@ func _refresh() -> void:
     team_label.text = _team_text()
     _build_bottleneck_section()
 
-    var stats_format := (
-        "Gameplay %.0f   Technology %.0f\n"
-        + "Graphics %.0f   Story %.0f\n"
-        + "Sound %.0f   Innovation %.0f\n"
-        + "Performance %.0f   Narrative %.0f\n"
-        + "Polish %.0f   Balance %.0f"
-    )
-    stats_label.text = stats_format % [
-        project.gameplay, project.technology, project.graphics, project.story,
-        project.sound, project.innovation, project.performance,
-        project.narrative_quality, project.polish, project.balance
-    ]
+    _refresh_metrics()
 
     bugs_label.text = _bugs_text()
     cash_label.text = "Cash %s   Spent %s   %s per week" % [
@@ -130,6 +121,29 @@ func _refresh() -> void:
     polish_button.disabled = not done
     polish_button.text = "STOP POLISHING" if project.polishing else "POLISH / FIX BUGS"
     status_label.text = _status(done)
+
+func _setup_metrics() -> void:
+    stats_label.hide()
+    _metrics_grid = GridContainer.new()
+    _metrics_grid.name = "ProjectMetrics"
+    _metrics_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    var parent := stats_label.get_parent()
+    parent.add_child(_metrics_grid)
+    parent.move_child(_metrics_grid, stats_label.get_index())
+
+func _refresh_metrics() -> void:
+    UiBuilder.clear(_metrics_grid)
+    _metrics_grid.columns = 3 if get_viewport_rect().size.x >= 760 else 2
+    for item in [
+        {"icon": "design", "label": "Design", "value": "%.0f" % project.gameplay},
+        {"icon": "technology", "label": "Technology", "value": "%.0f" % project.technology},
+        {"icon": "warning", "label": "Known bugs", "value": str(project.known_bugs)},
+        {"icon": "staff", "label": "Team", "value": str(TeamManager.working_members(project.team_id).size())},
+        {"icon": "cash", "label": "Spent", "value": Format.money(project.development_cost)},
+        {"icon": "info", "label": "Project week", "value": str(project.total_weeks())}
+    ]:
+        _metrics_grid.add_child(UiBuilder.stat_card(
+            str(item["icon"]), str(item["label"]), str(item["value"])))
 
 func _build_focus_section() -> void:
     UiBuilder.clear(decision_container)

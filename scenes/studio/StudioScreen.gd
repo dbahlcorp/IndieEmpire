@@ -250,6 +250,22 @@ func _setup_surface() -> void:
     %Shade.gui_input.connect(func(event):
         if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
             _close_menu())
+    var quick_destinations := {
+        "GamesQuickButton": ["games", "res://scenes/studio/GamesScreen.tscn"],
+        "TeamQuickButton": ["staff", "res://scenes/studio/TeamsScreen.tscn"],
+        "ResearchQuickButton": ["research", "res://scenes/company/ResearchScreen.tscn"],
+        "MarketQuickButton": ["market", "res://scenes/market/MarketScreen.tscn"],
+        "CompanyQuickButton": ["company", "res://scenes/company/CompanyScreen.tscn"]
+    }
+    for node_name in quick_destinations:
+        var quick := get_node("%" + node_name) as Button
+        var details: Array = quick_destinations[node_name]
+        quick.icon = UiIcons.texture(str(details[0]))
+        quick.expand_icon = true
+        quick.add_theme_constant_override("icon_max_width", 18)
+        quick.tooltip_text = "Open %s" % quick.text.capitalize()
+        quick.visible = TutorialManager.system_visible(str(details[0]))
+        quick.pressed.connect(_go_to.bind(str(details[1])))
     var destinations := {
         "StaffButton": "res://scenes/company/StaffScreen.tscn",
         "HiringButton": "res://scenes/company/HiringScreen.tscn",
@@ -286,8 +302,12 @@ func _layout_surface() -> void:
     hud.size.x = hud_width
     hud.reset_size()
     hud.size.x = hud_width
+    %CompanyPlate.position = hud.position - Vector2(10, 8)
+    %CompanyPlate.size = Vector2(hud_width + 20, hud.size.y + 16)
     %ClockBar.position = Vector2(bounds.x - hud_width - inset, 20)
     %ClockBar.size = Vector2(hud_width, 48)
+    %ClockPlate.position = %ClockBar.position - Vector2(8, 6)
+    %ClockPlate.size = Vector2(hud_width + 16, 60)
     # Wide screens get two columns, so the cards sit beside the HUD. Portrait
     # has only one column, so they have to stack *below* it -- this was a fixed
     # 216, and the HUD is 211 tall from y=80, so the company figures were drawn

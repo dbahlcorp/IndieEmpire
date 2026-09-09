@@ -561,6 +561,41 @@ M4 rival studios, M5 publishers and contracts, M6 engines and technology,
 M7 advanced studio operations, M8+ acquisitions, franchises, publishing and
 eventually your own console.
 
+## Sequels and franchises
+
+Every original game the studio ships becomes an intellectual property. From any
+released game's detail page -- or the new Franchises list off the Games tab --
+the player can start a **sequel**: game creation opens with a NEW IP / SEQUEL
+choice, and picking a franchise pre-fills and locks its genre and theme. A
+sequel is linked by `GameProject.series_id` and numbered by `sequel_number`;
+`Franchise` (`GameState.franchises`) tracks each series' entries, lifetime units
+and revenue, average review, and three stateful figures that move every week and
+every release -- fan interest, reputation and fatigue. All of it persists in
+saves (v23); a career loaded from an older save has each shipped game backfilled
+as its own single-entry IP.
+
+`FranchiseSimulator` is the pure maths, and it is tuned so a sequel is worth
+making without being a free win. A sequel to an anticipated series opens to a
+real launch-demand bonus from its fan interest, plus small reused-design-
+knowledge quality and team-familiarity speed bonuses -- but it is also judged
+against the series' own standard (a raised review bar that scales with the
+franchise's reputation and how long it has run), and against
+`SalesSimulator.QUALITY_EXPONENT` a higher bar is a genuine cost. Shipping
+entries close together accumulates **franchise fatigue** faster than the gap
+between them clears it; strong innovation partly counters the addition, and time
+away decays it. By the fourth or fifth annual entry of a milked series the
+fatigue penalty outweighs the fan-interest bonus and the sequel opens *worse*
+than a brand-new IP would have. `FranchiseEconomyTest` measures a scripted
+five-entry series to pin that no-runaway property, the same way
+`EconomyPlateauTest` does for the whole career; `FranchiseTest` covers IP
+creation, sequel linkage, fan carryover, expectations, fatigue and its decay,
+serialization and history. The release presentation and postmortem both explain
+a sequel's performance in franchise terms.
+
+Architecture is prepared for remakes, remasters, spin-offs and expansions as
+future entry kinds without further model changes, but only the sequel is
+implemented here.
+
 ## M6 foundation
 
 The Engine Lab lets studios research era-appropriate technology and combine

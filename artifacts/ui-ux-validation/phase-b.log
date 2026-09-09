@@ -1,0 +1,54 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+=== PhaseB ===
+
+-- the game was closed and reopened --
+  FAIL the game was closed and reopened: year (DEC 1990 - W4) -- expected 1998, got 1990
+  FAIL the game was closed and reopened: month -- expected 1, got 12
+  FAIL the game was closed and reopened: week -- expected 3, got 4
+  FAIL the game was closed and reopened: cash to the dollar ($2,381,978) -- expected 10259185, got 2381978
+  FAIL the game was closed and reopened: fans -- expected 88690, got 35985
+  FAIL the game was closed and reopened: consumer reputation -- expected 26.7000, got 14.1080
+
+-- the catalogue --
+  FAIL the catalogue: every released game (14) -- expected 24, got 14
+  FAIL the catalogue: lifetime units (529,887) -- expected 2235949, got 529887
+  FAIL the catalogue: lifetime revenue -- expected 14987048, got 2715890
+  FAIL the catalogue: titles still selling stayed on the market -- expected 1, got 3
+  FAIL the catalogue: its sales curve (77 units over 2 weeks) -- expected 71, got 77
+
+-- the workforce --
+  FAIL the workforce: payroll ($55,025/mo) -- expected 81275, got 55025
+
+-- the world --
+  FAIL the world: combination knowledge (6) -- expected 9, got 6
+  FAIL the world: platform knowledge -- expected 16, got 7
+  FAIL the world: news feed (171 items) -- expected 250, got 171
+  FAIL the world: recent transactions -- expected 600, got 459
+  FAIL the world: the whole financial history (6 years) -- expected 14, got 6
+  FAIL the world: studio experience for every genre
+  FAIL the world: market trends restored exactly
+
+-- continuing the simulation --
+  now JUN 1991 - W4 | $5,200,853 | 18 games | 12 staff
+
+PhaseB FAILED: 19 of 40 checks
+  - the game was closed and reopened: year (DEC 1990 - W4) -- expected 1998, got 1990
+  - the game was closed and reopened: month -- expected 1, got 12
+  - the game was closed and reopened: week -- expected 3, got 4
+  - the game was closed and reopened: cash to the dollar ($2,381,978) -- expected 10259185, got 2381978
+  - the game was closed and reopened: fans -- expected 88690, got 35985
+  - the game was closed and reopened: consumer reputation -- expected 26.7000, got 14.1080
+  - the catalogue: every released game (14) -- expected 24, got 14
+  - the catalogue: lifetime units (529,887) -- expected 2235949, got 529887
+  - the catalogue: lifetime revenue -- expected 14987048, got 2715890
+  - the catalogue: titles still selling stayed on the market -- expected 1, got 3
+  - the catalogue: its sales curve (77 units over 2 weeks) -- expected 71, got 77
+  - the workforce: payroll ($55,025/mo) -- expected 81275, got 55025
+  - the world: combination knowledge (6) -- expected 9, got 6
+  - the world: platform knowledge -- expected 16, got 7
+  - the world: news feed (171 items) -- expected 250, got 171
+  - the world: recent transactions -- expected 600, got 459
+  - the world: the whole financial history (6 years) -- expected 14, got 6
+  - the world: studio experience for every genre
+  - the world: market trends restored exactly

@@ -4,11 +4,12 @@ extends HBoxContainer
 ## adding a tab does not mean editing five scene files.
 
 const TABS := [
-    {"id": "studio", "label": "Studio", "scene": "res://scenes/studio/StudioScreen.tscn"},
+    {"id": "studio", "label": "Office", "scene": "res://scenes/studio/StudioScreen.tscn"},
     {"id": "games", "label": "Games", "scene": "res://scenes/studio/GamesScreen.tscn"},
-    {"id": "market", "label": "Market", "scene": "res://scenes/market/MarketScreen.tscn"},
     {"id": "staff", "label": "Staff", "scene": "res://scenes/company/StaffScreen.tscn"},
-    {"id": "company", "label": "Company", "scene": "res://scenes/company/CompanyScreen.tscn"}
+    {"id": "research", "label": "Research", "scene": "res://scenes/company/ResearchScreen.tscn"},
+    {"id": "company", "label": "Company", "scene": "res://scenes/company/CompanyScreen.tscn"},
+    {"id": "market", "label": "Market", "scene": "res://scenes/market/MarketScreen.tscn"}
 ]
 
 func _ready() -> void:
@@ -23,7 +24,7 @@ func _ready() -> void:
             continue
         var button := Button.new()
         button.text = ""
-        button.tooltip_text = str(tab["label"])
+        button.tooltip_text = _tooltip(str(tab["id"]), str(tab["label"]))
         button.custom_minimum_size = Vector2(0, 58)
         button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         var active := current == str(tab["scene"])
@@ -76,6 +77,16 @@ func _badge_count(tab_id: String) -> int:
             return RetentionManager.requests().size() + RetentionManager.leaving().size()
         _:
             return 0
+
+func _tooltip(tab_id: String, label_text: String) -> String:
+    match tab_id:
+        "studio": return "Return to the office and active projects"
+        "games": return "Released games, sales and post-release analytics"
+        "staff": return "People, roles, workload and hiring"
+        "research": return "Unlock technology and new production capabilities"
+        "company": return "Finances, reputation and company records"
+        "market": return "Current genres, platforms and consumer demand"
+        _: return label_text
 
 func _add_badge(button: Button, count: int) -> void:
     if count <= 0:

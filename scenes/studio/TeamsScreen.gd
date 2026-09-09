@@ -53,14 +53,20 @@ func _build() -> void:
     list.add_child(UiBuilder.heading("EMPLOYEE ASSIGNMENTS"))
     _filter_bar()
 
+    var roster := GridContainer.new()
+    roster.columns = 2 if get_viewport_rect().size.x >= 760 else 1
+    roster.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    list.add_child(roster)
     var shown := 0
     for employee in EmployeeManager.active_employees():
         if not _matches_filter(employee):
             continue
-        _employee_assignment(employee)
+        roster.add_child(_employee_assignment(employee))
         shown += 1
     if shown == 0:
-        list.add_child(UiBuilder.label("Nobody matches this filter.", 14, true))
+        var empty := UiBuilder.empty_state(
+            "Nobody matches this filter", "Choose another role or status to see more people.")
+        roster.add_child(empty["panel"])
 
 func _filter_bar() -> void:
     ## Only shows up as roster it actually has -- a two-person studio does not
@@ -168,34 +174,44 @@ func _team_card(team: StudioTeam) -> void:
         list.add_child(start)
     list.add_child(UiBuilder.divider())
 
-func _employee_assignment(employee: Employee) -> void:
-    var row := HBoxContainer.new()
-    row.add_theme_constant_override("separation", 8)
+func _employee_assignment(employee: Employee) -> PanelContainer:
+    var card := PanelContainer.new()
+    card.theme_type_variation = &"ElevatedPanel"
+    card.custom_minimum_size = Vector2(300, 300)
+    card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    var stack := VBoxContainer.new()
+    stack.add_theme_constant_override("separation", 8)
+    stack.add_child(UiBuilder.employee_header(
+        employee, EmployeeManager.job_title(employee), 64))
     var load := TeamManager.workload_percent(employee.id)
-    var status := TeamManager.workload_text(employee.id)
+    var status := "Idle" if load <= 0 else TeamManager.workload_text(employee.id)
     if employee.is_training():
-        status = "AWAY: %s" % TrainingManager.summary(employee)
-    var info := UiBuilder.label("%s\n%s — %d%% %s\n%s" % [
-        employee.display_name(), EmployeeManager.job_title(employee),
-        load, TeamManager.workload_label(load), status
-    ], 13)
-    info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    row.add_child(info)
+        status = "Training · %s" % TrainingManager.summary(employee)
+    elif ResearchManager.is_researching(employee.id):
+        status = "Researching"
+    var tone := "warning" if load > 100 else ("positive" if load > 0 else "info")
+    stack.add_child(UiBuilder.status_chip("%s · %d%% workload" % [status, load], tone))
+    stack.add_child(UiBuilder.stat_grid([
+        {"icon": "design", "label": "Design", "value": str(employee.design)},
+        {"icon": "technology", "label": "Technology", "value": str(employee.programming)},
+        {"icon": "research", "label": "Research", "value": str(employee.research)},
+        {"icon": "energy", "label": "Speed", "value": str(employee.speed)}
+    ], 2))
 
     var risk := MoraleSimulator.burnout_risk_label(employee)
     var risk_line := MoraleSimulator.salary_label(employee)
     if risk in ["HIGH", "CRITICAL"]:
         risk_line = "BURNOUT RISK %s" % risk
-    var condition := UiBuilder.label("Morale %s %d%%\nStress %s %d%%\n%s" % [
+    var condition := UiBuilder.label("Morale %s %d%%   ·   Stress %s %d%%\n%s   ·   %s / month" % [
         UiBuilder.meter(employee.morale, 6), employee.morale,
         UiBuilder.meter(employee.stress, 6), employee.stress,
-        risk_line
+        risk_line, Format.money(employee.salary)
     ], 12)
-    condition.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    row.add_child(condition)
+    stack.add_child(condition)
 
     var option := OptionButton.new()
-    option.custom_minimum_size = Vector2(120, UiBuilder.TAP_HEIGHT)
+    option.custom_minimum_size = Vector2(0, UiBuilder.TAP_HEIGHT)
+    option.tooltip_text = "Assign this employee to a studio team"
     option.add_item("No team")
     option.set_item_metadata(0, "")
     for team in GameState.teams:
@@ -205,8 +221,16 @@ func _employee_assignment(employee: Employee) -> void:
             option.select(option.item_count - 1)
     option.disabled = TeamManager.employee_has_active_role(employee.id)
     option.item_selected.connect(_on_team_selected.bind(employee, option))
-    row.add_child(option)
-    list.add_child(row)
+    stack.add_child(option)
+    var details := UiBuilder.button("VIEW DETAILS")
+    details.pressed.connect(_open_employee.bind(employee.id))
+    stack.add_child(details)
+    card.add_child(stack)
+    return card
+
+func _open_employee(employee_id: String) -> void:
+    ScreenRouter.open_employee(employee_id, scene_file_path)
+    get_tree().change_scene_to_file("res://scenes/company/EmployeeScreen.tscn")
 
 func _on_team_selected(index: int, employee: Employee, option: OptionButton) -> void:
     TeamManager.assign_employee(employee, str(option.get_item_metadata(index)))

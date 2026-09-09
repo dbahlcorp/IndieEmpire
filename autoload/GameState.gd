@@ -37,6 +37,10 @@ var active_projects: Array[GameProject] = []
 var selected_project_id: String = ""
 var released_games: Array[GameProject] = []
 var next_id: int = 1
+## Intellectual properties (PA.10). One per original game once released, extended
+## by sequels. See FranchiseManager and Franchise.
+var franchises: Array[Franchise] = []
+var next_series_number: int = 1
 
 # --- People ---
 var employees: Array[Employee] = []
@@ -164,6 +168,11 @@ func next_project_id() -> String:
     next_id += 1
     return id
 
+func next_series_id() -> String:
+    var id := "series_%06d" % next_series_number
+    next_series_number += 1
+    return id
+
 func next_employee_id() -> String:
     var id := "employee_%06d" % next_employee_number
     next_employee_number += 1
@@ -174,6 +183,17 @@ func find_game(id: String) -> GameProject:
         if game.id == id:
             return game
     return null
+
+func find_franchise(series_id: String) -> Franchise:
+    if series_id.is_empty():
+        return null
+    for franchise in franchises:
+        if franchise.id == series_id:
+            return franchise
+    return null
+
+func franchise_for_game(project: GameProject) -> Franchise:
+    return find_franchise(project.series_id) if project != null else null
 
 func find_active_project(id: String) -> GameProject:
     for project in active_projects:
@@ -281,6 +301,8 @@ func reset_company() -> void:
     selected_project_id = ""
     released_games.clear()
     next_id = 1
+    franchises.clear()
+    next_series_number = 1
     # Clear technology before anyone is seeded -- Employee.is_away() consults
     # ResearchManager and EngineManager, so no stale in-flight work must linger.
     EngineManager.reset_technology()

@@ -29,9 +29,16 @@ var _cover_preview: GameCoverArt
 var _priority_choices: Dictionary = ProjectPrioritySimulator.default_choices()
 var _priorities_body: VBoxContainer
 var _priorities_header: Button
+## PA.10 -- empty for a new IP, a franchise id for a sequel. Set from the
+## NEW IP / SEQUEL selector below or restored from a draft handed over by
+## GameDetailScreen's "MAKE A SEQUEL" button.
+var _series_id: String = ""
+var _franchise_body: VBoxContainer
 
 func _ready() -> void:
     GameClock.enter_menu()
+    _build_workflow_header()
+    _style_form()
     _cover_preview = GameCoverArt.new()
     _cover_preview.custom_minimum_size = Vector2(104, 136)
     var preview_center := CenterContainer.new()
@@ -39,6 +46,7 @@ func _ready() -> void:
     $Margin/Scroll/VBox.add_child(preview_center)
     $Margin/Scroll/VBox.move_child(preview_center, 1)
     _populate_options()
+    _build_franchise_section()
     _build_priorities_section()
 
     title_input.text_changed.connect(_on_title_changed)
@@ -52,12 +60,43 @@ func _ready() -> void:
     back_button.pressed.connect(_on_back_pressed)
 
     _restore_draft()
+    _build_franchise_section()
     _apply_progressive_disclosure()
     _refresh()
     if TutorialManager.first_project_setup():
         TutorialManager.offer("first_game", title_input)
     elif TutorialManager.is_complete("first_technology"):
         TutorialManager.offer("second_game_feature", feature_list)
+
+func _build_workflow_header() -> void:
+    var stages := HBoxContainer.new()
+    stages.name = "WorkflowStages"
+    stages.add_theme_constant_override("separation", 6)
+    for data in [
+        ["1  CONCEPT", "positive"], ["2  PRODUCTION", "info"],
+        ["3  GREENLIGHT", "info"], ["4  DEVELOPMENT", "info"]
+    ]:
+        var chip := UiBuilder.status_chip(str(data[0]), str(data[1]))
+        chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        stages.add_child(chip)
+    $Margin/Scroll/VBox.add_child(stages)
+    $Margin/Scroll/VBox.move_child(stages, 1)
+
+func _style_form() -> void:
+    for node_name in [
+        "TitleLabel", "GenreLabel", "PlatformLabel", "SizeLabel", "EngineLabel",
+        "TeamLabel", "RolesLabel", "FeaturesLabel"
+    ]:
+        var label := $Margin/Scroll/VBox.get_node(node_name) as Label
+        label.theme_type_variation = &"SectionHeading"
+    title_input.tooltip_text = "The title shown in your catalogue, reviews and sales reports"
+    theme_option.tooltip_text = "The subject and setting of the game"
+    genre_option.tooltip_text = "The play style and audience expectations"
+    platform_option.tooltip_text = "Platform audience, licence cost and market lifecycle"
+    size_option.tooltip_text = "Scope affects cost, time, useful team size and feature capacity"
+    engine_option.tooltip_text = "Custom engines can unlock features and production benefits"
+    team_option.tooltip_text = "The team that will own this project until release"
+    review_button.text = "REVIEW & GREENLIGHT"
 
 func _apply_progressive_disclosure() -> void:
     if not TutorialManager.first_project_setup():
@@ -84,6 +123,7 @@ func _restore_draft() -> void:
     if draft.is_empty():
         return
 
+    _series_id = str(draft.get("series_id", ""))
     title_input.text = str(draft.get("title", ""))
     _select_by_id(theme_option, str(draft.get("theme_id", "")))
     _select_by_id(genre_option, str(draft.get("genre_id", "")))
@@ -238,6 +278,97 @@ func _on_feature_toggled(pressed: bool, id: String) -> void:
         _selected_feature_ids.append(id)
     elif not pressed:
         _selected_feature_ids.erase(id)
+    _populate_features()
+    _refresh()
+
+func _build_franchise_section() -> void:
+    ## NEW IP (a standalone original) vs SEQUEL (an entry in an existing
+    ## franchise). Selecting SEQUEL reveals the studio's franchises; picking one
+    ## pre-fills and locks the core identity -- a sequel keeps its genre and
+    ## theme. Built in code and rebuilt in place, the same pattern the
+    ## priorities section and cover preview already use.
+    var vbox: VBoxContainer = $Margin/Scroll/VBox
+    if _franchise_body == null:
+        var card := UiBuilder.collapsible_section("IP / SEQUEL", true)
+        vbox.add_child(card["panel"])
+        vbox.move_child(card["panel"], title_input.get_index() + 1)
+        _franchise_body = card["body"]
+
+    UiBuilder.clear(_franchise_body)
+
+    var choices := FranchiseManager.selectable_franchises()
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 8)
+    var new_ip := UiBuilder.button(("* " if _series_id.is_empty() else "") + "NEW IP")
+    new_ip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    new_ip.disabled = _series_id.is_empty()
+    new_ip.pressed.connect(_on_ip_mode.bind(""))
+    row.add_child(new_ip)
+    var sequel := UiBuilder.button(("* " if not _series_id.is_empty() else "") + "SEQUEL")
+    sequel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    sequel.disabled = choices.is_empty()
+    sequel.pressed.connect(func():
+        if _series_id.is_empty() and not choices.is_empty():
+            _on_ip_mode(choices[0].id))
+    row.add_child(sequel)
+    _franchise_body.add_child(row)
+
+    if choices.is_empty():
+        _franchise_body.add_child(UiBuilder.label(
+            "You have no released games yet. Ship an original first.", 13))
+        _apply_sequel_lock()
+        return
+
+    if _series_id.is_empty():
+        _franchise_body.add_child(UiBuilder.label(
+            "A brand-new original. Shipping it creates a new IP you can build a "
+            + "franchise on later.", 13))
+        _apply_sequel_lock()
+        return
+
+    var picker := OptionButton.new()
+    picker.custom_minimum_size = Vector2(0, UiBuilder.TAP_HEIGHT)
+    for franchise in choices:
+        picker.add_item("%s  (%d entr%s)" % [
+            franchise.name, franchise.entry_count(),
+            "y" if franchise.entry_count() == 1 else "ies"])
+        picker.set_item_metadata(picker.item_count - 1, franchise.id)
+        if franchise.id == _series_id:
+            picker.select(picker.item_count - 1)
+    picker.item_selected.connect(func(index: int):
+        _on_ip_mode(str(picker.get_item_metadata(index))))
+    _franchise_body.add_child(picker)
+
+    var franchise := GameState.find_franchise(_series_id)
+    if franchise != null:
+        _franchise_body.add_child(UiBuilder.label(
+            "Standing %s · Fan interest %s · Fatigue %s" % [
+                FranchiseSimulator.reputation_label(franchise.reputation),
+                FranchiseSimulator.fan_interest_label(franchise.fan_interest),
+                FranchiseSimulator.fatigue_label(franchise.fatigue)], 12))
+        for line in FranchiseSimulator.sequel_outlook(franchise):
+            _franchise_body.add_child(UiBuilder.label("• %s" % line, 12))
+    _apply_sequel_lock()
+
+func _apply_sequel_lock() -> void:
+    ## A sequel keeps the genre and theme of its series; everything else stays
+    ## the player's call.
+    var locked := not _series_id.is_empty()
+    genre_option.disabled = locked
+    theme_option.disabled = locked
+
+func _on_ip_mode(series_id: String) -> void:
+    _series_id = series_id
+    if not series_id.is_empty():
+        var franchise := GameState.find_franchise(series_id)
+        var original := GameState.find_game(franchise.original_game_id) if franchise != null else null
+        if original != null:
+            _select_by_id(genre_option, original.genre_id)
+            _select_by_id(theme_option, original.theme_id)
+            _select_by_id(platform_option, original.platform_id)
+            if title_input.text.strip_edges().is_empty():
+                title_input.text = FranchiseManager.suggested_sequel_title(franchise)
+    _build_franchise_section()
     _populate_features()
     _refresh()
 
@@ -607,7 +738,8 @@ func _build_draft() -> Dictionary:
         "feature_ids": _selected_feature_ids.duplicate(),
         "assignments": assignments,
         "priority_choices": _priority_choices.duplicate(),
-        "budget_target": _budget_target
+        "budget_target": _budget_target,
+        "series_id": _series_id
     }
 
 func _on_review_pressed() -> void:

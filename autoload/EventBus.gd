@@ -20,6 +20,9 @@ signal game_commercial_failure(project: GameProject)
 ## checked -- not a random event, but a read of the real bottleneck. See
 ## DelaySimulator and ProjectManager, which checks this every week.
 signal project_schedule_slipped(project: GameProject, weeks: int, causes: Array)
+## A franchise gained an entry, or its fan interest / fatigue / reputation
+## moved. Emitted once per release from FranchiseManager. See PA.10.
+signal franchise_updated(franchise: Franchise, project: GameProject)
 
 signal employee_at_risk(employee: Employee)
 signal employee_burnt_out(employee: Employee)

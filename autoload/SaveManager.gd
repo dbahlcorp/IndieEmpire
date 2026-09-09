@@ -10,7 +10,7 @@ signal game_saved(slot: String)
 const SAVE_DIR := "user://saves"
 const AUTOSAVE := "autosave"
 const MANUAL_SLOTS := ["save_1", "save_2", "save_3"]
-const SAVE_VERSION := 22
+const SAVE_VERSION := 23
 const MIN_SUPPORTED_VERSION := 5
 
 var has_active_company: bool = false
@@ -224,7 +224,11 @@ func _collect_save_data() -> Dictionary:
         "current_project": GameState.current_project.to_dict() if GameState.current_project != null else null,
         "active_projects": GameState.active_projects.map(func(project: GameProject): return project.to_dict()),
         "selected_project_id": GameState.selected_project_id,
-        "released_games": released
+        "released_games": released,
+        "franchises": {
+            "next_series_number": GameState.next_series_number,
+            "list": GameState.franchises.map(func(f: Franchise): return f.to_dict())
+        }
     }
 
 func _apply_save_data(data: Dictionary) -> void:
@@ -482,6 +486,18 @@ func _apply_save_data(data: Dictionary) -> void:
         for engine in GameState.custom_engines:
             engine["games_shipped"] = int(GameState.engine_familiarity.get(
                 str(engine.get("id", "")), 0))
+
+    # v23: franchises / IP layer (PA.10).
+    GameState.franchises.clear()
+    var franchise_block: Dictionary = data.get("franchises", {})
+    GameState.next_series_number = int(franchise_block.get("next_series_number", 1))
+    for entry in franchise_block.get("list", []):
+        if entry is Dictionary:
+            GameState.franchises.append(Franchise.from_dict(entry))
+    # A save from before PA.10 has released games but no franchises: make each
+    # shipped game its own single-entry IP so a sequel can be started from it.
+    if int(data.get("version", 0)) < 23:
+        FranchiseManager.backfill_from_history()
 
     GameState.active_projects.clear()
     for entry in data.get("active_projects", []):

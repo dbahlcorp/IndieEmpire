@@ -56,6 +56,7 @@ func _render() -> void:
 
 func _render_identity() -> void:
     UiBuilder.clear(identity_container)
+    _render_franchise()
     var genre_id := str(_draft.get("genre_id", ""))
     var theme_id := str(_draft.get("theme_id", ""))
     var platform_id := str(_draft.get("platform_id", ""))
@@ -70,6 +71,25 @@ func _render_identity() -> void:
     identity_container.add_child(UiBuilder.label(
         "Engine: %s" % (EngineManager.engine_name(engine_id) if not engine_id.is_empty() else "No custom engine"), 15))
     _render_engine(engine_id)
+
+func _render_franchise() -> void:
+    var series_id := str(_draft.get("series_id", ""))
+    if series_id.is_empty():
+        identity_container.add_child(UiBuilder.label("New IP — a standalone original.", 15))
+        return
+    var franchise := GameState.find_franchise(series_id)
+    if franchise == null:
+        return
+    identity_container.add_child(UiBuilder.label("SEQUEL — %s, entry %d" % [
+        franchise.name, franchise.entry_count() + 1], 16))
+    identity_container.add_child(UiBuilder.label(
+        "Franchise standing: %s   Fan interest: %s   Fatigue: %s" % [
+            FranchiseSimulator.reputation_label(franchise.reputation),
+            FranchiseSimulator.fan_interest_label(franchise.fan_interest),
+            FranchiseSimulator.fatigue_label(franchise.fatigue)], 13))
+    for line in FranchiseSimulator.sequel_outlook(franchise):
+        identity_container.add_child(UiBuilder.label("• %s" % line, 13))
+    identity_container.add_child(UiBuilder.divider())
 
 func _render_engine(engine_id: String) -> void:
     if engine_id.is_empty():
@@ -171,7 +191,8 @@ func _attempt_greenlight() -> GameProject:
         str(_draft.get("genre_id", "")), str(_draft.get("platform_id", "")),
         str(_draft.get("size_id", "")), str(_draft.get("team_id", "")),
         _draft.get("assignments", {}), str(_draft.get("engine_id", "")),
-        _draft.get("feature_ids", []), _draft.get("priority_choices", {})
+        _draft.get("feature_ids", []), _draft.get("priority_choices", {}),
+        str(_draft.get("series_id", ""))
     )
     if project == null:
         error_label.text = "You cannot afford this project."

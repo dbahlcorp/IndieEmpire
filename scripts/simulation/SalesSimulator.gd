@@ -218,7 +218,7 @@ static func base_demand(
         project: GameProject, platform: Dictionary, size: Dictionary,
         install_base: int, trend_demand: float, reputation: float,
         fans: int, difficulty_multiplier: float,
-        concurrent_releases: int = 1) -> float:
+        concurrent_releases: int = 1, franchise_multiplier: float = 1.0) -> float:
 
     var audience: Dictionary = platform.get("audience", {})
     var review := review_multiplier(project.review_score)
@@ -244,6 +244,11 @@ static func base_demand(
 
     var demand := float(install_base) * market_reach_for(install_base) * review * trend_demand * platform_multiplier
     demand *= reputation_multiplier * combo * size_multiplier * difficulty_multiplier * reach
+    # A sequel opens to an audience that already knows the series -- or, if the
+    # franchise has been milked, to one that is sick of it. Net of fan interest
+    # and fatigue; see FranchiseSimulator.launch_demand_multiplier. Company-wide
+    # fans (fan_bonus) are a separate pull and are not touched by this.
+    demand *= maxf(franchise_multiplier, 0.0)
     return demand * crowding + fan_bonus
 
 static func units_for_week(

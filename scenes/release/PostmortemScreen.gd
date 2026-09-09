@@ -37,6 +37,8 @@ func _build() -> void:
     ], 14, true))
     list.add_child(UiBuilder.divider())
 
+    _franchise_section()
+
     list.add_child(UiBuilder.heading("DEVELOPMENT DIRECTION"))
     list.add_child(UiBuilder.label(_development_direction(), 15))
     list.add_child(UiBuilder.divider())
@@ -54,6 +56,22 @@ func _build() -> void:
     for lesson in game.lessons:
         lessons += lesson + "\n\n"
     list.add_child(UiBuilder.label(lessons.strip_edges(), 15))
+
+func _franchise_section() -> void:
+    if not game.is_sequel():
+        return
+    var franchise := GameState.franchise_for_game(game)
+    if franchise == null:
+        return
+    list.add_child(UiBuilder.heading("FRANCHISE"))
+    list.add_child(UiBuilder.label(
+        FranchiseSimulator.postmortem_note(game, franchise), 15))
+    list.add_child(UiBuilder.label(
+        "The series now stands at: fan interest %s, fatigue %s, reputation %s." % [
+            FranchiseSimulator.fan_interest_label(franchise.fan_interest),
+            FranchiseSimulator.fatigue_label(franchise.fatigue),
+            FranchiseSimulator.reputation_label(franchise.reputation)], 13))
+    list.add_child(UiBuilder.divider())
 
 func _development_direction() -> String:
     var lines: Array[String] = []
