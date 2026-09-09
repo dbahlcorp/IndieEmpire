@@ -13,6 +13,10 @@ func run() -> void:
     _conditions_have_readable_reactions()
     await _active_project_emits_and_clears_a_bubble()
     await _employees_move_and_sit()
+    await _new_hire_arrives_at_an_assigned_workstation()
+    await _activity_states_follow_simulation()
+    await _office_move_rebuilds_the_floor()
+    await _save_load_reconstructs_visual_state()
 
 func _modular_portraits_are_stable_and_varied() -> void:
     section("modular employee portraits")
@@ -149,6 +153,14 @@ func _layouts_match_offices() -> void:
             check_not_empty(route, "%s has a route from its door to every desk" % office_id)
             check(OfficeLayout.route_is_walkable(route, layout),
                 "%s routes keep employees out of furniture" % office_id)
+    check_equal(OfficeLayout.get_layout("bedroom").get("features", []).size(), 0,
+        "the bedroom remains visibly improvised")
+    check_equal(OfficeLayout.get_layout("small_office").get("features", []).size(), 1,
+        "the small office introduces a break room")
+    check_equal(OfficeLayout.get_layout("professional_studio").get("features", []).size(), 2,
+        "the professional studio adds a meeting room")
+    check_equal(OfficeLayout.get_layout("large_studio_floor").get("features", []).size(), 3,
+        "the large studio adds a QA lab")
 
 func _employees_move_and_sit() -> void:
     section("employees move through the room")
@@ -199,3 +211,133 @@ func _employees_move_and_sit() -> void:
     check_equal(returning["position"], returning["desk"], "along a route that ends at their own desk")
     check_equal(returning["state"], "seated", "the returning founder reached and sat at their desk")
     view.queue_free()
+
+func _new_hire_arrives_at_an_assigned_workstation() -> void:
+    section("new hire arrival and workstation assignment")
+    GameState.start_company("Arrival Test", "Ada", "normal")
+    GameState.office_id = "shared_workspace"
+    var view := OfficeFloorView.new()
+    view.custom_minimum_size = Vector2(390, 180)
+    add_child(view)
+    await get_tree().process_frame
+
+    var hire := EmployeeManager.generate_candidate("artist", "junior", "Maya Chen", 902)
+    hire.id = GameState.next_employee_id()
+    hire.status = "active"
+    hire.employer = "player"
+    hire.workstation_tier = "pro"
+    GameState.employees.append(hire)
+    EventBus.employee_hired.emit(hire)
+    check_equal(view.actors.size(), 2, "the new hire appears on the floor")
+    if view.actors.size() >= 2:
+        var actor: Dictionary = view.actors[1]
+        check_equal(actor["position"], OfficeLayout.get_layout("shared_workspace")["entrance"],
+            "the new hire starts at the office entrance")
+        check_equal(actor["state"], "walking", "the new hire visibly arrives")
+        check_equal(int(actor["desk_index"]), 1, "the hire owns the second workstation")
+        check_equal((actor["employee"] as Employee).workstation_tier, "pro",
+            "the assigned workstation tier follows the employee")
+    view.queue_free()
+    await get_tree().process_frame
+
+func _activity_states_follow_simulation() -> void:
+    section("simulation-backed visual states")
+    GameState.start_company("State Test", "Ada", "normal")
+    var founder := EmployeeManager.founder()
+    var view := OfficeFloorView.new()
+    view.custom_minimum_size = Vector2(390, 180)
+    add_child(view)
+    await get_tree().process_frame
+    check_equal(view.activity_state_for(founder), "idle", "unassigned staff look idle")
+
+    founder.training_course_id = "research_methods"
+    founder.training_weeks_left = 2
+    view.rebuild()
+    check_equal(view.activity_state_for(founder), "training", "a trainee has a training state")
+    check_equal(view.actors.size(), 1, "training remains visible in the studio presentation")
+    founder.training_course_id = ""
+    founder.training_weeks_left = 0
+
+    GameState.active_research = [{"tech_id": "save_system", "progress": 1.0,
+        "researcher_ids": [founder.id]}]
+    view.rebuild()
+    check_equal(view.activity_state_for(founder), "researching",
+        "an assigned researcher has a research state")
+    GameState.active_research.clear()
+
+    var project := DevelopmentSimulator.start_project(
+        "Visible Assignment", "fantasy", "adventure", "microstar_64", "tiny")
+    if check_not_null(project, "a project exists for work-state coverage"):
+        project.role_assignments = {"lead_programmer": founder.id}
+        check_equal(view.activity_state_for(founder), "working",
+            "a project role switches the employee to working")
+        MoraleManager.set_crunch(founder.assigned_team, true)
+        check_equal(view.activity_state_for(founder), "crunching",
+            "crunch is a distinct visual state")
+        MoraleManager.set_crunch(founder.assigned_team, false)
+
+    founder.time_off_weeks = 1
+    view.rebuild()
+    check_equal(view.activity_state_for(founder), "on_leave", "leave has an explicit state")
+    check_empty(view.actors, "employees on leave are absent from the floor")
+    founder.time_off_weeks = 0
+    view.rebuild()
+    check_equal(view.actors.size(), 1, "returning from leave reconstructs the actor")
+    view.queue_free()
+    await get_tree().process_frame
+
+func _office_move_rebuilds_the_floor() -> void:
+    section("office moves feel physical")
+    GameState.start_company("Move Test", "Ada", "normal")
+    var view := OfficeFloorView.new()
+    view.custom_minimum_size = Vector2(390, 180)
+    add_child(view)
+    await get_tree().process_frame
+    view.set_office("professional_studio")
+    check_equal(view.office_id, "professional_studio", "the room changes office tier")
+    check_equal(view.floor_plan.get("features", []).size(), 2,
+        "the moved office includes its larger-studio facilities")
+    if not view.actors.is_empty():
+        check_equal(view.actors[0]["position"], view.floor_plan["entrance"],
+            "staff walk into the new office")
+        check_equal(view.actors[0]["state"], "walking",
+            "an office move does not teleport staff between desks")
+    view.queue_free()
+    await get_tree().process_frame
+
+func _save_load_reconstructs_visual_state() -> void:
+    section("save/load visual reconstruction")
+    const SLOT := "__office_floor_visual_test"
+    SaveManager.delete_save(SLOT)
+    GameState.start_company("Rebuild Test", "Ada", "normal")
+    GameState.office_id = "small_office"
+    var founder := EmployeeManager.founder()
+    founder.workstation_tier = "standard"
+    founder.training_course_id = "research_methods"
+    founder.training_skill = "research"
+    founder.training_weeks_left = 2
+    SaveManager.has_active_company = true
+    if not check(SaveManager.save_game(SLOT), "the reconstruction fixture saves"):
+        return
+
+    GameState.office_id = "bedroom"
+    founder.workstation_tier = ""
+    founder.training_weeks_left = 0
+    check(SaveManager.load_game(SLOT), "the reconstruction fixture loads")
+    var view := OfficeFloorView.new()
+    view.custom_minimum_size = Vector2(390, 180)
+    add_child(view)
+    await get_tree().process_frame
+    check_equal(view.office_id, "small_office", "the saved office is reconstructed")
+    check_equal(view.actors.size(), 1, "the saved employee is reconstructed")
+    if not view.actors.is_empty():
+        var actor: Dictionary = view.actors[0]
+        check_equal(str(actor.get("activity", "")), "training",
+            "activity is derived again from loaded training state")
+        check_equal(int(actor.get("desk_index", -1)), 0,
+            "the loaded employee returns to the deterministic workstation")
+        check_equal((actor["employee"] as Employee).workstation_tier, "standard",
+            "the workstation visual is reconstructed from the loaded employee")
+    view.queue_free()
+    SaveManager.delete_save(SLOT)
+    await get_tree().process_frame

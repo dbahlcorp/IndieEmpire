@@ -28,7 +28,14 @@ const WORK_OUTPUT_COLORS := {
     "audio": Color("#55ad7a"),
     "qa": Color("#d95a52"),
     "plan": Color("#70899b"),
-    "polish": Color("#e2bd48")
+    "polish": Color("#e2bd48"),
+    "research": Color("#7c72d8"),
+    "training": Color("#5f9c68")
+}
+const ACTIVITY_COLORS := {
+    "idle": Color("#84929a"), "working": Color("#42a5c6"),
+    "training": Color("#5f9c68"), "researching": Color("#7c72d8"),
+    "crunching": Color("#e06c52")
 }
 const REACTION_COLORS := {
     "happy": Color("#63b878"),
@@ -52,6 +59,8 @@ var elapsed := 0.0
 # The first people the room ever shows are already at work; anyone who appears
 # after that (a new hire, someone back from leave) walks in through the door.
 var _populated := false
+var _state_sync_timer := 0.0
+var _state_signature := ""
 
 func _ready() -> void:
     # Retain textures for the canvas draw commands between frames.
@@ -64,6 +73,10 @@ func _ready() -> void:
     EventBus.employee_departed.connect(func(_employee): rebuild())
     EventBus.employee_laid_off.connect(func(_employee): rebuild())
     EventBus.employee_workstation_equipped.connect(func(_employee, _tier_id): queue_redraw())
+    EventBus.training_started.connect(func(_employee, _course_id): rebuild())
+    EventBus.training_completed.connect(func(_employee, _skill, _gain): rebuild())
+    EventBus.research_started.connect(func(_id, _name): rebuild())
+    EventBus.research_completed.connect(func(_id, _name): rebuild())
     EventBus.office_moved.connect(func(office): set_office(str(office.get("id", "bedroom"))))
     EventBus.week_ticked.connect(_on_week_ticked)
     EventBus.game_started.connect(_on_game_started)
@@ -74,17 +87,28 @@ func _ready() -> void:
     EventBus.employee_skill_level_up.connect(
         func(employee, _skill, _level): _react_employee(employee, "star", 2.8))
     OfficeCustomizationManager.customization_changed.connect(func(_id): queue_redraw())
+    SaveManager.game_loaded.connect(_on_game_loaded)
     set_office(GameState.office_id)
+
+func _on_game_loaded() -> void:
+    _populated = false
+    actors.clear()
+    work_bubbles.clear()
+    set_office(GameState.office_id)
+    rebuild()
 
 func set_office(value: String) -> void:
     var resolved := value if OfficeLayout.LAYOUTS.has(value) else "bedroom"
     if resolved == office_id and office_texture != null and not actors.is_empty():
         return
+    var moved := resolved != office_id
     office_id = resolved
     floor_plan = OfficeLayout.get_layout(office_id)
     office_texture = OfficeArtwork.texture(office_id)
     foreground_texture = null # The old full-room mask hid walking employees.
     atmosphere_texture = OfficeArtwork.atmosphere_texture(office_id)
+    if moved and _populated:
+        actors.clear()
     rebuild()
 
 func rebuild() -> void:
@@ -98,12 +122,15 @@ func rebuild() -> void:
     var employees := EmployeeManager.active_employees()
     for index in mini(employees.size(), desks.size()):
         var employee: Employee = employees[index]
-        if employee.is_away():
+        var visual_state := activity_state_for(employee)
+        if visual_state == "on_leave":
             continue
         if previous.has(employee.id):
             var existing: Dictionary = previous[employee.id]
             if existing["desk"] == desks[index]:
                 existing["employee"] = employee
+                existing["activity"] = visual_state
+                existing["desk_index"] = index
                 actors.append(existing)
                 continue
         var rng := RandomNumberGenerator.new()
@@ -111,6 +138,8 @@ func rebuild() -> void:
         var actor := {
             "employee": employee,
             "desk": desks[index],
+            "desk_index": index,
+            "activity": visual_state,
             "position": desks[index] if first_population else layout["entrance"],
             "route": [],
             "state": "walking",
@@ -136,6 +165,7 @@ func rebuild() -> void:
         else:
             _route_actor(actor, desks[index], "seated")
     _populated = _populated or not actors.is_empty()
+    _state_signature = state_signature()
     queue_redraw()
 
 func _on_week_ticked(_year: int, _month: int, _week: int) -> void:
@@ -208,7 +238,7 @@ func _sync_availability() -> void:
     var expected_ids: Array[String] = []
     var employees := EmployeeManager.active_employees()
     for index in mini(employees.size(), OfficeLayout.desk_count(office_id)):
-        if not employees[index].is_away():
+        if activity_state_for(employees[index]) != "on_leave":
             expected_ids.append(employees[index].id)
     if visible_ids != expected_ids:
         rebuild()
@@ -216,6 +246,12 @@ func _process(delta: float) -> void:
     if GameClock.paused:
         return
     elapsed += delta
+    _state_sync_timer -= delta
+    if _state_sync_timer <= 0.0:
+        _state_sync_timer = 0.5
+        var current_signature := state_signature()
+        if current_signature != _state_signature:
+            rebuild()
     for actor in actors:
         _advance_reaction(actor, delta)
         _advance_actor(actor, delta)
@@ -232,7 +268,7 @@ func _advance_reaction(actor: Dictionary, delta: float) -> void:
         actor["reaction_timer"] = 0.0
 
 func _advance_actor_output(actor: Dictionary, delta: float) -> void:
-    if actor["state"] != "seated" or not _employee_is_working(actor["employee"]):
+    if actor["state"] != "seated" or not _employee_is_visibly_active(actor["employee"]):
         return
     actor["output_timer"] = float(actor.get("output_timer", 0.0)) - delta
     if float(actor["output_timer"]) > 0.0:
@@ -271,6 +307,10 @@ func _spawn_work_bubble(actor: Dictionary, weekly_burst: bool = false) -> void:
 func _work_context(employee: Employee, sequence: int = 0) -> Dictionary:
     if employee == null:
         return {}
+    if ResearchManager.is_researching(employee.id):
+        return {"kind": "research"}
+    if employee.is_training():
+        return {"kind": "training"}
     for project in GameState.active_projects:
         var roles: Array[String] = []
         for role_id in project.role_assignments:
@@ -471,6 +511,8 @@ func _celebrate(team_id: String = "") -> void:
         _set_reaction(actor, "cheer", 2.8)
 
 func _employee_is_working(employee: Employee) -> bool:
+    if ResearchManager.is_researching(employee.id) or EngineManager.is_building(employee.id):
+        return true
     if TeamManager.workload_percent(employee.id) > 0:
         return true
     var team := TeamManager.find_team(employee.assigned_team)
@@ -478,6 +520,33 @@ func _employee_is_working(employee: Employee) -> bool:
         return true
     var contract := ContractManager.active_contract()
     return contract != null and contract.team_id == employee.assigned_team
+
+func _employee_is_visibly_active(employee: Employee) -> bool:
+    return employee != null and (employee.is_training() or _employee_is_working(employee))
+
+func activity_state_for(employee: Employee) -> String:
+    if employee == null:
+        return "idle"
+    if employee.time_off_weeks > 0 or employee.burnout_leave_weeks > 0:
+        return "on_leave"
+    if employee.is_training():
+        return "training"
+    if ResearchManager.is_researching(employee.id):
+        return "researching"
+    if _employee_is_working(employee):
+        if MoraleManager.is_crunching(employee.assigned_team):
+            return "crunching"
+        return "working"
+    return "idle"
+
+func state_signature() -> String:
+    ## A cheap snapshot lets direct UI actions (assignment/crunch/leave) become
+    ## visible promptly even when no dedicated presentation signal exists.
+    var parts: Array[String] = [GameState.office_id]
+    for employee in EmployeeManager.active_employees():
+        parts.append("%s:%s:%s:%s" % [employee.id, activity_state_for(employee),
+            employee.workstation_tier, employee.assigned_team])
+    return "|".join(parts)
 
 func _draw() -> void:
     if floor_plan.is_empty() or size.x <= 0.0 or size.y <= 0.0:
@@ -491,6 +560,8 @@ func _draw() -> void:
     var drawables: Array[Dictionary] = []
     for prop in floor_plan["props"]:
         drawables.append({"kind": "furniture", "item": prop, "depth": OfficeLayout.project(Vector2(prop["cell"]) + Vector2(0.5, 0.5), floor_plan["dimensions"]).y})
+    for feature in floor_plan.get("features", []):
+        ROOM_RENDERER.office_feature(self, art_rect, feature)
     var desk_cells: Array = floor_plan["desk_cells"]
     var employees := EmployeeManager.active_employees()
     for index in desk_cells.size():
@@ -511,6 +582,20 @@ func _draw() -> void:
             ROOM_RENDERER.furniture(self, art_rect, floor_plan, item["item"], item.get("texture"))
     _draw_work_bubbles(art_rect)
     _draw_reactions(art_rect)
+    _draw_activity_badges(art_rect)
+
+func _draw_activity_badges(art_rect: Rect2) -> void:
+    var room_scale := maxf(art_rect.size.y / 512.0, 0.28)
+    for actor in actors:
+        var activity := str(actor.get("activity", "idle"))
+        var color: Color = ACTIVITY_COLORS.get(activity, Color("#84929a"))
+        var feet := art_rect.position + (actor["position"] as Vector2) * art_rect.size
+        var center := feet + Vector2(0, -68.0) * room_scale
+        var radius := 6.0 * room_scale
+        if activity == "crunching":
+            radius *= 1.0 + sin(elapsed * 6.0) * 0.16
+        draw_circle(center, radius + maxf(room_scale, 1.0), Color(0.08, 0.09, 0.10, 0.55))
+        draw_circle(center, radius, color)
 func _draw_reactions(art_rect: Rect2) -> void:
     var room_scale := maxf(art_rect.size.y / 512.0, 0.28)
     for actor_index in actors.size():
@@ -832,7 +917,7 @@ func _draw_actor(actor: Dictionary, art_rect: Rect2) -> void:
     var bob := 0.0
     if actor["state"] == "walking":
         bob = absf(sin(elapsed * 10.0)) * 2.3 * scale
-    elif actor["state"] == "seated" and _employee_is_working(actor["employee"]):
+    elif actor["state"] == "seated" and _employee_is_visibly_active(actor["employee"]):
         bob = sin(elapsed * 3.5) * 0.8 * scale
     feet.y -= bob
 
@@ -844,7 +929,7 @@ func _draw_actor(actor: Dictionary, art_rect: Rect2) -> void:
             column = int(floor(elapsed * 8.0)) % 4
         "seated":
             row = 2
-            column = int(floor(elapsed * 4.0)) % 4 if _employee_is_working(actor["employee"]) else 0
+            column = int(floor(elapsed * 4.0)) % 4 if _employee_is_visibly_active(actor["employee"]) else 0
         "social":
             row = 3
             column = int(actor["social_frame"])

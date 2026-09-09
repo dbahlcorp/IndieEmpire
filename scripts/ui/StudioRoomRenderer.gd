@@ -100,3 +100,31 @@ static func furniture(canvas: CanvasItem, rect: Rect2, plan: Dictionary, item: D
         "bed":
             var top := box(canvas, rect, plan, cell, unit * 0.4, Color("#477a80"), 0.95)
             canvas.draw_line(top - Vector2(unit * 0.32, unit * 0.12), top + Vector2(unit * 0.05, -unit * 0.26), Color("#f6e7c7"), maxf(2, unit * 0.3))
+
+static func office_feature(canvas: CanvasItem, rect: Rect2, item: Dictionary) -> void:
+    ## Low-cost, authored silhouettes that make office tiers readable without
+    ## adding scene nodes, particles, or a second office simulation.
+    var center := rect.position + Vector2(item.get("anchor", Vector2(0.5, 0.5))) * rect.size
+    var unit := maxf(rect.size.y / 34.0, 4.0)
+    match str(item.get("kind", "")):
+        "break_room":
+            canvas.draw_rect(Rect2(center - Vector2(unit * 2.2, unit * 0.7),
+                Vector2(unit * 4.4, unit * 1.4)), Color("#8e6547"), true)
+            for offset in [-1.35, 1.35]:
+                canvas.draw_circle(center + Vector2(unit * offset, unit * 1.0),
+                    unit * 0.62, Color("#4d7880"))
+            canvas.draw_circle(center - Vector2(0, unit * 0.15), unit * 0.32,
+                Color("#f2d59b"))
+        "meeting_room":
+            canvas.draw_set_transform(center, -0.12, Vector2(1.0, 0.50))
+            canvas.draw_circle(Vector2.ZERO, unit * 2.5, Color("#966c4a"))
+            canvas.draw_arc(Vector2.ZERO, unit * 2.5, 0, TAU, 24,
+                Color("#5b4435"), maxf(unit * 0.18, 1.0), true)
+            canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+        "qa_lab":
+            for index in 3:
+                var monitor := center + Vector2((index - 1) * unit * 1.35, 0)
+                canvas.draw_rect(Rect2(monitor - Vector2(unit * 0.55, unit * 0.48),
+                    Vector2(unit * 1.1, unit * 0.86)), Color("#283c49"), true)
+                canvas.draw_rect(Rect2(monitor - Vector2(unit * 0.43, unit * 0.37),
+                    Vector2(unit * 0.86, unit * 0.55)), Color("#54a7b6"), true)

@@ -14,7 +14,7 @@ static func get_layout(office_id: String) -> Dictionary:
     var columns := mini(4, ceili(sqrt(float(capacity))))
     var rows := ceili(float(capacity) / columns)
     var dimensions := Vector2i(columns * 3 + 3, rows * 3 + 3)
-    var layout := {"dimensions": dimensions, "desks": [], "desk_cells": [], "social": [], "blocked": [], "props": []}
+    var layout := {"dimensions": dimensions, "desks": [], "desk_cells": [], "social": [], "blocked": [], "props": [], "features": []}
     for index in capacity:
         var cell := Vector2i(2 + (index % columns) * 3, 2 + (index / columns) * 3)
         layout["desk_cells"].append(cell)
@@ -27,6 +27,18 @@ static func get_layout(office_id: String) -> Dictionary:
         props.append({"cell": Vector2i(4, 2), "kind": "bed"})
     else:
         props.append({"cell": Vector2i(1, dimensions.y - 3), "kind": "coffee"})
+    # Larger offices gain authored visual zones. These are presentation of the
+    # office tier, not new simulation bonuses or purchase state.
+    var tier := ["bedroom", "shared_workspace", "small_office",
+        "professional_studio", "large_studio_floor", "studio_building",
+        "campus"].find(office_id)
+    var features: Array = layout["features"]
+    if tier >= 2:
+        features.append({"kind": "break_room", "anchor": Vector2(0.17, 0.73)})
+    if tier >= 3:
+        features.append({"kind": "meeting_room", "anchor": Vector2(0.79, 0.37)})
+    if tier >= 4:
+        features.append({"kind": "qa_lab", "anchor": Vector2(0.79, 0.69)})
     for prop in props:
         layout["blocked"].append(prop["cell"])
     for x in range(1, dimensions.x - 2, 2):
