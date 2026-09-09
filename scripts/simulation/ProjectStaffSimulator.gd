@@ -240,8 +240,9 @@ static func _contribution(
     condition_factor *= 1.0 - float(employee.stress) * 0.003
     condition_factor *= 1.0 - float(employee.burnout) * 0.005
     var effective_workload := workload
-    if "workhorse" in employee.trait_ids and workload > 100:
-        effective_workload = 100 + int(round(float(workload - 100) * 0.65))
+    if workload > 100:
+        effective_workload = 100 + int(round(float(workload - 100)
+            * EmployeeTraitSimulator.overload_work_factor(employee)))
     var base_workload := workload_multiplier(effective_workload)
     var workload_efficiency := base_workload + (1.0 - base_workload) * workload_relief
     # What they're actually working on. A real handicap with no machine of
@@ -253,18 +254,9 @@ static func _contribution(
     # -- the thing the player invests in most directly -- so they are not
     # capped. Condition and workload are penalties, so they are not capped
     # either. What *is* capped is the pile of situational percentages on top.
-    var trait_bonus := 1.0
-    if skill == "programming" and "lone_wolf" in employee.trait_ids:
-        trait_bonus *= 1.08
-    if skill == "testing" and "bug_hunter" in employee.trait_ids:
-        trait_bonus *= 1.20
-    if skill == "production" and "visionary" in employee.trait_ids:
-        trait_bonus *= 0.92
-    if "technical_genius" in employee.trait_ids:
-        if skill == "programming":
-            trait_bonus *= 1.15
-        elif skill == "testing":
-            trait_bonus *= 1.10
+    # Per-discipline trait output, authored in data/employee_traits.json as
+    # `skill_contribution` and composed by EmployeeTraitSimulator.
+    var trait_bonus := EmployeeTraitSimulator.skill_contribution_multiplier(employee, skill)
     var situational := BonusStack.combine({
         BonusStack.TEAM: [morale_factor, trait_bonus],
         BonusStack.FACILITIES: [equipment_factor]
@@ -280,15 +272,14 @@ static func _contribution(
         "experience_factor": experience_factor,
         "morale_factor": morale_factor,
         "workload_efficiency": workload_efficiency,
-        "polish_modifier": 1.10 if "perfectionist" in employee.trait_ids else 1.0,
-        "speed_modifier": 0.92 if "perfectionist" in employee.trait_ids else 1.0,
-        "innovation_modifier": 1.12 if "visionary" in employee.trait_ids else 1.0
+        "polish_modifier": EmployeeTraitSimulator.polish_multiplier(employee),
+        "speed_modifier": EmployeeTraitSimulator.speed_multiplier(employee),
+        "innovation_modifier": EmployeeTraitSimulator.innovation_multiplier(employee)
     }
 
 static func _effective_overload(employee: Employee, workload: int) -> float:
-    var excess := maxi(workload - 100, 0)
-    if "workhorse" in employee.trait_ids:
-        excess = int(round(float(excess) * 0.65))
+    var excess := int(round(float(maxi(workload - 100, 0))
+        * EmployeeTraitSimulator.overload_work_factor(employee)))
     return float(excess) / 100.0
 
 static func _assigned_employee(

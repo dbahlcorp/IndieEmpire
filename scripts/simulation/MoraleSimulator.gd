@@ -117,15 +117,13 @@ static func weekly_influences(employee: Employee, context: Dictionary) -> Array:
     # Workload. Overtime is the main driver of stress.
     var workload := int(context.get("workload", 0))
     if workload > 100:
-        var excess := workload - 100
-        if "workhorse" in employee.trait_ids:
-            excess = int(round(float(excess) * 0.65))
+        var excess := int(round(float(workload - 100)
+            * EmployeeTraitSimulator.overload_work_factor(employee)))
         # Workhorse softens the stress an overload piles on; people_person
         # softens the morale hit the same way -- the same trade, read
         # through the other of the two numbers this file keeps separate.
-        var morale_excess := excess
-        if "people_person" in employee.trait_ids:
-            morale_excess = int(round(float(morale_excess) * 0.65))
+        var morale_excess := int(round(float(excess)
+            * EmployeeTraitSimulator.overload_morale_factor(employee)))
         influences.append({
             "cause": "Overworked (%d%%)" % workload,
             "morale": -1 - int(ceil(float(morale_excess) / 25.0)),

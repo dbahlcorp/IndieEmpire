@@ -12,17 +12,9 @@ extends RefCounted
 const MIN_MULTIPLIER := 0.80
 const MAX_MULTIPLIER := 3.75
 
-const TRAIT_VALUE := {
-    "perfectionist": 0.05,
-    "bug_hunter": 0.05,
-    "fast_learner": 0.03,
-    "visionary": 0.04,
-    "workhorse": 0.02,
-    "team_player": 0.02,
-    "lone_wolf": -0.03,
-    "people_person": 0.03,
-    "technical_genius": 0.06
-}
+## Each trait's contribution to market value is authored as `market_value` in
+## data/employee_traits.json and summed by EmployeeTraitSimulator; the clamp
+## below is unchanged.
 
 static func market_value(employee: Employee, seniority_override: String = "") -> int:
     ## seniority_override lets the same maths price what a promotion would
@@ -71,10 +63,7 @@ static func _average_skill(employee: Employee) -> float:
     return total / float(EmployeeManager.SKILL_FIELDS.size())
 
 static func _trait_multiplier(employee: Employee) -> float:
-    var total := 0.0
-    for trait_id in employee.trait_ids:
-        total += float(TRAIT_VALUE.get(trait_id, 0.0))
-    return 1.0 + clampf(total, -0.06, 0.16)
+    return 1.0 + clampf(EmployeeTraitSimulator.market_value_sum(employee), -0.06, 0.16)
 
 static func _experience_multiplier(employee: Employee) -> float:
     return 1.0 + clampf(float(employee.level - 1) * 0.035, 0.0, 0.35)

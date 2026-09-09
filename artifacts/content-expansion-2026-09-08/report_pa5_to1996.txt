@@ -1,0 +1,68 @@
+========================================================================
+BALANCE REPORT -- PA.5 to1996 (16 seeds)  (16 seeds, 410 releases)
+========================================================================
+
+REVIEW DISTRIBUTION
+   0.0- 4.0    11    2.7%  #
+   4.0- 5.0    43   10.5%  ######
+   5.0- 6.0    76   18.5%  ###########
+   6.0- 7.0    90   22.0%  #############
+   7.0- 8.0    99   24.1%  ##############
+   8.0- 9.0    77   18.8%  ###########
+   9.0- 9.5    14    3.4%  ##
+   9.5-10.1     0    0.0%  
+  mean 6.70  median 6.80  stdev 1.41  min 3.6  max 9.3
+  at the 9.8 review ceiling: 0 (0.0%)
+
+SALES CEILING (attach rate vs platform install base)
+  mean 1.12%  median 0.29%  max 8.00%
+  pinned at the 8% cap: 3 (0.7%)
+  distinct unit totals: 355 of 410 releases
+
+QUALITY RATIO BY SIZE  (1.0 = met the size's expected_quality bar)
+  size        n    mean  median     min     max  review
+  small     239    1.16    1.02    0.66    2.13    6.52
+  medium    143    0.88    0.88    0.63    1.11    6.86
+  large      28    1.00    1.00    0.88    1.09    7.39
+
+PROFITABILITY (per release: revenue + advance - development cost)
+  releases that lost money: 160 of 410 (39.0%)
+  median profit $85,076   mean $461,416   max $4,982,635
+  median revenue/total-cost ratio: 1.9x
+  wages as a share of a game's cost: median 58%  mean 43%
+  of the 252 releases built by paid staff, 36 lost money (14.3%)
+
+MARKET SATURATION
+  the studio's own games on sale at launch: median 3  mean 3.62  max 10
+  crowding: -20% per concurrent release, floored at 30%
+  slate         n   median units    crowding
+  1           162            236        100%
+  2            30         86,632         80%
+  3            25        239,926         60%
+  4            28        171,414         40%
+  5            34        120,504         30%
+  6            49         82,176         30%
+  7            52         80,604         30%
+  8            24         98,872         30%
+  9             5        111,894         30%
+  10            1         45,320         30%
+  genre demand at launch (1.0 = untouched): median 0.95  min 0.21
+  launched into a genre the studio had already crowded: 30%
+
+CASH CURVE (median across seeds)
+   year           cash      in 1985 $    runway  staff    games avg rev
+   1985        $-2,616        $-2,616         -    1.0      1.0    4.40
+   1986           $956           $928         -    1.0      3.0    4.32
+   1987         $3,149         $2,971         -    1.0      6.0    5.00
+   1988         $3,909         $3,586         -    1.0      7.0    5.18
+   1989         $5,290         $4,723         -    1.0      8.0    5.35
+   1990         $6,244         $5,429         -    1.0     10.5    5.45
+   1991         $5,901         $4,959         -    1.0     12.5    5.47
+   1992         $5,944         $4,833         -    1.0     13.5    5.52
+   1993       $135,453       $106,656        2y    2.5     17.0    5.85
+   1994     $3,936,750     $3,005,153        3y   16.0     20.0    6.42
+   1995     $5,368,914     $3,976,973        2y   18.0     28.0    6.60
+   1996     $8,138,974     $5,855,377        2y   20.0     37.0    6.88
+
+  final cash across seeds: min $5,074  median $8,138,974  max $21,046,508
+  real growth 1991-1996: +311.6%/yr  STILL COMPOUNDING -- this is a runaway

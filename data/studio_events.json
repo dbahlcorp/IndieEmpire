@@ -5,8 +5,14 @@
     "title": "EMPLOYEE REQUEST",
     "weight": 12,
     "cooldown_weeks": 30,
-    "roles": ["artist", "generalist"],
-    "conditions": ["employee_art > 45", "company_cash > 4000"],
+    "roles": [
+      "artist",
+      "generalist"
+    ],
+    "conditions": [
+      "employee_art > 45",
+      "company_cash > 4000"
+    ],
     "body": "{name} would like to attend an art conference.",
     "choices": [
       {
@@ -14,8 +20,16 @@
         "cost": 1200,
         "outcome": "{name} comes back from the conference with a notebook full of ideas.",
         "effects": [
-          {"kind": "skill_xp", "skill": "art", "amount": 60},
-          {"kind": "morale", "target": "employee", "amount": 8}
+          {
+            "kind": "skill_xp",
+            "skill": "art",
+            "amount": 60
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 8
+          }
         ]
       },
       {
@@ -23,7 +37,11 @@
         "default": true,
         "outcome": "{name} accepts the answer, but it is noted.",
         "effects": [
-          {"kind": "morale", "target": "employee", "amount": -3}
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
         ]
       }
     ]
@@ -34,17 +52,30 @@
     "title": "TEAM FRICTION",
     "weight": 9,
     "cooldown_weeks": 24,
-    "conditions": ["employee_team_size >= 2", "employee_morale < 72"],
+    "conditions": [
+      "employee_team_size >= 2",
+      "employee_morale < 72"
+    ],
     "body": "{name} and another member of {their} team keep butting heads, and it is starting to show in the work.",
     "choices": [
       {
         "label": "MEDIATE",
-        "cost": 0,
         "outcome": "You sit them both down. It is an awkward hour, but they agree to keep it professional.",
         "effects": [
-          {"kind": "team_chemistry", "amount": 10},
-          {"kind": "morale", "target": "team", "amount": 2},
-          {"kind": "morale", "target": "employee", "amount": -3}
+          {
+            "kind": "team_chemistry",
+            "amount": 10
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": 2
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
         ]
       },
       {
@@ -52,9 +83,20 @@
         "default": true,
         "outcome": "You leave them to sort it out themselves. The mood on the team stays sour for weeks.",
         "effects": [
-          {"kind": "team_chemistry", "amount": -12},
-          {"kind": "morale", "target": "employee", "amount": -5},
-          {"kind": "morale", "target": "team", "amount": -3}
+          {
+            "kind": "team_chemistry",
+            "amount": -12
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -5
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": -3
+          }
         ]
       }
     ]
@@ -65,7 +107,9 @@
     "title": "EQUIPMENT FAILURE",
     "weight": 10,
     "cooldown_weeks": 20,
-    "conditions": ["has_active_project == 1"],
+    "conditions": [
+      "has_active_project == 1"
+    ],
     "body": "A development workstation has failed.",
     "choices": [
       {
@@ -79,7 +123,4709 @@
         "default": true,
         "outcome": "The team shares machines while a fix is arranged.",
         "effects": [
-          {"kind": "dev_efficiency", "amount": -0.08, "weeks": 3}
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.08,
+            "weeks": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course_programmer",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 9,
+    "cooldown_weeks": 34,
+    "roles": [
+      "programmer"
+    ],
+    "conditions": [
+      "employee_programming > 40",
+      "company_cash > 6000"
+    ],
+    "body": "{name} has found a systems programming workshop and would like the studio to cover it.",
+    "choices": [
+      {
+        "label": "APPROVE",
+        "cost": 1600,
+        "outcome": "{name} returns sharper, and clearly grateful.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "programming",
+            "amount": 65
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS QUARTER",
+        "default": true,
+        "outcome": "{name} says {they} understands, though the disappointment shows.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course_designer",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 9,
+    "cooldown_weeks": 34,
+    "roles": [
+      "designer"
+    ],
+    "conditions": [
+      "employee_design > 40",
+      "company_cash > 6000"
+    ],
+    "body": "{name} has found a game design summit and would like the studio to cover it.",
+    "choices": [
+      {
+        "label": "APPROVE",
+        "cost": 1600,
+        "outcome": "{name} returns sharper, and clearly grateful.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "design",
+            "amount": 65
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS QUARTER",
+        "default": true,
+        "outcome": "{name} says {they} understands, though the disappointment shows.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course_writer",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 9,
+    "cooldown_weeks": 34,
+    "roles": [
+      "writer"
+    ],
+    "conditions": [
+      "employee_writing > 40",
+      "company_cash > 6000"
+    ],
+    "body": "{name} has found a narrative craft retreat and would like the studio to cover it.",
+    "choices": [
+      {
+        "label": "APPROVE",
+        "cost": 1600,
+        "outcome": "{name} returns sharper, and clearly grateful.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "writing",
+            "amount": 65
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS QUARTER",
+        "default": true,
+        "outcome": "{name} says {they} understands, though the disappointment shows.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course_audio_designer",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 9,
+    "cooldown_weeks": 34,
+    "roles": [
+      "audio_designer"
+    ],
+    "conditions": [
+      "employee_audio > 40",
+      "company_cash > 6000"
+    ],
+    "body": "{name} has found a game audio conference and would like the studio to cover it.",
+    "choices": [
+      {
+        "label": "APPROVE",
+        "cost": 1600,
+        "outcome": "{name} returns sharper, and clearly grateful.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "audio",
+            "amount": 65
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS QUARTER",
+        "default": true,
+        "outcome": "{name} says {they} understands, though the disappointment shows.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course_qa_tester",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 9,
+    "cooldown_weeks": 34,
+    "roles": [
+      "qa_tester"
+    ],
+    "conditions": [
+      "employee_testing > 40",
+      "company_cash > 6000"
+    ],
+    "body": "{name} has found a software testing certification course and would like the studio to cover it.",
+    "choices": [
+      {
+        "label": "APPROVE",
+        "cost": 1600,
+        "outcome": "{name} returns sharper, and clearly grateful.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "testing",
+            "amount": 65
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS QUARTER",
+        "default": true,
+        "outcome": "{name} says {they} understands, though the disappointment shows.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "course_producer",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 9,
+    "cooldown_weeks": 34,
+    "roles": [
+      "producer"
+    ],
+    "conditions": [
+      "employee_production > 40",
+      "company_cash > 6000"
+    ],
+    "body": "{name} has found a production management course and would like the studio to cover it.",
+    "choices": [
+      {
+        "label": "APPROVE",
+        "cost": 1600,
+        "outcome": "{name} returns sharper, and clearly grateful.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "production",
+            "amount": 65
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS QUARTER",
+        "default": true,
+        "outcome": "{name} says {they} understands, though the disappointment shows.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "speaking_invite",
+    "type": "employee",
+    "title": "SPEAKING INVITATION",
+    "weight": 7,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "employee_reputation > 30",
+      "company_cash > 5000"
+    ],
+    "body": "A conference has invited {name} to give a talk about {their} work here.",
+    "choices": [
+      {
+        "label": "SEND THEM",
+        "cost": 900,
+        "outcome": "{name} represents the studio well. A few CVs arrive the week after.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 6
+          },
+          {
+            "kind": "reputation",
+            "amount": 1.2
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "TOO BUSY",
+        "default": true,
+        "outcome": "The slot passes to someone from another studio.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "open_source_ask",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 7,
+    "cooldown_weeks": 44,
+    "roles": [
+      "programmer",
+      "generalist"
+    ],
+    "conditions": [
+      "employee_programming > 55"
+    ],
+    "body": "{name} wants to open-source a small internal tool {they} built.",
+    "choices": [
+      {
+        "label": "ALLOW IT",
+        "outcome": "The tool picks up a following, and the studio's name travels with it.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.0
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 5
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "programming",
+            "amount": 30
+          }
+        ]
+      },
+      {
+        "label": "KEEP IT IN-HOUSE",
+        "default": true,
+        "outcome": "{name} shrugs and moves on.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mentor_junior",
+    "type": "employee",
+    "title": "MENTORING",
+    "weight": 8,
+    "cooldown_weeks": 36,
+    "conditions": [
+      "employee_team_size >= 2",
+      "employee_leadership > 45"
+    ],
+    "body": "{name} has been quietly coaching a newer teammate for weeks.",
+    "choices": [
+      {
+        "label": "RECOGNISE IT",
+        "outcome": "You thank {name} in front of the team. Both of them stand a little taller.",
+        "effects": [
+          {
+            "kind": "team_chemistry",
+            "amount": 6
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": 3
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.5
+          }
+        ]
+      },
+      {
+        "label": "LET IT RIDE",
+        "default": true,
+        "outcome": "The mentoring continues, unremarked.",
+        "effects": [
+          {
+            "kind": "team_chemistry",
+            "amount": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "second_monitor",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 10,
+    "cooldown_weeks": 22,
+    "conditions": [
+      "has_active_project == 1"
+    ],
+    "body": "{name} is asking for a second monitor.",
+    "choices": [
+      {
+        "label": "BUY IT",
+        "cost": 350,
+        "outcome": "A small thing that makes {their} day noticeably smoother.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 4
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.04,
+            "weeks": 3
+          }
+        ]
+      },
+      {
+        "label": "NOT RIGHT NOW",
+        "default": true,
+        "outcome": "{name} makes do with one screen.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "license_renewal",
+    "type": "studio",
+    "title": "SOFTWARE LICENSE",
+    "weight": 8,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "company_cash > 8000"
+    ],
+    "body": "The studio's toolchain licenses are up for renewal, and the price has gone up.",
+    "choices": [
+      {
+        "label": "RENEW",
+        "cost": 2600,
+        "outcome": "Paid, grumbled about, forgotten by Friday.",
+        "effects": []
+      },
+      {
+        "label": "DOWNGRADE THE TIER",
+        "default": true,
+        "outcome": "The cheaper tier is missing a few things the team relied on.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.05,
+            "weeks": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "standing_desks",
+    "type": "studio",
+    "title": "FACILITIES",
+    "weight": 6,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_headcount >= 4",
+      "company_cash > 9000"
+    ],
+    "body": "Someone has started a thread about standing desks.",
+    "choices": [
+      {
+        "label": "KIT OUT THE FLOOR",
+        "cost": 3200,
+        "outcome": "A round of new desks arrives. The floor likes it.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "work_life_balance",
+            "amount": 2.5
+          }
+        ]
+      },
+      {
+        "label": "NOTE THE FEEDBACK",
+        "default": true,
+        "outcome": "The thread goes quiet on its own.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "coffee_machine",
+    "type": "studio",
+    "title": "THE COFFEE MACHINE",
+    "weight": 9,
+    "cooldown_weeks": 30,
+    "conditions": [
+      "company_headcount >= 3"
+    ],
+    "body": "The coffee machine has died. Morale is measurably worse by 10am.",
+    "choices": [
+      {
+        "label": "REPLACE IT PROPERLY",
+        "cost": 800,
+        "outcome": "The new machine is better than the old one. A small win.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "INSTANT FOR NOW",
+        "default": true,
+        "outcome": "A jar of instant appears next to the kettle. It is not the same.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "burnout_warning",
+    "type": "employee",
+    "title": "A QUIET WORD",
+    "weight": 11,
+    "cooldown_weeks": 20,
+    "conditions": [
+      "employee_stress > 60"
+    ],
+    "body": "{name} looks worn down. {they} has not said anything, but it is obvious.",
+    "choices": [
+      {
+        "label": "SEND THEM HOME FOR A WEEK",
+        "outcome": "{name} comes back steadier. The work waited.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 9
+          },
+          {
+            "kind": "culture",
+            "id": "work_life_balance",
+            "amount": 3.0
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.05,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "KEEP AN EYE ON IT",
+        "default": true,
+        "outcome": "You make a note to check in later.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "family_emergency",
+    "type": "employee",
+    "title": "FAMILY EMERGENCY",
+    "weight": 8,
+    "cooldown_weeks": 40,
+    "body": "{name} needs to take time off at short notice for a family matter.",
+    "choices": [
+      {
+        "label": "OF COURSE",
+        "outcome": "{name} is grateful, and remembers it.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 6
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 3.0
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "AFTER THIS MILESTONE",
+        "default": true,
+        "outcome": "{name} stays, distracted and quietly resentful.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -7
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sabbatical_request",
+    "type": "employee",
+    "title": "SABBATICAL REQUEST",
+    "weight": 6,
+    "cooldown_weeks": 60,
+    "conditions": [
+      "employee_tenure_weeks > 150"
+    ],
+    "body": "{name} has been here a long time and is asking for an unpaid month off.",
+    "choices": [
+      {
+        "label": "GRANT IT",
+        "outcome": "{name} returns recharged and full of ideas.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 8
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "design",
+            "amount": 40
+          },
+          {
+            "kind": "culture",
+            "id": "work_life_balance",
+            "amount": 2.5
+          }
+        ]
+      },
+      {
+        "label": "DECLINE",
+        "default": true,
+        "outcome": "{name} accepts it, but something has shifted.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -6
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": -2.5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wedding_leave",
+    "type": "employee",
+    "title": "GOOD NEWS",
+    "weight": 6,
+    "cooldown_weeks": 52,
+    "body": "{name} is getting married and would like two weeks off.",
+    "choices": [
+      {
+        "label": "CONGRATULATE THEM",
+        "cost": 200,
+        "outcome": "The whole floor signs a card. {name} beams for a month.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "GRANT THE MINIMUM",
+        "default": true,
+        "outcome": "{name} takes the statutory leave and nothing more is said.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "competing_offer",
+    "type": "employee",
+    "title": "OUTSIDE OFFER",
+    "weight": 7,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "employee_reputation > 25",
+      "employee_level >= 3"
+    ],
+    "body": "{name} has been approached by another studio and is being honest with you about it.",
+    "choices": [
+      {
+        "label": "MATCH IT",
+        "outcome": "{name} stays. The raise is real money, but so is losing {them}.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 8
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "WISH THEM WELL",
+        "default": true,
+        "outcome": "You do not counter. {name} has not decided yet, but the odds are not good.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -6
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": -5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "credit_dispute",
+    "type": "employee",
+    "title": "CREDITS",
+    "weight": 7,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "employee_tenure_weeks > 40"
+    ],
+    "body": "{name} feels {their} contribution to the last game was under-credited.",
+    "choices": [
+      {
+        "label": "FIX THE CREDITS",
+        "outcome": "An updated credits list goes out. {name} feels seen.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 5
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "EXPLAIN THE CALL",
+        "default": true,
+        "outcome": "{name} listens, unconvinced.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "anniversary",
+    "type": "employee",
+    "title": "WORK ANNIVERSARY",
+    "weight": 8,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "employee_tenure_weeks > 100"
+    ],
+    "body": "It is {name}'s work anniversary with the studio.",
+    "choices": [
+      {
+        "label": "MARK IT",
+        "cost": 500,
+        "outcome": "Cake, a short speech, a small bonus. {name} is touched.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 6
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": 2
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "LET IT PASS",
+        "default": true,
+        "outcome": "Nobody mentions it. {name} notices that nobody mentions it.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "refactor_request",
+    "type": "employee",
+    "title": "TECHNICAL DEBT",
+    "weight": 8,
+    "cooldown_weeks": 36,
+    "roles": [
+      "programmer",
+      "generalist"
+    ],
+    "conditions": [
+      "employee_programming > 50",
+      "has_active_project == 1"
+    ],
+    "body": "{name} wants two weeks to pay down the worst of the codebase's technical debt.",
+    "choices": [
+      {
+        "label": "APPROVE THE CLEANUP",
+        "outcome": "Progress slows, then rebounds cleaner than before.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.06,
+            "weeks": 2
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 3.0
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "programming",
+            "amount": 40
+          }
+        ]
+      },
+      {
+        "label": "AFTER SHIP",
+        "default": true,
+        "outcome": "The debt stays on the pile. So does the frustration.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -4
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": -2.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "style_guide",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 7,
+    "cooldown_weeks": 44,
+    "roles": [
+      "artist"
+    ],
+    "conditions": [
+      "employee_art > 55"
+    ],
+    "body": "{name} has drafted a studio art style guide and wants time to finish it.",
+    "choices": [
+      {
+        "label": "GIVE THEM THE TIME",
+        "outcome": "The guide pays off on every project after it.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "art",
+            "amount": 35
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 2.5
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 4
+          }
+        ]
+      },
+      {
+        "label": "SHELVE IT",
+        "default": true,
+        "outcome": "The draft sits in a folder nobody opens.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "playtest_push",
+    "type": "employee",
+    "title": "PLAYTEST",
+    "weight": 8,
+    "cooldown_weeks": 32,
+    "roles": [
+      "designer",
+      "qa_tester",
+      "producer",
+      "generalist"
+    ],
+    "conditions": [
+      "has_active_project == 1",
+      "company_cash > 5000"
+    ],
+    "body": "{name} thinks the current build needs a proper external playtest before it goes further.",
+    "choices": [
+      {
+        "label": "RUN IT",
+        "cost": 1400,
+        "outcome": "The findings sting, but the game is better for them.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 2
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 2.5
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "design",
+            "amount": 30
+          }
+        ]
+      },
+      {
+        "label": "TRUST THE TEAM",
+        "default": true,
+        "outcome": "Development continues on instinct.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "scope_worry",
+    "type": "employee",
+    "title": "A WORD FROM PRODUCTION",
+    "weight": 8,
+    "cooldown_weeks": 30,
+    "roles": [
+      "producer",
+      "designer",
+      "generalist"
+    ],
+    "conditions": [
+      "has_active_project == 1",
+      "employee_production > 45"
+    ],
+    "body": "{name} is worried the current project is drifting past what the team can finish well.",
+    "choices": [
+      {
+        "label": "CUT SOMETHING",
+        "outcome": "A hard conversation, then a tighter plan everyone believes in.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 3.0
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": 2
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": 4
+          }
+        ]
+      },
+      {
+        "label": "PUSH ON",
+        "default": true,
+        "outcome": "The team keeps going. The unease does not go away.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": -3
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "team_lunch",
+    "type": "studio",
+    "title": "TEAM LUNCH",
+    "weight": 10,
+    "cooldown_weeks": 26,
+    "conditions": [
+      "company_headcount >= 3"
+    ],
+    "body": "The team has been heads-down for weeks. Someone suggests a proper lunch out.",
+    "choices": [
+      {
+        "label": "YOUR TREAT",
+        "cost": 600,
+        "outcome": "Two hours away from the desks does more than two hours at them.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 5
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "MAYBE FRIDAY",
+        "default": true,
+        "outcome": "The idea fades. Everyone eats at their desk again.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "game_jam",
+    "type": "studio",
+    "title": "INTERNAL GAME JAM",
+    "weight": 7,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "company_headcount >= 4",
+      "has_active_project == 1"
+    ],
+    "body": "The team wants to run a two-day internal game jam.",
+    "choices": [
+      {
+        "label": "BLOCK OUT THE TIME",
+        "outcome": "Nothing shippable comes out of it, but the floor is buzzing for a week.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 6
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 3.5
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.05,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS SPRINT",
+        "default": true,
+        "outcome": "The jam is postponed indefinitely.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": -2.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "office_dog",
+    "type": "studio",
+    "title": "THE OFFICE DOG",
+    "weight": 6,
+    "cooldown_weeks": 50,
+    "conditions": [
+      "company_headcount >= 4"
+    ],
+    "body": "Someone has started bringing their dog in. Opinions vary.",
+    "choices": [
+      {
+        "label": "ALLOW IT",
+        "outcome": "Morale up, allergies down a bit, net positive.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "SET A POLICY",
+        "default": true,
+        "outcome": "A polite no. The dog stays home. So does a little goodwill.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "music_wars",
+    "type": "studio",
+    "title": "THE OFFICE PLAYLIST",
+    "weight": 7,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_headcount >= 4"
+    ],
+    "body": "A low-grade dispute about the shared speaker has been running for a fortnight.",
+    "choices": [
+      {
+        "label": "BUY EVERYONE HEADPHONES",
+        "cost": 700,
+        "outcome": "The speaker goes quiet. So does the argument.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.03,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "LET THEM SORT IT",
+        "default": true,
+        "outcome": "The rota holds for a week, then collapses again.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "retro_honesty",
+    "type": "studio",
+    "title": "A HONEST RETRO",
+    "weight": 8,
+    "cooldown_weeks": 34,
+    "body": "The last project's retrospective turned unusually frank.",
+    "choices": [
+      {
+        "label": "ACT ON IT",
+        "outcome": "You commit to two concrete changes. The team watches to see if you mean it.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 3.0
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "THANK THEM AND MOVE ON",
+        "default": true,
+        "outcome": "The notes are filed. The team notices they were filed.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -3
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": -2.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "landlord_rent_hike",
+    "type": "studio",
+    "title": "THE LANDLORD",
+    "weight": 7,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "office_quality > 20"
+    ],
+    "body": "The building's owner is signalling a rent increase at renewal.",
+    "choices": [
+      {
+        "label": "NEGOTIATE HARD",
+        "outcome": "You hold most of the line. It costs a tense meeting and a favour.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": -1200
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 1.0
+          }
+        ]
+      },
+      {
+        "label": "ABSORB IT",
+        "default": true,
+        "outcome": "The higher rent is now just a fact of the month.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": -2500
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "power_cut",
+    "type": "studio",
+    "title": "POWER CUT",
+    "weight": 7,
+    "cooldown_weeks": 38,
+    "conditions": [
+      "has_active_project == 1"
+    ],
+    "body": "A neighbourhood power cut has taken the office offline for the afternoon.",
+    "choices": [
+      {
+        "label": "SEND EVERYONE HOME",
+        "outcome": "A lost afternoon, cleanly. People pick it up tomorrow.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 1
+          }
+        ]
+      },
+      {
+        "label": "WAIT IT OUT",
+        "default": true,
+        "outcome": "Half the team loses unsaved work when it flickers back.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.06,
+            "weeks": 2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "backup_scare",
+    "type": "studio",
+    "title": "BACKUP SCARE",
+    "weight": 7,
+    "cooldown_weeks": 48,
+    "body": "A near-miss with the version control server has everyone rattled about backups.",
+    "choices": [
+      {
+        "label": "PAY FOR PROPER BACKUPS",
+        "cost": 1500,
+        "outcome": "Offsite, automated, tested. One less thing to lie awake about.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 2.0
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "TIGHTEN THE MANUAL PROCESS",
+        "default": true,
+        "outcome": "A new checklist. It works until someone forgets it.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "press_feature",
+    "type": "studio",
+    "title": "PRESS INTEREST",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "company_reputation > 20"
+    ],
+    "body": "A games outlet wants to run a feature on the studio.",
+    "choices": [
+      {
+        "label": "GIVE THEM ACCESS",
+        "outcome": "The piece is warm and widely read. Good for the name.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 2.0
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          }
+        ]
+      },
+      {
+        "label": "POLITELY DECLINE",
+        "default": true,
+        "outcome": "The feature runs about a different studio.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "community_mod",
+    "type": "studio",
+    "title": "THE COMMUNITY",
+    "weight": 6,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_fans > 400"
+    ],
+    "body": "Players have built an ambitious mod for one of your games and are asking for a nod.",
+    "choices": [
+      {
+        "label": "SIGNAL-BOOST IT",
+        "outcome": "You share it everywhere. The community glows; a few new fans arrive.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.0
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "STAY QUIET",
+        "default": true,
+        "outcome": "The mod does fine without you. The makers notice the silence.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": -0.5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "charity_bundle",
+    "type": "studio",
+    "title": "CHARITY BUNDLE",
+    "weight": 6,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "company_reputation > 15"
+    ],
+    "body": "A charity bundle organiser has asked to include one of your older games.",
+    "choices": [
+      {
+        "label": "DONATE A SLOT",
+        "outcome": "Costs a bit of revenue, buys a lot of goodwill.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "DECLINE",
+        "default": true,
+        "outcome": "A reasonable business call that still feels a little cold.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "local_meetup",
+    "type": "studio",
+    "title": "LOCAL DEV MEETUP",
+    "weight": 7,
+    "cooldown_weeks": 36,
+    "conditions": [
+      "office_quality > 30"
+    ],
+    "body": "The local game-dev meetup is looking for a venue and a host.",
+    "choices": [
+      {
+        "label": "HOST IT AT THE STUDIO",
+        "cost": 500,
+        "outcome": "Pizza, demos, and three promising people you now know by name.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.8
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "PASS IT ON",
+        "default": true,
+        "outcome": "Another studio hosts. You hear it went well.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "recruiter_spam",
+    "type": "studio",
+    "title": "POACHING SEASON",
+    "weight": 7,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_headcount >= 5"
+    ],
+    "body": "A recruiter has been messaging half the team on the same day.",
+    "choices": [
+      {
+        "label": "RALLY THE FLOOR",
+        "outcome": "A frank all-hands about where the studio is going steadies most of them.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "HOPE IT BLOWS OVER",
+        "default": true,
+        "outcome": "A couple of people take the calls. Nothing happens yet.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -3
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": -1.5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tax_audit",
+    "type": "studio",
+    "title": "THE ACCOUNTANT CALLS",
+    "weight": 6,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_cash > 6000"
+    ],
+    "body": "The books need a proper going-over before a filing deadline.",
+    "choices": [
+      {
+        "label": "BRING IN A PRO",
+        "cost": 1800,
+        "outcome": "Clean books, a fee, and no more late-night spreadsheet dread.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "DO IT YOURSELF",
+        "default": true,
+        "outcome": "It gets done. It eats a weekend that should not have been eaten.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "engine_talk_invite",
+    "type": "studio",
+    "title": "CONFERENCE BOOTH",
+    "weight": 6,
+    "cooldown_weeks": 50,
+    "conditions": [
+      "company_cash > 12000",
+      "company_reputation > 10"
+    ],
+    "body": "There is a chance to take a small booth at a regional games conference.",
+    "choices": [
+      {
+        "label": "TAKE THE BOOTH",
+        "cost": 3000,
+        "outcome": "A banner, a demo station, and a mailing list that is suddenly worth having.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.5
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "SKIP IT THIS YEAR",
+        "default": true,
+        "outcome": "The budget stays put.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "bad_review_pile",
+    "type": "studio",
+    "title": "A ROUGH WEEK ONLINE",
+    "weight": 7,
+    "cooldown_weeks": 34,
+    "conditions": [
+      "company_fans > 200"
+    ],
+    "body": "One of your games is getting piled on over a bug that shipped.",
+    "choices": [
+      {
+        "label": "SHIP A FIX FAST",
+        "outcome": "A quick patch and a straight apology turn the mood around.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.8
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 2.0
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 1
+          }
+        ]
+      },
+      {
+        "label": "LET IT PASS",
+        "default": true,
+        "outcome": "The noise dies down on its own, but it leaves a mark.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": -1.2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fan_mail",
+    "type": "studio",
+    "title": "FAN MAIL",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "company_fans > 600"
+    ],
+    "body": "A stack of genuinely heartfelt letters about one of your games has arrived.",
+    "choices": [
+      {
+        "label": "READ THEM TO THE FLOOR",
+        "outcome": "Ten minutes that reminds everyone why they do this.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 5
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "PIN A FEW UP",
+        "default": true,
+        "outcome": "They go on the wall by the kitchen. People stop and read them.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "heatwave",
+    "type": "studio",
+    "title": "HEATWAVE",
+    "weight": 6,
+    "cooldown_weeks": 48,
+    "body": "The office air conditioning cannot keep up with the week's heat.",
+    "choices": [
+      {
+        "label": "BUY PORTABLE UNITS",
+        "cost": 900,
+        "outcome": "Not elegant, but the floor is workable again by lunch.",
+        "effects": []
+      },
+      {
+        "label": "TOUGH IT OUT",
+        "default": true,
+        "outcome": "Concentration melts along with everything else.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.06,
+            "weeks": 2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "intern_program",
+    "type": "studio",
+    "title": "INTERNSHIP",
+    "weight": 6,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_headcount >= 5"
+    ],
+    "body": "A nearby course has asked whether the studio would take a summer intern.",
+    "choices": [
+      {
+        "label": "TAKE ONE ON",
+        "outcome": "It costs some senior time now; one of them is worth hiring later.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 3
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 1.5
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.5
+          }
+        ]
+      },
+      {
+        "label": "NOT THIS YEAR",
+        "default": true,
+        "outcome": "The slot goes elsewhere.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "neighbour_noise",
+    "type": "studio",
+    "title": "THE UNIT NEXT DOOR",
+    "weight": 6,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "has_active_project == 1"
+    ],
+    "body": "Building work in the neighbouring unit has made the office genuinely loud.",
+    "choices": [
+      {
+        "label": "PAY FOR ACOUSTIC PANELS",
+        "cost": 1100,
+        "outcome": "The worst of it is dampened within a day.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.03,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "HAND OUT EARPLUGS",
+        "default": true,
+        "outcome": "People cope. Deep work does not.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.05,
+            "weeks": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "old_game_spike",
+    "type": "studio",
+    "title": "AN UNEXPECTED SPIKE",
+    "weight": 5,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "company_fans > 300"
+    ],
+    "body": "An old game of yours is suddenly trending again after a streamer picked it up.",
+    "choices": [
+      {
+        "label": "LEAN IN",
+        "outcome": "A quick sale and a social push turn the moment into real momentum.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "ENJOY IT QUIETLY",
+        "default": true,
+        "outcome": "The spike fades in a fortnight, unremarked.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "keyboard_upgrade",
+    "type": "studio",
+    "title": "SMALL COMFORTS",
+    "weight": 7,
+    "cooldown_weeks": 46,
+    "conditions": [
+      "company_headcount >= 4",
+      "company_cash > 8000"
+    ],
+    "body": "The team's keyboards and chairs are visibly past their best.",
+    "choices": [
+      {
+        "label": "REFRESH THE LOT",
+        "cost": 2400,
+        "outcome": "A dull purchase that everyone quietly appreciates for months.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.03,
+            "weeks": 3
+          }
+        ]
+      },
+      {
+        "label": "REPLACE THE WORST ONES",
+        "default": true,
+        "outcome": "A few people get new kit. The rest keep waiting.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "documentary_crew",
+    "type": "studio",
+    "title": "A FILM CREW",
+    "weight": 5,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_reputation > 25"
+    ],
+    "body": "A small documentary about local studios wants a day of filming.",
+    "choices": [
+      {
+        "label": "LET THEM IN",
+        "outcome": "A distracting day; a genuinely nice piece of press three months later.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.4
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 1
+          }
+        ]
+      },
+      {
+        "label": "DECLINE",
+        "default": true,
+        "outcome": "The crew films elsewhere.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "localisation_offer",
+    "type": "studio",
+    "title": "LOCALISATION",
+    "weight": 5,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "company_cash > 10000",
+      "company_fans > 250"
+    ],
+    "body": "A localisation house has offered a good rate to translate one of your games.",
+    "choices": [
+      {
+        "label": "COMMISSION IT",
+        "cost": 2600,
+        "outcome": "New regions, a modest cost, a wider audience for the back catalogue.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.8
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "NOT YET",
+        "default": true,
+        "outcome": "The game stays in one language for now.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "mentorship_scheme",
+    "type": "studio",
+    "title": "INDUSTRY MENTORSHIP",
+    "weight": 5,
+    "cooldown_weeks": 56,
+    "conditions": [
+      "company_headcount >= 6"
+    ],
+    "body": "An industry body wants senior staff to mentor newcomers from underrepresented backgrounds.",
+    "choices": [
+      {
+        "label": "SIGN THE STUDIO UP",
+        "outcome": "A few hours a month, well spent. It says something true about the place.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.6
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "MAYBE NEXT INTAKE",
+        "default": true,
+        "outcome": "The form goes in a drawer.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "all_nighter_offer",
+    "type": "employee",
+    "title": "CRUNCH VOLUNTEER",
+    "weight": 7,
+    "cooldown_weeks": 30,
+    "conditions": [
+      "has_active_project == 1",
+      "employee_energy < 60"
+    ],
+    "body": "{name} is offering to pull a weekend to hit the milestone.",
+    "choices": [
+      {
+        "label": "THANK THEM, BUT NO",
+        "outcome": "You move the milestone instead. {name} is surprised, then relieved.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "work_life_balance",
+            "amount": 2.5
+          }
+        ]
+      },
+      {
+        "label": "ACCEPT THE OFFER",
+        "default": true,
+        "outcome": "The milestone lands. {name} is running on fumes by Monday.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.05,
+            "weeks": 1
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -6
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tooling_idea",
+    "type": "employee",
+    "title": "EMPLOYEE REQUEST",
+    "weight": 8,
+    "cooldown_weeks": 34,
+    "roles": [
+      "programmer",
+      "generalist",
+      "producer"
+    ],
+    "conditions": [
+      "employee_programming > 45"
+    ],
+    "body": "{name} has an idea for an internal tool that could save the team hours a week.",
+    "choices": [
+      {
+        "label": "FUND A PROTOTYPE",
+        "outcome": "A week lost now, paid back within a month.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 1
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "programming",
+            "amount": 35
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.5
+          }
+        ]
+      },
+      {
+        "label": "ADD IT TO THE BACKLOG",
+        "default": true,
+        "outcome": "The idea joins a hundred others nobody will get to.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "design_disagreement",
+    "type": "employee",
+    "title": "A DESIGN DISAGREEMENT",
+    "weight": 8,
+    "cooldown_weeks": 32,
+    "roles": [
+      "designer",
+      "generalist",
+      "producer"
+    ],
+    "conditions": [
+      "employee_design > 45",
+      "has_active_project == 1"
+    ],
+    "body": "{name} strongly disagrees with the direction a core system is taking.",
+    "choices": [
+      {
+        "label": "HEAR IT OUT PROPERLY",
+        "outcome": "An hour on the whiteboard produces a better third option.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "design",
+            "amount": 30
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "KEEP THE CURRENT PLAN",
+        "default": true,
+        "outcome": "The plan holds. {name} implements it without enthusiasm.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -4
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "relocation_request",
+    "type": "employee",
+    "title": "REMOTE REQUEST",
+    "weight": 6,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "employee_tenure_weeks > 60"
+    ],
+    "body": "{name} needs to move away for personal reasons and is asking to work remotely.",
+    "choices": [
+      {
+        "label": "MAKE IT WORK",
+        "outcome": "Some logistics, a webcam, and you keep someone you would have lost.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 7
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.5
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "IT HAS TO BE IN PERSON",
+        "default": true,
+        "outcome": "{name} starts looking for something closer to home.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -8
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "health_scare",
+    "type": "employee",
+    "title": "HEALTH",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "body": "{name} has had a health scare and is being careful about hours.",
+    "choices": [
+      {
+        "label": "PROTECT THEIR SCHEDULE",
+        "outcome": "You quietly rebalance the load. {name} does not forget it.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 6
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": -1
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 3.0
+          }
+        ]
+      },
+      {
+        "label": "BUSINESS AS USUAL",
+        "default": true,
+        "outcome": "{name} keeps up appearances and pays for it.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -7
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "award_nomination",
+    "type": "studio",
+    "title": "AWARD NOMINATION",
+    "weight": 5,
+    "cooldown_weeks": 50,
+    "conditions": [
+      "company_reputation > 22"
+    ],
+    "body": "One of your games has been longlisted for a regional development award.",
+    "choices": [
+      {
+        "label": "GO TO THE CEREMONY",
+        "cost": 1200,
+        "outcome": "You do not win, but the night is good for the team and the name.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 5
+          },
+          {
+            "kind": "reputation",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "SKIP THE CEREMONY",
+        "default": true,
+        "outcome": "A line in a newsletter. The team hears about it secondhand.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pipeline_bottleneck",
+    "type": "employee",
+    "title": "PIPELINE PROBLEM",
+    "weight": 8,
+    "cooldown_weeks": 30,
+    "conditions": [
+      "employee_team_size >= 3",
+      "has_active_project == 1"
+    ],
+    "body": "{name} keeps getting blocked waiting on work from another discipline.",
+    "choices": [
+      {
+        "label": "FIX THE HANDOFF",
+        "outcome": "A short process change unclogs the pipe for everyone.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.5
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": 3
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.03,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "WORK AROUND IT",
+        "default": true,
+        "outcome": "{name} finds a workaround. The block is still there for the next person.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "public_holiday",
+    "type": "studio",
+    "title": "LONG WEEKEND",
+    "weight": 8,
+    "cooldown_weeks": 32,
+    "body": "A public holiday falls on a Friday. Someone asks about making it a four-day weekend.",
+    "choices": [
+      {
+        "label": "GIVE THE FLOOR THE DAY",
+        "outcome": "A rested team on Tuesday is worth more than a worked Friday.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "work_life_balance",
+            "amount": 2.0
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 1
+          }
+        ]
+      },
+      {
+        "label": "NORMAL FRIDAY",
+        "default": true,
+        "outcome": "Half the floor takes leave anyway; the other half resents it.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hardware_gift",
+    "type": "studio",
+    "title": "AN UNEXPECTED PARCEL",
+    "weight": 5,
+    "cooldown_weeks": 52,
+    "body": "A hardware maker has sent over a box of new development kits, no strings stated.",
+    "choices": [
+      {
+        "label": "READ THE FINE PRINT FIRST",
+        "outcome": "Nothing hidden. The team gets nice new toys and a small speed-up.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.04,
+            "weeks": 3
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "SEND IT BACK",
+        "default": true,
+        "outcome": "Better safe. The kits go back unopened.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "volunteer_day",
+    "type": "studio",
+    "title": "VOLUNTEER DAY",
+    "weight": 5,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "company_headcount >= 5"
+    ],
+    "body": "A local school is asking for volunteers to run a coding afternoon.",
+    "choices": [
+      {
+        "label": "SEND A COUPLE OF PEOPLE",
+        "outcome": "An afternoon of lost work and a genuinely good deed.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 1
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.6
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "DECLINE POLITELY",
+        "default": true,
+        "outcome": "The school finds someone else.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "engine_bug_upstream",
+    "type": "employee",
+    "title": "UPSTREAM BUG",
+    "weight": 7,
+    "cooldown_weeks": 34,
+    "roles": [
+      "programmer",
+      "generalist"
+    ],
+    "conditions": [
+      "employee_programming > 55",
+      "has_active_project == 1"
+    ],
+    "body": "{name} has traced a nasty bug to a third-party library, not your code.",
+    "choices": [
+      {
+        "label": "PATCH IT AND UPSTREAM THE FIX",
+        "outcome": "Extra work now; goodwill and a fixed dependency later.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "programming",
+            "amount": 45
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.5
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "WORK AROUND IT LOCALLY",
+        "default": true,
+        "outcome": "A hack that works, and a comment apologising for itself.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 1
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": -1.5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "first_hire_jitters",
+    "type": "employee",
+    "title": "SETTLING IN",
+    "weight": 8,
+    "cooldown_weeks": 26,
+    "conditions": [
+      "employee_tenure_weeks < 20"
+    ],
+    "body": "{name} is still finding their feet weeks after joining.",
+    "choices": [
+      {
+        "label": "PAIR THEM WITH A BUDDY",
+        "outcome": "A week of shadowing and {name} clicks into place.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 5
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": 3
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "design",
+            "amount": 20
+          }
+        ]
+      },
+      {
+        "label": "SINK OR SWIM",
+        "default": true,
+        "outcome": "{name} gets there eventually, the hard way.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "conference_ticket_lottery",
+    "type": "studio",
+    "title": "CONFERENCE TICKETS",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "company_headcount >= 5"
+    ],
+    "body": "The studio has two spare passes to a major industry conference.",
+    "choices": [
+      {
+        "label": "RUN A FAIR LOTTERY",
+        "outcome": "Two happy people, and a transparent process the rest respect.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "SEND THE LEADS",
+        "default": true,
+        "outcome": "The obvious choice, and a slightly sour one.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "moonlighting",
+    "type": "employee",
+    "title": "SIDE PROJECT",
+    "weight": 6,
+    "cooldown_weeks": 46,
+    "body": "{name} is making a small game of their own in the evenings and has been upfront about it.",
+    "choices": [
+      {
+        "label": "ENCOURAGE IT",
+        "outcome": "{name} brings the energy back into the day job. Everyone wins.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 5
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 2.5
+          }
+        ]
+      },
+      {
+        "label": "REMIND THEM OF THE CONTRACT",
+        "default": true,
+        "outcome": "{name} complies, and dims a little.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -5
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": -2.5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "kit_theft",
+    "type": "studio",
+    "title": "BREAK-IN",
+    "weight": 5,
+    "cooldown_weeks": 56,
+    "body": "Someone broke into the office overnight and took two laptops.",
+    "choices": [
+      {
+        "label": "REPLACE AND UPGRADE SECURITY",
+        "cost": 3200,
+        "outcome": "A bad morning, a real bill, and a lock that actually works now.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      },
+      {
+        "label": "CLAIM ON INSURANCE AND WAIT",
+        "default": true,
+        "outcome": "The excess still stings, and the team is jumpy for a fortnight.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": -800
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "streamer_partnership",
+    "type": "studio",
+    "title": "STREAMER PARTNERSHIP",
+    "weight": 6,
+    "cooldown_weeks": 42,
+    "conditions": [
+      "company_fans > 350",
+      "has_active_project == 1"
+    ],
+    "body": "A mid-size streamer wants early access to your next game in exchange for coverage.",
+    "choices": [
+      {
+        "label": "SET IT UP CAREFULLY",
+        "outcome": "Managed well, it is free reach that actually converts.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.2
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "KEEP THE BUILD LOCKED DOWN",
+        "default": true,
+        "outcome": "No leak risk, no coverage either.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "pension_scheme",
+    "type": "studio",
+    "title": "BENEFITS",
+    "weight": 6,
+    "cooldown_weeks": 60,
+    "conditions": [
+      "company_headcount >= 6",
+      "company_cash > 15000"
+    ],
+    "body": "The team has asked, politely and repeatedly, about a proper pension contribution.",
+    "choices": [
+      {
+        "label": "SET ONE UP",
+        "outcome": "An ongoing cost, and a real signal that this is a place to stay.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": -1500
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 3.5
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "PROMISE TO REVISIT IT",
+        "default": true,
+        "outcome": "The same conversation will happen again next year.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": -2.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "code_review_culture",
+    "type": "employee",
+    "title": "PROCESS",
+    "weight": 7,
+    "cooldown_weeks": 40,
+    "roles": [
+      "programmer",
+      "producer",
+      "generalist"
+    ],
+    "conditions": [
+      "employee_programming > 50"
+    ],
+    "body": "{name} wants to make code review mandatory, and some of the team are pushing back.",
+    "choices": [
+      {
+        "label": "BACK THE POLICY",
+        "outcome": "Slower merges, fewer fires. The pushback fades within a month.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 2
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 3.0
+          }
+        ]
+      },
+      {
+        "label": "KEEP IT OPTIONAL",
+        "default": true,
+        "outcome": "Reviews happen when people remember. Bugs happen when they do not.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": -2.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "art_book",
+    "type": "studio",
+    "title": "AN ART BOOK",
+    "weight": 5,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_fans > 500"
+    ],
+    "body": "A publisher wants to put out a small art book of one of your games.",
+    "choices": [
+      {
+        "label": "APPROVE IT",
+        "outcome": "A lovely object, a trickle of revenue, and the art team floating for weeks.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.8
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "PASS",
+        "default": true,
+        "outcome": "The idea goes nowhere.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "difficult_client",
+    "type": "studio",
+    "title": "CONTRACT CLIENT",
+    "weight": 7,
+    "cooldown_weeks": 36,
+    "conditions": [
+      "has_active_project == 1"
+    ],
+    "body": "A contract client keeps changing the brief without changing the deadline.",
+    "choices": [
+      {
+        "label": "HOLD THE LINE IN WRITING",
+        "outcome": "A firm, professional email resets expectations. Mostly.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "KEEP ABSORBING IT",
+        "default": true,
+        "outcome": "The team eats the churn. Morale and the schedule both slip.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -4
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.05,
+            "weeks": 3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "junior_breakthrough",
+    "type": "employee",
+    "title": "A BREAKTHROUGH",
+    "weight": 6,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "employee_tenure_weeks < 60",
+      "employee_level >= 2"
+    ],
+    "body": "{name}, still fairly new, has solved something the seniors had been stuck on.",
+    "choices": [
+      {
+        "label": "MAKE A POINT OF IT",
+        "outcome": "Public credit for a junior does more for the floor than a bonus would.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 8
+          },
+          {
+            "kind": "morale",
+            "target": "team",
+            "amount": 3
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "A QUIET WELL DONE",
+        "default": true,
+        "outcome": "{name} appreciates it, even if nobody else hears.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "holiday_party",
+    "type": "studio",
+    "title": "END OF YEAR",
+    "weight": 8,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "company_headcount >= 4"
+    ],
+    "body": "It is the end of the year and the team is looking at you about a party.",
+    "choices": [
+      {
+        "label": "DO IT PROPERLY",
+        "cost": 2000,
+        "outcome": "A good night out. People talk about it into January.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 6
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "DRINKS AT THE OFFICE",
+        "default": true,
+        "outcome": "Cheaper, flatter, fine.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "noise_complaint_from_us",
+    "type": "employee",
+    "title": "FOCUS TIME",
+    "weight": 7,
+    "cooldown_weeks": 38,
+    "conditions": [
+      "company_headcount >= 5"
+    ],
+    "body": "{name} says the open floor makes deep work almost impossible some afternoons.",
+    "choices": [
+      {
+        "label": "CREATE A QUIET ROOM",
+        "cost": 1200,
+        "outcome": "A corner becomes a no-meeting, no-talking room. It fills up fast.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.04,
+            "weeks": 3
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 4
+          }
+        ]
+      },
+      {
+        "label": "SUGGEST HEADPHONES",
+        "default": true,
+        "outcome": "{name} has tried headphones. That was the point.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "legacy_support_ask",
+    "type": "studio",
+    "title": "LEGACY SUPPORT",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "company_fans > 300"
+    ],
+    "body": "Players of a game you shipped years ago are asking for a compatibility patch.",
+    "choices": [
+      {
+        "label": "PATCH IT",
+        "outcome": "A week of someone's time buys years more goodwill from a loyal group.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 1
+          },
+          {
+            "kind": "reputation",
+            "amount": 1.0
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "MARK IT UNSUPPORTED",
+        "default": true,
+        "outcome": "An honest notice. Some fans take it hard.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": -0.8
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "energy_bill_shock",
+    "type": "studio",
+    "title": "THE ENERGY BILL",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "body": "The quarterly energy bill is far higher than budgeted.",
+    "choices": [
+      {
+        "label": "AUDIT AND FIX",
+        "outcome": "An efficiency sweep pays for itself by the next quarter.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": -600
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "JUST PAY IT",
+        "default": true,
+        "outcome": "The hit lands in full this month.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": -1800
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cross_team_swap",
+    "type": "employee",
+    "title": "A CHANGE OF SCENE",
+    "weight": 6,
+    "cooldown_weeks": 42,
+    "conditions": [
+      "company_headcount >= 8",
+      "employee_team_size >= 2"
+    ],
+    "body": "{name} has quietly asked to move to the other team for a while.",
+    "choices": [
+      {
+        "label": "ARRANGE THE SWAP",
+        "outcome": "A fresh problem re-energises {name}, and cross-pollinates both teams.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 5
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": -2
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "KEEP THE TEAMS STABLE",
+        "default": true,
+        "outcome": "{name} stays put, and stays a little restless.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "press_hit_piece",
+    "type": "studio",
+    "title": "A CRITICAL ARTICLE",
+    "weight": 6,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_reputation > 18"
+    ],
+    "body": "An outlet has run a pointed piece questioning one of the studio's design choices.",
+    "choices": [
+      {
+        "label": "RESPOND ONCE, CALMLY",
+        "outcome": "A measured reply and then silence. It reads as confidence.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": -0.4
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "DO NOT ENGAGE",
+        "default": true,
+        "outcome": "The piece circulates unanswered for a week.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": -1.4
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "stock_option_ask",
+    "type": "employee",
+    "title": "A STAKE IN IT",
+    "weight": 5,
+    "cooldown_weeks": 56,
+    "conditions": [
+      "employee_tenure_weeks > 120",
+      "employee_reputation > 20"
+    ],
+    "body": "{name} has asked, seriously, about some form of ownership or profit share.",
+    "choices": [
+      {
+        "label": "START THAT CONVERSATION",
+        "outcome": "No promises today, but the fact you engaged means a lot.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 6
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 3.0
+          }
+        ]
+      },
+      {
+        "label": "DEFLECT",
+        "default": true,
+        "outcome": "{name} reads the deflection accurately.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -5
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": -2.5
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "build_server_slow",
+    "type": "studio",
+    "title": "BUILD TIMES",
+    "weight": 8,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "has_active_project == 1",
+      "company_cash > 9000"
+    ],
+    "body": "Builds have crept up to twenty minutes and the whole team feels it.",
+    "choices": [
+      {
+        "label": "BUY A PROPER BUILD MACHINE",
+        "cost": 2800,
+        "outcome": "Builds drop to three minutes. The floor audibly exhales.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.05,
+            "weeks": 4
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "LIVE WITH IT",
+        "default": true,
+        "outcome": "Twenty minutes, forty times a day, across the team.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "returnship",
+    "type": "studio",
+    "title": "RETURN TO WORK",
+    "weight": 5,
+    "cooldown_weeks": 50,
+    "conditions": [
+      "company_headcount >= 5"
+    ],
+    "body": "An experienced developer coming back from a long career break has applied for a trial.",
+    "choices": [
+      {
+        "label": "GIVE THEM THE TRIAL",
+        "outcome": "A bit of ramp-up, then a strong, grateful hire the market overlooked.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 2
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 1.5
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.4
+          }
+        ]
+      },
+      {
+        "label": "GO WITH A SAFER CV",
+        "default": true,
+        "outcome": "You hire the obvious candidate instead.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "accessibility_letter",
+    "type": "studio",
+    "title": "A LETTER FROM A PLAYER",
+    "weight": 6,
+    "cooldown_weeks": 46,
+    "conditions": [
+      "company_fans > 250"
+    ],
+    "body": "A player with limited vision has written about how close one of your games came to being playable for them.",
+    "choices": [
+      {
+        "label": "BUDGET AN ACCESSIBILITY PASS",
+        "outcome": "A few weeks of work opens the game to a lot more people.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 2
+          },
+          {
+            "kind": "reputation",
+            "amount": 1.2
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 2.5
+          }
+        ]
+      },
+      {
+        "label": "REPLY WITH THANKS",
+        "default": true,
+        "outcome": "A kind reply, and the game stays as it is.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "overtime_creep",
+    "type": "studio",
+    "title": "THE HOURS",
+    "weight": 9,
+    "cooldown_weeks": 30,
+    "conditions": [
+      "has_active_project == 1"
+    ],
+    "body": "Nobody called a crunch, but people have been staying late for a month.",
+    "choices": [
+      {
+        "label": "CALL IT OUT AND SEND PEOPLE HOME",
+        "outcome": "You name the drift and stop it. The team believes you meant it.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "work_life_balance",
+            "amount": 3.5
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 1
+          }
+        ]
+      },
+      {
+        "label": "LET IT RIDE TO THE MILESTONE",
+        "default": true,
+        "outcome": "The milestone lands. So does the resentment.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -5
+          },
+          {
+            "kind": "culture",
+            "id": "work_life_balance",
+            "amount": -3.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rival_studio_closes",
+    "type": "studio",
+    "title": "A RIVAL FOLDS",
+    "weight": 5,
+    "cooldown_weeks": 52,
+    "body": "A studio down the road has shut down, and some good people are suddenly available.",
+    "choices": [
+      {
+        "label": "REACH OUT WARMLY",
+        "outcome": "You are not hiring today, but you make the calls anyway. It is remembered.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.6
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 1.0
+          }
+        ]
+      },
+      {
+        "label": "NOTE IT AND MOVE ON",
+        "default": true,
+        "outcome": "The moment passes.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "wrong_estimate",
+    "type": "employee",
+    "title": "AN HONEST ADMISSION",
+    "weight": 7,
+    "cooldown_weeks": 36,
+    "conditions": [
+      "has_active_project == 1"
+    ],
+    "body": "{name} owns up that an estimate {they} gave was badly wrong, early enough to matter.",
+    "choices": [
+      {
+        "label": "THANK THEM FOR THE HONESTY",
+        "outcome": "You replan calmly. The lesson is that honesty here is safe.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.0
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 3
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "MAKE AN EXAMPLE OF IT",
+        "default": true,
+        "outcome": "The schedule is fixed; the next bad estimate will be hidden.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -6
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": -2.5
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "community_manager_ask",
+    "type": "studio",
+    "title": "THE FORUMS",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "company_fans > 700"
+    ],
+    "body": "The community around your games has outgrown anyone's spare time to manage it.",
+    "choices": [
+      {
+        "label": "GIVE SOMEONE THE ROLE OFFICIALLY",
+        "outcome": "Part of one person's week, formally. The forums calm down.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.8
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 2
+          }
+        ]
+      },
+      {
+        "label": "KEEP MUDDLING THROUGH",
+        "default": true,
+        "outcome": "Threads go unanswered. The mood there slowly sours.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": -0.6
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "desk_move",
+    "type": "studio",
+    "title": "REARRANGING THE FLOOR",
+    "weight": 7,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_headcount >= 6"
+    ],
+    "body": "The team wants to reorganise the desks around how people actually work together.",
+    "choices": [
+      {
+        "label": "BLOCK OUT AN AFTERNOON",
+        "outcome": "A disruptive afternoon, then weeks of smoother collaboration.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 1
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "LEAVE IT AS IS",
+        "default": true,
+        "outcome": "The layout stays. So does the friction it causes.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "prototype_love",
+    "type": "employee",
+    "title": "A PROMISING PROTOTYPE",
+    "weight": 7,
+    "cooldown_weeks": 38,
+    "conditions": [
+      "employee_creativity > 50"
+    ],
+    "body": "{name} has a rough prototype that everyone who plays it keeps thinking about.",
+    "choices": [
+      {
+        "label": "GIVE IT A REAL WEEK",
+        "outcome": "Nothing is promised, but the idea gets a fair shot.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 1
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 3.0
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 6
+          }
+        ]
+      },
+      {
+        "label": "PARK IT FOR NOW",
+        "default": true,
+        "outcome": "The prototype goes in the drawer with the others.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -4
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": -2.0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "first_bad_month",
+    "type": "studio",
+    "title": "A SLOW MONTH",
+    "weight": 6,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_cash < 20000"
+    ],
+    "body": "Revenue this month is well down and the team can feel the mood shift.",
+    "choices": [
+      {
+        "label": "BE STRAIGHT WITH EVERYONE",
+        "outcome": "An honest all-hands about the numbers steadies people more than silence would.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "KEEP IT UPSTAIRS",
+        "default": true,
+        "outcome": "The uncertainty spreads in the gaps where information should be.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "veteran_wisdom",
+    "type": "employee",
+    "title": "INSTITUTIONAL MEMORY",
+    "weight": 6,
+    "cooldown_weeks": 50,
+    "conditions": [
+      "employee_tenure_weeks > 180"
+    ],
+    "body": "{name} has been here longer than anyone and holds a lot of undocumented knowledge.",
+    "choices": [
+      {
+        "label": "FUND A WEEK OF WRITING IT DOWN",
+        "outcome": "A dull week that de-risks the studio for years.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 1
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.5
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "production",
+            "amount": 30
+          }
+        ]
+      },
+      {
+        "label": "TRUST IT STAYS IN THEIR HEAD",
+        "default": true,
+        "outcome": "It does, until the day it does not.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "free_snacks_debate",
+    "type": "studio",
+    "title": "THE SNACK BUDGET",
+    "weight": 7,
+    "cooldown_weeks": 36,
+    "conditions": [
+      "company_headcount >= 4"
+    ],
+    "body": "There is a surprisingly heated discussion about whether the studio should stock snacks.",
+    "choices": [
+      {
+        "label": "JUST STOCK THE KITCHEN",
+        "cost": 400,
+        "outcome": "A trivial cost that removes a recurring low-grade irritation.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "PEOPLE CAN BRING THEIR OWN",
+        "default": true,
+        "outcome": "Technically fair. Slightly mean.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "press_embargo_break",
+    "type": "studio",
+    "title": "AN EMBARGO BREAKS EARLY",
+    "weight": 5,
+    "cooldown_weeks": 48,
+    "conditions": [
+      "has_active_project == 1",
+      "company_reputation > 20"
+    ],
+    "body": "A preview of your unannounced game has leaked a day before the planned reveal.",
+    "choices": [
+      {
+        "label": "BRING THE REVEAL FORWARD",
+        "outcome": "You get ahead of it within hours. The scramble is worth it.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 1
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.5
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      },
+      {
+        "label": "STICK TO THE PLAN",
+        "default": true,
+        "outcome": "The official reveal lands into a conversation that already happened.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": -0.8
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "team_offsite",
+    "type": "studio",
+    "title": "AN OFFSITE",
+    "weight": 6,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_headcount >= 6",
+      "company_cash > 14000"
+    ],
+    "body": "Someone has floated a two-day team offsite to plan the next year properly.",
+    "choices": [
+      {
+        "label": "BOOK IT",
+        "cost": 3500,
+        "outcome": "Away from the desks, the team actually agrees on a direction.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "A LONG MEETING INSTEAD",
+        "default": true,
+        "outcome": "You cover the agenda in a room. Half of it does not stick.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "skill_swap_lunch",
+    "type": "studio",
+    "title": "LUNCH AND LEARN",
+    "weight": 7,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_headcount >= 5"
+    ],
+    "body": "A few people want to run weekly lunchtime sessions teaching each other their disciplines.",
+    "choices": [
+      {
+        "label": "SUPPORT IT",
+        "outcome": "The studio gets broader, more curious, and a little more bonded.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 2.0
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "KEEP LUNCH AS LUNCH",
+        "default": true,
+        "outcome": "The idea does not survive the first busy week.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "contractor_gap",
+    "type": "studio",
+    "title": "A CONTRACTOR LEAVES",
+    "weight": 6,
+    "cooldown_weeks": 42,
+    "conditions": [
+      "has_active_project == 1"
+    ],
+    "body": "A contractor the team leaned on has finished up, and there is a hole where they were.",
+    "choices": [
+      {
+        "label": "BACKFILL PROPERLY",
+        "cost": 2200,
+        "outcome": "A short, expensive scramble to bring someone else up to speed.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.04,
+            "weeks": 3
+          }
+        ]
+      },
+      {
+        "label": "SPREAD THE WORK",
+        "default": true,
+        "outcome": "The team covers it. Everyone is stretched a little thinner.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.05,
+            "weeks": 4
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "player_data_request",
+    "type": "studio",
+    "title": "A DATA REQUEST",
+    "weight": 4,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_fans > 400"
+    ],
+    "body": "A researcher has asked, transparently, for anonymised play data from one of your games for a study.",
+    "choices": [
+      {
+        "label": "SHARE IT CAREFULLY",
+        "outcome": "A cautious yes, with the players' interests kept front of mind.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.6
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 1.0
+          }
+        ]
+      },
+      {
+        "label": "DECLINE ON PRINCIPLE",
+        "default": true,
+        "outcome": "A clean no. The safest call, and a defensible one.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "morale_dip",
+    "type": "studio",
+    "title": "A FLAT PATCH",
+    "weight": 8,
+    "cooldown_weeks": 34,
+    "body": "Nothing is wrong exactly, but the floor has felt low-energy for a couple of weeks.",
+    "choices": [
+      {
+        "label": "SHIP A SMALL WIN",
+        "outcome": "You carve out a tiny, finishable thing. Crossing it off lifts everyone.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "WAIT FOR IT TO PASS",
+        "default": true,
+        "outcome": "It does, eventually, on its own.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hiring_referral",
+    "type": "employee",
+    "title": "A REFERRAL",
+    "weight": 7,
+    "cooldown_weeks": 38,
+    "conditions": [
+      "employee_tenure_weeks > 30"
+    ],
+    "body": "{name} knows someone excellent who might be tempted to join.",
+    "choices": [
+      {
+        "label": "PURSUE IT AND PAY THE BONUS",
+        "cost": 1000,
+        "outcome": "A warm lead is worth ten cold CVs. {name} is pleased to have helped.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "ADD THEM TO THE PILE",
+        "default": true,
+        "outcome": "The contact goes into the applicant tracker with everyone else.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "engine_choice_regret",
+    "type": "employee",
+    "title": "SECOND THOUGHTS",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "roles": [
+      "programmer",
+      "generalist",
+      "producer"
+    ],
+    "conditions": [
+      "employee_programming > 55"
+    ],
+    "body": "{name} thinks the engine decision made last year is quietly costing the team every week.",
+    "choices": [
+      {
+        "label": "SCHEDULE A REAL EVALUATION",
+        "outcome": "You commit to measuring it properly rather than arguing about it.",
+        "effects": [
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.0
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "programming",
+            "amount": 30
+          }
+        ]
+      },
+      {
+        "label": "IT IS TOO LATE TO CHANGE",
+        "default": true,
+        "outcome": "Probably true. It still lands badly.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "small_grant",
+    "type": "studio",
+    "title": "A DEVELOPMENT GRANT",
+    "weight": 5,
+    "cooldown_weeks": 56,
+    "conditions": [
+      "company_headcount >= 3"
+    ],
+    "body": "The studio qualifies for a modest regional development grant, with a form and a wait.",
+    "choices": [
+      {
+        "label": "DO THE PAPERWORK",
+        "outcome": "A tedious week for someone, then a genuinely useful cheque.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": 4000
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 1
+          }
+        ]
+      },
+      {
+        "label": "NOT WORTH THE HASSLE",
+        "default": true,
+        "outcome": "The deadline passes.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "cameo_request",
+    "type": "studio",
+    "title": "A CAMEO",
+    "weight": 4,
+    "cooldown_weeks": 52,
+    "conditions": [
+      "company_fans > 500"
+    ],
+    "body": "Another studio has asked to put a small nod to one of your characters in their game.",
+    "choices": [
+      {
+        "label": "SAY YES, WARMLY",
+        "outcome": "A friendly gesture that both fanbases enjoy spotting.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.8
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "KEEP THE IP CLEAN",
+        "default": true,
+        "outcome": "A polite no. Understandable, slightly joyless.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "onboarding_gap",
+    "type": "employee",
+    "title": "A ROUGH START",
+    "weight": 7,
+    "cooldown_weeks": 34,
+    "conditions": [
+      "employee_tenure_weeks < 24"
+    ],
+    "body": "{name} joined a month ago and still does not have the access or docs to be productive.",
+    "choices": [
+      {
+        "label": "FIX ONBOARDING PROPERLY",
+        "outcome": "A day spent writing it down means the next hire does not lose a month.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 5
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.5
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.02,
+            "weeks": 1
+          }
+        ]
+      },
+      {
+        "label": "GET THEM UNBLOCKED FOR NOW",
+        "default": true,
+        "outcome": "{name} can work again. The next new starter hits the same wall.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "meeting_overload",
+    "type": "studio",
+    "title": "TOO MANY MEETINGS",
+    "weight": 8,
+    "cooldown_weeks": 32,
+    "conditions": [
+      "company_headcount >= 6"
+    ],
+    "body": "The calendar has filled with recurring meetings and the makers are visibly frustrated.",
+    "choices": [
+      {
+        "label": "CANCEL HALF OF THEM",
+        "outcome": "A brave cull. Two weeks later nobody misses the ones you dropped.",
+        "effects": [
+          {
+            "kind": "dev_efficiency",
+            "amount": 0.04,
+            "weeks": 3
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 2.0
+          }
+        ]
+      },
+      {
+        "label": "KEEP THEM, TRIM THE AGENDAS",
+        "default": true,
+        "outcome": "A smaller fix. The calendar stays crowded.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fan_convention_booth",
+    "type": "studio",
+    "title": "A FAN CONVENTION",
+    "weight": 5,
+    "cooldown_weeks": 50,
+    "conditions": [
+      "company_fans > 800"
+    ],
+    "body": "Fans are organising a small convention around games like yours and want the studio there.",
+    "choices": [
+      {
+        "label": "SHOW UP PROPERLY",
+        "cost": 1800,
+        "outcome": "A weekend of your time, and a fanbase that now feels genuinely seen.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 1.4
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 3
+          }
+        ]
+      },
+      {
+        "label": "SEND A CARE PACKAGE",
+        "default": true,
+        "outcome": "Some swag in the post. Appreciated, but not the same.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "junior_overwhelmed",
+    "type": "employee",
+    "title": "IN OVER THEIR HEAD",
+    "weight": 7,
+    "cooldown_weeks": 32,
+    "conditions": [
+      "employee_tenure_weeks < 50",
+      "employee_stress > 45"
+    ],
+    "body": "{name} was handed a task well beyond their level and is quietly drowning in it.",
+    "choices": [
+      {
+        "label": "RESCOPE AND PAIR THEM UP",
+        "outcome": "You catch it in time. {name} learns instead of breaking.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 6
+          },
+          {
+            "kind": "team_chemistry",
+            "amount": 2
+          },
+          {
+            "kind": "skill_xp",
+            "skill": "design",
+            "amount": 25
+          }
+        ]
+      },
+      {
+        "label": "LET THEM PUSH THROUGH",
+        "default": true,
+        "outcome": "{name} delivers something, late and shaky, and loses confidence.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -6
+          },
+          {
+            "kind": "dev_efficiency",
+            "amount": -0.03,
+            "weeks": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "green_office",
+    "type": "studio",
+    "title": "SUSTAINABILITY",
+    "weight": 5,
+    "cooldown_weeks": 54,
+    "conditions": [
+      "company_headcount >= 6"
+    ],
+    "body": "A few people want the studio to take its environmental footprint seriously.",
+    "choices": [
+      {
+        "label": "MAKE SOME REAL CHANGES",
+        "outcome": "Better suppliers, less waste, a small cost, and a team that is prouder of the place.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": -700
+          },
+          {
+            "kind": "culture",
+            "id": "employee_loyalty",
+            "amount": 2.0
+          },
+          {
+            "kind": "reputation",
+            "amount": 0.4
+          }
+        ]
+      },
+      {
+        "label": "PUT UP RECYCLING BINS",
+        "default": true,
+        "outcome": "A gesture. Better than nothing, and clearly just a gesture.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "archive_request",
+    "type": "studio",
+    "title": "PRESERVATION",
+    "weight": 4,
+    "cooldown_weeks": 56,
+    "body": "A games-preservation group has asked for source and assets from an old title, for the archive.",
+    "choices": [
+      {
+        "label": "CONTRIBUTE IT",
+        "outcome": "A little legal care, and a piece of the studio's work is safe for good.",
+        "effects": [
+          {
+            "kind": "reputation",
+            "amount": 0.8
+          },
+          {
+            "kind": "culture",
+            "id": "quality_focus",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "NOT RIGHT NOW",
+        "default": true,
+        "outcome": "Maybe when there is time. There is never time.",
+        "effects": []
+      }
+    ]
+  },
+  {
+    "id": "team_split_tension",
+    "type": "employee",
+    "title": "THE OTHER TEAM",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "company_headcount >= 9"
+    ],
+    "body": "{name} feels the two teams have drifted into an unhelpful us-and-them.",
+    "choices": [
+      {
+        "label": "MIX THEM DELIBERATELY",
+        "outcome": "A shared demo day and a couple of swaps thaw it out.",
+        "effects": [
+          {
+            "kind": "team_chemistry",
+            "amount": 4
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 1.5
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "label": "LET EACH TEAM DO ITS THING",
+        "default": true,
+        "outcome": "The divide hardens a little more.",
+        "effects": [
+          {
+            "kind": "team_chemistry",
+            "amount": -3
+          },
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unexpected_praise",
+    "type": "studio",
+    "title": "AN UNSOLICITED SHOUT-OUT",
+    "weight": 5,
+    "cooldown_weeks": 46,
+    "conditions": [
+      "company_reputation > 15"
+    ],
+    "body": "A well-known developer has praised one of your games, unprompted, in an interview.",
+    "choices": [
+      {
+        "label": "SHARE IT WITH THE TEAM",
+        "outcome": "A genuine lift, and a small bump in applications that week.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 4
+          },
+          {
+            "kind": "reputation",
+            "amount": 1.0
+          }
+        ]
+      },
+      {
+        "label": "STAY COOL ABOUT IT",
+        "default": true,
+        "outcome": "It still makes the group chat.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "late_payment",
+    "type": "studio",
+    "title": "A CLIENT PAYS LATE",
+    "weight": 6,
+    "cooldown_weeks": 40,
+    "conditions": [
+      "company_cash < 25000"
+    ],
+    "body": "A contract client's payment is a month overdue and cash is tighter than it should be.",
+    "choices": [
+      {
+        "label": "CHASE IT FIRMLY",
+        "outcome": "An uncomfortable call, and the money lands within the week.",
+        "effects": [
+          {
+            "kind": "cash",
+            "amount": 0
+          },
+          {
+            "kind": "culture",
+            "id": "efficiency",
+            "amount": 1.0
+          }
+        ]
+      },
+      {
+        "label": "WAIT POLITELY",
+        "default": true,
+        "outcome": "It arrives eventually. The gap it left did real damage to the month.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "company",
+            "amount": -3
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "skill_plateau",
+    "type": "employee",
+    "title": "STUCK",
+    "weight": 6,
+    "cooldown_weeks": 44,
+    "conditions": [
+      "employee_level >= 3",
+      "employee_morale < 68"
+    ],
+    "body": "{name} has plateaued and knows it, and it is starting to affect {their} mood.",
+    "choices": [
+      {
+        "label": "FUND A STRETCH PROJECT",
+        "outcome": "A harder problem, a bit of slack, and {name} climbs again.",
+        "effects": [
+          {
+            "kind": "skill_xp",
+            "skill": "design",
+            "amount": 40
+          },
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": 5
+          },
+          {
+            "kind": "culture",
+            "id": "creative_freedom",
+            "amount": 1.5
+          }
+        ]
+      },
+      {
+        "label": "KEEP THEM ON STEADY WORK",
+        "default": true,
+        "outcome": "Reliable output, a slowly flattening person.",
+        "effects": [
+          {
+            "kind": "morale",
+            "target": "employee",
+            "amount": -3
+          }
         ]
       }
     ]

@@ -289,8 +289,7 @@ func skill_xp_progress(employee: Employee, skill: String) -> float:
 func award_skill_experience(employee: Employee, skill: String, amount: int) -> void:
     if employee == null or skill not in SKILL_FIELDS or amount <= 0:
         return
-    if "fast_learner" in employee.trait_ids:
-        amount = int(round(float(amount) * 1.25))
+    amount = int(round(float(amount) * EmployeeTraitSimulator.xp_multiplier(employee)))
     employee.skill_experience[skill] = int(employee.skill_experience.get(skill, 0)) + amount
     employee.experience += amount
     var old_overall_level := employee.level
@@ -441,13 +440,12 @@ func _generated_name(rng: RandomNumberGenerator) -> String:
         last_names[rng.randi_range(0, last_names.size() - 1)]]
 
 func _personality_traits(rng: RandomNumberGenerator) -> Array[String]:
-    const PERSONALITIES := [
-        "perfectionist", "workhorse", "team_player", "lone_wolf",
-        "visionary", "bug_hunter", "fast_learner", "people_person", "technical_genius"
-    ]
-    var result: Array[String] = [PERSONALITIES[rng.randi_range(0, PERSONALITIES.size() - 1)]]
+    ## Drawn from data/employee_traits.json (every entry with "generated" not
+    ## set to false), so adding a trait to the catalog is a data change.
+    var pool := EmployeeTraitSimulator.generated_pool()
+    var result: Array[String] = [str(pool[rng.randi_range(0, pool.size() - 1)])]
     if rng.randf() < 0.30:
-        var second: String = PERSONALITIES[rng.randi_range(0, PERSONALITIES.size() - 1)]
+        var second: String = str(pool[rng.randi_range(0, pool.size() - 1)])
         if second not in result:
             result.append(second)
     return result

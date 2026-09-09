@@ -1,0 +1,82 @@
+========================================================================
+BALANCE REPORT -- BASELINE main to2010 (6 seeds)  (6 seeds, 357 releases)
+========================================================================
+
+REVIEW DISTRIBUTION
+   0.0- 4.0     3    0.8%  
+   4.0- 5.0    20    5.6%  ###
+   5.0- 6.0    27    7.6%  ####
+   6.0- 7.0    74   20.7%  ############
+   7.0- 8.0   128   35.9%  #####################
+   8.0- 9.0    97   27.2%  ################
+   9.0- 9.5     8    2.2%  #
+   9.5-10.1     0    0.0%  
+  mean 7.20  median 7.40  stdev 1.16  min 3.6  max 9.2
+  at the 9.8 review ceiling: 0 (0.0%)
+
+SALES CEILING (attach rate vs platform install base)
+  mean 2.71%  median 2.18%  max 8.00%
+  pinned at the 8% cap: 7 (2.0%)
+  distinct unit totals: 339 of 357 releases
+
+QUALITY RATIO BY SIZE  (1.0 = met the size's expected_quality bar)
+  size        n    mean  median     min     max  review
+  small     111    1.28    1.21    0.66    2.40    6.90
+  medium    117    0.94    0.94    0.64    1.16    7.10
+  large     129    1.03    1.03    0.90    1.12    7.54
+
+PROFITABILITY (per release: revenue + advance - development cost)
+  releases that lost money: 59 of 357 (16.5%)
+  median profit $1,229,438   mean $3,413,787   max $18,604,847
+  median revenue/total-cost ratio: 4.2x
+  wages as a share of a game's cost: median 68%  mean 59%
+  of the 299 releases built by paid staff, 14 lost money (4.7%)
+
+MARKET SATURATION
+  the studio's own games on sale at launch: median 3  mean 3.47  max 10
+  crowding: -20% per concurrent release, floored at 30%
+  slate         n   median units    crowding
+  1           106         16,520        100%
+  2            71      1,171,675         80%
+  3            20        449,678         60%
+  4            34        362,158         40%
+  5            39        432,886         30%
+  6            35         99,466         30%
+  7            31         82,714         30%
+  8            17        169,199         30%
+  9             3        554,441         30%
+  10            1        636,537         30%
+  genre demand at launch (1.0 = untouched): median 0.90  min 0.18
+  launched into a genre the studio had already crowded: 31%
+
+CASH CURVE (median across seeds)
+   year           cash      in 1985 $    runway  staff    games avg rev
+   1986         $1,644         $1,596         -    1.0      2.0    4.30
+   1987         $2,441         $2,303         -    1.0      5.0    5.02
+   1988         $4,513         $4,140         -    1.0      7.0    5.14
+   1989         $4,452         $3,975         -    1.0      9.0    5.21
+   1990         $4,599         $3,999         -    1.0     10.0    5.40
+   1991     $1,433,934     $1,204,987        1y    8.5     13.0    5.91
+   1992     $1,998,173     $1,624,531        1y   13.0     20.5    6.26
+   1993     $3,213,130     $2,530,024        2y   16.5     28.0    6.53
+   1994     $3,313,280     $2,529,222        1y   18.0     32.5    6.68
+   1995     $6,603,320     $4,891,348        2y   20.0     38.5    6.88
+   1996     $7,754,498     $5,578,776        2y   20.0     42.0    6.92
+   1997     $8,265,860     $5,780,321        2y   20.0     46.0    6.93
+   1998    $14,498,544     $9,862,955        3y   20.0     50.0    6.97
+   1999    $16,495,865    $10,924,414        3y   20.0     54.0    7.09
+   2000    $31,519,670    $20,335,271        6y   20.0     57.5    7.11
+   2001    $37,777,856    $23,537,605        7y   20.0     60.5    7.12
+   2002    $44,988,805    $27,101,690        8y   20.0     65.0    7.13
+   2003    $68,538,086    $39,963,898       11y   20.0     69.0    7.14
+   2004    $80,358,418    $45,400,236       12y   20.0     73.0    7.17
+   2005    $94,719,464    $51,901,076       14y   20.0     75.0    7.17
+   2006   $123,712,639    $65,804,595       18y   20.0     77.5    7.17
+   2007   $134,870,710    $69,700,625       19y   20.0     79.5    7.17
+   2008   $164,586,342    $82,706,705       22y   20.0     82.0    7.20
+   2009   $190,905,711    $93,352,426       25y   20.0     84.0    7.21
+   2010   $219,174,114   $104,368,625       28y   20.0     86.0    7.23
+   2011   $244,189,656   $112,529,795       30y   20.0     88.0    7.24
+
+  final cash across seeds: min $209,633,768  median $244,189,656  max $288,321,257
+  real growth 1999-2011: +21.5%/yr  STILL COMPOUNDING -- this is a runaway

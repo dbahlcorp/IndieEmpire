@@ -27,8 +27,7 @@ static func expected_gain(course: Dictionary, employee: Employee, skill: String)
 
     var current := int(employee.get(skill))
     var factor := diminishing_factor(current)
-    if "fast_learner" in employee.trait_ids:
-        factor *= 1.25
+    factor *= EmployeeTraitSimulator.xp_multiplier(employee)
 
     var low := maxi(int(round(float(course.get("min_gain", 1)) * factor)), MIN_GAIN)
     var high := maxi(int(round(float(course.get("max_gain", 2)) * factor)), low)

@@ -1,0 +1,64 @@
+========================================================================
+BALANCE REPORT -- BASELINE main to1996 (8 seeds)  (8 seeds, 182 releases)
+========================================================================
+
+REVIEW DISTRIBUTION
+   0.0- 4.0     3    1.6%  
+   4.0- 5.0    28   15.4%  #########
+   5.0- 6.0    27   14.8%  ########
+   6.0- 7.0    44   24.2%  ##############
+   7.0- 8.0    48   26.4%  ###############
+   8.0- 9.0    28   15.4%  #########
+   9.0- 9.5     4    2.2%  #
+   9.5-10.1     0    0.0%  
+  mean 6.59  median 6.80  stdev 1.39  min 3.6  max 9.2
+  at the 9.8 review ceiling: 0 (0.0%)
+
+SALES CEILING (attach rate vs platform install base)
+  mean 1.09%  median 0.34%  max 8.00%
+  pinned at the 8% cap: 1 (0.5%)
+  distinct unit totals: 157 of 182 releases
+
+QUALITY RATIO BY SIZE  (1.0 = met the size's expected_quality bar)
+  size        n    mean  median     min     max  review
+  small      93    1.10    0.95    0.66    2.23    6.18
+  medium     74    0.90    0.90    0.64    1.10    6.91
+  large      15    1.01    1.01    0.91    1.09    7.48
+
+PROFITABILITY (per release: revenue + advance - development cost)
+  releases that lost money: 64 of 182 (35.2%)
+  median profit $82,214   mean $430,487   max $3,412,395
+  median revenue/total-cost ratio: 1.9x
+  wages as a share of a game's cost: median 64%  mean 46%
+  of the 116 releases built by paid staff, 10 lost money (8.6%)
+
+MARKET SATURATION
+  the studio's own games on sale at launch: median 3  mean 3.55  max 8
+  crowding: -20% per concurrent release, floored at 30%
+  slate         n   median units    crowding
+  1            70             86        100%
+  2            14        208,736         80%
+  3            11        131,496         60%
+  4            16         98,548         40%
+  5            14         74,418         30%
+  6            25         70,043         30%
+  7            24         68,127         30%
+  8             8        108,056         30%
+  genre demand at launch (1.0 = untouched): median 0.92  min 0.18
+  launched into a genre the studio had already crowded: 27%
+
+CASH CURVE (median across seeds)
+   year           cash      in 1985 $    runway  staff    games avg rev
+   1986         $1,628         $1,580         -    1.0      2.5    4.24
+   1987         $2,106         $1,987         -    1.0      5.5    4.90
+   1988         $4,509         $4,137         -    1.0      7.0    5.13
+   1989         $4,452         $3,975         -    1.0      9.0    5.21
+   1990         $4,599         $3,999         -    1.0     10.0    5.40
+   1991     $1,433,934     $1,204,987        1y    8.5     13.0    5.91
+   1992     $1,998,173     $1,624,531        1y   13.0     20.5    6.26
+   1993     $3,213,130     $2,530,024        2y   16.5     28.0    6.53
+   1994     $3,313,280     $2,529,222        1y   18.0     32.5    6.68
+   1995     $6,603,320     $4,891,348        2y   20.0     38.5    6.88
+   1996     $7,754,498     $5,578,776        2y   20.0     42.0    6.92
+
+  final cash across seeds: min $61,369  median $7,754,498  max $18,827,770

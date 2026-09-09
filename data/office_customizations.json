@@ -51,5 +51,158 @@
     "painted_sheet": "res://assets/offices/components_painted/executive_walnut/sheet.png",
     "tint": "#f0d2b0",
     "accent": "#a6633f"
+  },
+  {
+    "id": "minimalist_white",
+    "name": "Minimalist White",
+    "description": "Bright, uncluttered surfaces and a single clean accent.",
+    "purchase_type": "cash",
+    "price": 2200,
+    "tint": "#fbfbf8",
+    "accent": "#4c8dbd"
+  },
+  {
+    "id": "industrial_loft",
+    "name": "Industrial Loft",
+    "description": "Exposed brick, black steel and Edison bulbs.",
+    "purchase_type": "cash",
+    "price": 3200,
+    "tint": "#e7ded4",
+    "accent": "#8a5a3c"
+  },
+  {
+    "id": "retro_arcade",
+    "name": "Retro Arcade",
+    "description": "Carpet patterns, cabinet glow and unapologetic colour.",
+    "purchase_type": "cash",
+    "price": 3800,
+    "tint": "#e9e0ff",
+    "accent": "#c8407a"
+  },
+  {
+    "id": "midnight_studio",
+    "name": "Midnight Studio",
+    "description": "Dark walls, focused task lighting, no distractions.",
+    "purchase_type": "cash",
+    "price": 5200,
+    "tint": "#c9d0dc",
+    "accent": "#5566a8"
+  },
+  {
+    "id": "forest_cabin",
+    "name": "Forest Cabin",
+    "description": "Timber, wool and a wood stove in the corner.",
+    "purchase_type": "cash",
+    "price": 6000,
+    "tint": "#e6dcc6",
+    "accent": "#6b7f4a"
+  },
+  {
+    "id": "brutalist_concrete",
+    "name": "Brutalist Concrete",
+    "description": "Raw grey planes and hard shadows. Severe on purpose.",
+    "purchase_type": "cash",
+    "price": 6800,
+    "tint": "#dedede",
+    "accent": "#7a7f83"
+  },
+  {
+    "id": "pastel_dream",
+    "name": "Pastel Dream",
+    "description": "Soft pinks and mint, rounded furniture, gentle light.",
+    "purchase_type": "cash",
+    "price": 7400,
+    "tint": "#ffe7ef",
+    "accent": "#e59ac0"
+  },
+  {
+    "id": "coffeehouse",
+    "name": "Coffeehouse",
+    "description": "Chalkboards, mismatched chairs and the smell of roast.",
+    "purchase_type": "cash",
+    "price": 8600,
+    "tint": "#efe2d0",
+    "accent": "#9c6b43"
+  },
+  {
+    "id": "library_hush",
+    "name": "Library Hush",
+    "description": "Floor-to-ceiling shelves, green lampshades, quiet.",
+    "purchase_type": "cash",
+    "price": 9800,
+    "tint": "#e8e0cf",
+    "accent": "#4f7355"
+  },
+  {
+    "id": "chrome_lab",
+    "name": "Chrome Lab",
+    "description": "White surfaces, glass partitions and cold blue light.",
+    "purchase_type": "cash",
+    "price": 11000,
+    "tint": "#eef4f7",
+    "accent": "#4aa6b0"
+  },
+  {
+    "id": "warehouse_raw",
+    "name": "Warehouse Raw",
+    "description": "High ceilings, roller doors and a lot of empty floor.",
+    "purchase_type": "cash",
+    "price": 12500,
+    "tint": "#ded9d0",
+    "accent": "#9a7a4c"
+  },
+  {
+    "id": "greenhouse",
+    "name": "Greenhouse",
+    "description": "Glass roof, hanging plants and a lot of natural light.",
+    "purchase_type": "cash",
+    "price": 15500,
+    "tint": "#e2f2df",
+    "accent": "#5b9d64"
+  },
+  {
+    "id": "art_deco",
+    "name": "Art Deco",
+    "description": "Gold geometry, deep green and a lobby that means business.",
+    "purchase_type": "cash",
+    "price": 18000,
+    "tint": "#f2e6cf",
+    "accent": "#b58a3c"
+  },
+  {
+    "id": "scandi_bright",
+    "name": "Scandi Bright",
+    "description": "Pale birch, white oil finish and one warm textile.",
+    "purchase_type": "cash",
+    "price": 19500,
+    "tint": "#f6efe6",
+    "accent": "#c98a5a"
+  },
+  {
+    "id": "blueprint",
+    "name": "Blueprint",
+    "description": "Cyan grids on navy, drafting tables and pinned schematics.",
+    "purchase_type": "cash",
+    "price": 21000,
+    "tint": "#d7e6f2",
+    "accent": "#3f6fae"
+  },
+  {
+    "id": "workshop_garage",
+    "name": "Workshop Garage",
+    "description": "Pegboard walls, rolling tool chests and a concrete floor.",
+    "purchase_type": "cash",
+    "price": 23000,
+    "tint": "#e4e0d8",
+    "accent": "#c26a3a"
+  },
+  {
+    "id": "penthouse_glass",
+    "name": "Penthouse Glass",
+    "description": "Floor-to-ceiling windows, a skyline and very little else.",
+    "purchase_type": "cash",
+    "price": 30000,
+    "tint": "#eef1f4",
+    "accent": "#7f8fa6"
   }
 ]

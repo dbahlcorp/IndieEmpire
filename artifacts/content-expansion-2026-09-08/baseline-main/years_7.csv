@@ -1,0 +1,5 @@
+seed,year,cash,staff,payroll_mo,office,teams,rent_mo,released,avg_review,consumer_rep,fans
+7,1986,2613,1,0,bedroom,1,0,3,4.23,0.0,0
+7,1987,496,1,0,bedroom,1,0,6,4.55,0.0,0
+7,1988,1150,1,0,bedroom,1,0,6,4.55,1.0,0
+7,1988,-4893,1,0,bedroom,1,0,6,4.55,1.0,0

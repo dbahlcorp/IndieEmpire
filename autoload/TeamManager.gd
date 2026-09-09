@@ -280,10 +280,7 @@ func chemistry_target(team: StudioTeam, staff: Array[Employee] = []) -> float:
     for employee in staff:
         teamwork += employee.teamwork
         morale += employee.morale
-        if "team_player" in employee.trait_ids:
-            teamwork += 8.0
-        if "lone_wolf" in employee.trait_ids:
-            teamwork -= 10.0
+        teamwork += EmployeeTraitSimulator.teamwork_delta(employee)
     teamwork /= staff.size()
     morale /= staff.size()
     # Whoever leads sets the tone, for better or worse.
