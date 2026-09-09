@@ -137,7 +137,8 @@ func generate_candidate(
     var market_noise := rng.randf_range(0.94, 1.06)
     employee.salary = int(round(
         float(EmployeeValueSimulator.market_value(employee))
-        * market_noise * rarity_salary_multiplier / 25.0)) * 25
+        * market_noise * rarity_salary_multiplier
+        * GameState.difficulty_salary_multiplier() / 25.0)) * 25
     employee.hiring_fee = int(round(float(employee.salary) * 0.45 / 50.0)) * 50
     return employee
 

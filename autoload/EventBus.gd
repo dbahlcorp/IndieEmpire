@@ -116,6 +116,13 @@ signal tutorial_presented(id: String)
 signal tutorial_completed(id: String)
 signal onboarding_skipped()
 
+# --- App lifecycle ---
+## The OS is about to background, interrupt or close the app. AppLifecycle
+## pauses the clock and writes a safety save before this fires. Screens that
+## run a transient presentation can use it to settle to a resumable state.
+signal app_suspending()
+signal app_resumed()
+
 # --- Feed and toasts ---
 signal news_posted(item: Dictionary)
 signal notification_requested(title: String, body: String, important: bool)

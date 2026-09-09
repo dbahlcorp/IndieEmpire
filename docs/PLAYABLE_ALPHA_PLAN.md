@@ -110,7 +110,7 @@ below:
 | PA.11 | Awards | **Implemented** (2026-09-09) | Medium |
 | PA.12 | Statistics & Graphs | **Missing UI, data exists** | Medium |
 | PA.13 | Financial Crisis/Recovery | **Implemented** (2026-09-09) | Medium |
-| PA.14 | Difficulty & Accessibility | **Partial** (difficulty done, accessibility not) | Medium (breadth, not depth) |
+| PA.14 | Difficulty, Settings & Accessibility | **Implemented** (2026-09-09) | Medium (breadth, not depth) |
 | PA.15 | Human Playtest & Balance | **Process exists, needs a human gate + updated probe** | Low–Medium |
 
 ---
@@ -1286,7 +1286,32 @@ PA.15 (any new lever, especially a loan, needs measurement).
 
 ---
 
-## PA.14 — Difficulty & Accessibility
+## PA.14 — Difficulty, Settings & Accessibility
+
+**Status: implemented, 2026-09-09.** Full write-up in
+`docs/DIFFICULTY_SETTINGS_2026-09-09.md`.
+
+### Implementation notes (as built)
+
+- **Difficulty** gained two scalars — `salary_multiplier` and
+  `project_risk_multiplier` — applied in `EmployeeManager.generate_candidate()`
+  and `DevelopmentSimulator.advance_project()`'s bug-risk term. Normal stays
+  1.0 on everything, so no BalanceProbe re-measurement was needed. Still one
+  simulation, still no content-compatibility change.
+- **Settings** added `default_game_speed`, `autosave_enabled` and `text_scale`
+  to `Settings.gd`, persisted in the same `user://settings.json`. `GameClock`
+  applies the default speed on new-company / load; `SaveManager.autosave()` is
+  gated by the toggle while the new `SaveManager.safety_save()` is not.
+- **Text scaling** routes `UiBuilder` font sizes and tap-target heights, plus
+  the `VisualTheme` base size, through `Settings.text_scale`; a live rebuild via
+  `VisualTheme.apply_text_scale()`. Hand-laid `.tscn` sizes are "where
+  practical", as the brief allows.
+- **iOS lifecycle**: new `autoload/AppLifecycle.gd` — pause the clock and write
+  the autosave slot on background / interruption / screen-lock / memory-warning
+  / close, ignoring the autosave preference; stay paused on resume.
+- **Tests**: `DifficultyTest` (91), `SettingsTest` (26), `LifecycleTest` (10).
+
+The plan text below is the pre-implementation record.
 
 ### Current repository state
 **Difficulty is done.** `data/difficulties.json` (3 tiers: Relaxed/Normal/

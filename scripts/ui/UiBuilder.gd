@@ -3,11 +3,22 @@ extends RefCounted
 
 ## Small helpers for the screens that build their contents in code.
 
+## Accessibility text scaling. Screens built in code pin their own font sizes,
+## which bypasses the theme's default_font_size, so every size that goes onto a
+## control here runs through this first. See Settings.text_scale / TEXT_SCALES.
+static func scaled_font(size: int) -> int:
+    return maxi(1, int(round(float(size) * Settings.text_scale)))
+
+static func _scaled_height(height: int) -> int:
+    ## Grow tap targets with the text so larger labels are not clipped; never
+    ## shrink below the mobile minimum.
+    return int(round(float(maxi(height, TAP_HEIGHT)) * maxf(Settings.text_scale, 1.0)))
+
 static func label(text: String, size: int = 15, centered: bool = false) -> Label:
     var node := Label.new()
     node.text = text
     node.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-    node.add_theme_font_size_override("font_size", size)
+    node.add_theme_font_size_override("font_size", scaled_font(size))
     if centered:
         node.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     return node
@@ -192,8 +203,8 @@ const MAJOR_HEIGHT := 64
 static func button(text: String, height: int = TAP_HEIGHT) -> Button:
     var node := Button.new()
     node.text = text
-    node.custom_minimum_size = Vector2(0, maxi(height, TAP_HEIGHT))
-    node.add_theme_font_size_override("font_size", 15)
+    node.custom_minimum_size = Vector2(0, _scaled_height(height))
+    node.add_theme_font_size_override("font_size", scaled_font(15))
     return node
 
 static func icon_button(text: String, icon_id: String, tooltip: String = "") -> Button:
@@ -206,7 +217,7 @@ static func icon_button(text: String, icon_id: String, tooltip: String = "") -> 
 
 static func major_button(text: String) -> Button:
     var node := button(text, MAJOR_HEIGHT)
-    node.add_theme_font_size_override("font_size", 18)
+    node.add_theme_font_size_override("font_size", scaled_font(18))
     node.set_meta("major_action", true)
     return node
 
@@ -214,8 +225,8 @@ static func toggle(text: String, pressed: bool) -> CheckButton:
     var node := CheckButton.new()
     node.text = text
     node.button_pressed = pressed
-    node.custom_minimum_size = Vector2(0, TAP_HEIGHT)
-    node.add_theme_font_size_override("font_size", 15)
+    node.custom_minimum_size = Vector2(0, _scaled_height(TAP_HEIGHT))
+    node.add_theme_font_size_override("font_size", scaled_font(15))
     return node
 
 static func meter(percent: float, width: int = 10) -> String:
@@ -246,8 +257,8 @@ static func collapsible_section(title: String, expanded: bool = false) -> Dictio
     stack.add_theme_constant_override("separation", 6)
 
     var header := Button.new()
-    header.custom_minimum_size = Vector2(0, TAP_HEIGHT)
-    header.add_theme_font_size_override("font_size", 15)
+    header.custom_minimum_size = Vector2(0, _scaled_height(TAP_HEIGHT))
+    header.add_theme_font_size_override("font_size", scaled_font(15))
     header.alignment = HORIZONTAL_ALIGNMENT_LEFT
     header.text = "%s  %s" % ["▾" if expanded else "▸", title]
 

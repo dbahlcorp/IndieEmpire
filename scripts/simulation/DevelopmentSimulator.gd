@@ -547,6 +547,7 @@ static func advance_project(project: GameProject) -> Dictionary:
         * FeatureSimulator.bug_risk_multiplier(
             project.feature_ids, project.size_id)
         * DevelopmentFocusSimulator.multiplier(project, "production", "bug_risk")
+        * GameState.difficulty_project_risk_multiplier()
     )
     var new_bugs := maxi(int(round(float(randi_range(0, 4)) * bug_risk)), 0)
     project.bugs_created += new_bugs

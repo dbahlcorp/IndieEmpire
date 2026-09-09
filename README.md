@@ -664,6 +664,35 @@ balance probes are unchanged because they model no loan-taking manager.
 Bankruptcy itself is untouched: a badly run studio still runs out of grace and
 closes. Save format is v25 (loan, crisis level and lifetime loan count).
 
+## Difficulty, settings and lifecycle
+
+Difficulty (Relaxed / Normal / Hard, `data/difficulties.json`) is a small set
+of economic and risk scalars over one shared simulation, not three separate
+ones, and never changes what content is compatible or available. A tier sets
+starting cash, sales strength, operating expenses, bankruptcy grace, candidate
+salary pressure and project bug risk. Normal is the canonical balance target
+and every Normal multiplier is exactly 1.0, so the balance probes are
+unaffected; the last two scalars are the only additions and an unknown
+difficulty id falls back to Normal-equivalent numbers.
+
+Player settings persist to `user://settings.json`, separate from the company
+saves, so preferences outlive a new company or a bankruptcy: master / music /
+SFX / ambience volume, subtle haptics, reduced motion, compact numbers,
+notifications, tutorials, a starting game speed, an autosave toggle and a text
+size (`Settings.TEXT_SCALES`). Text scaling runs every code-built font size and
+tap-target height through `UiBuilder`, and the theme base size through
+`VisualTheme`, growing touch targets with the text and never below the 44 px
+minimum. Turning autosave off still leaves the manual slots and the lifecycle
+safety save; the player is never left with nothing.
+
+`AppLifecycle` hardens the game against iOS suspending or terminating it.
+Backgrounding, an interruption, the screen locking, a memory warning or the
+player swiping the app away all pause the clock and write the autosave slot
+immediately — ignoring the autosave preference — so a returning player resumes
+an in-development project and a shipped game's sales without losing meaningful
+progress. On resume the clock stays paused until the player taps play, so no
+real time is silently converted into simulated weeks.
+
 ## M6 foundation
 
 The Engine Lab lets studios research era-appropriate technology and combine

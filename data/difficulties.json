@@ -5,7 +5,9 @@
     "starting_cash": 25000,
     "sales_multiplier": 1.2,
     "expense_multiplier": 0.8,
-    "grace_weeks": 12
+    "grace_weeks": 12,
+    "salary_multiplier": 0.9,
+    "project_risk_multiplier": 0.85
   },
   {
     "id": "normal",
@@ -13,7 +15,9 @@
     "starting_cash": 10000,
     "sales_multiplier": 1.0,
     "expense_multiplier": 1.0,
-    "grace_weeks": 6
+    "grace_weeks": 6,
+    "salary_multiplier": 1.0,
+    "project_risk_multiplier": 1.0
   },
   {
     "id": "hard",
@@ -21,6 +25,8 @@
     "starting_cash": 7500,
     "sales_multiplier": 0.9,
     "expense_multiplier": 1.15,
-    "grace_weeks": 3
+    "grace_weeks": 3,
+    "salary_multiplier": 1.12,
+    "project_risk_multiplier": 1.18
   }
 ]

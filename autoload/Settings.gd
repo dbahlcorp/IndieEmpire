@@ -5,6 +5,12 @@ extends Node
 
 const PATH := "user://settings.json"
 
+## Selectable text sizes. 1.0 is the authored size; the larger steps keep the
+## UI usable on a phone held at arm's length without a full layout redesign.
+## Applied through UiBuilder and VisualTheme -- see apply_text_scale().
+const TEXT_SCALES := [1.0, 1.15, 1.3]
+const TEXT_SCALE_LABELS := ["Standard", "Large", "Larger"]
+
 var compact_numbers: bool = true
 var notifications_enabled: bool = true
 var master_volume: float = 1.0
@@ -13,6 +19,16 @@ var sfx_volume: float = 0.72
 var ambience_volume: float = 0.42
 var haptics_enabled: bool = true
 var onboarding_enabled: bool = true
+## The clock speed a company starts (and resumes) at: an index into
+## GameClock.SPEEDS. Player-scoped so it carries across companies. Live speed
+## changes from the clock bar are not written here.
+var default_game_speed: int = 0
+## Periodic autosave after meaningful actions and every simulated week. When
+## off, only manual saves and the safety save on backgrounding/quit are made
+## (see AppLifecycle) -- the player is never left with nothing.
+var autosave_enabled: bool = true
+## UI text size multiplier, one of TEXT_SCALES.
+var text_scale: float = 1.0
 ## Minimise animation: results reveals, count-ups and chart grow-ins land
 ## instantly. Honoured by ReleaseResultsScreen and SalesChart today; other
 ## animated screens should check it as they gain motion.
@@ -60,6 +76,35 @@ func set_reduced_motion(value: bool) -> void:
     reduced_motion = value
     save_settings()
 
+func set_default_game_speed(index: int) -> void:
+    default_game_speed = clampi(index, 0, GameClock.SPEEDS.size() - 1)
+    if SaveManager.has_active_company:
+        GameClock.set_speed(default_game_speed)
+    save_settings()
+
+func set_autosave_enabled(value: bool) -> void:
+    autosave_enabled = value
+    save_settings()
+
+func set_text_scale(value: float) -> void:
+    text_scale = _snapped_text_scale(value)
+    save_settings()
+    VisualTheme.apply_text_scale()
+
+func _snapped_text_scale(value: float) -> float:
+    var nearest: float = TEXT_SCALES[0]
+    for option in TEXT_SCALES:
+        if absf(option - value) < absf(nearest - value):
+            nearest = option
+    return nearest
+
+func text_scale_index() -> int:
+    var best := 0
+    for index in TEXT_SCALES.size():
+        if absf(TEXT_SCALES[index] - text_scale) < absf(TEXT_SCALES[best] - text_scale):
+            best = index
+    return best
+
 func mark_release_reveal_seen() -> void:
     if seen_release_reveal:
         return
@@ -87,6 +132,9 @@ func save_settings() -> void:
         "haptics_enabled": haptics_enabled,
         "onboarding_enabled": onboarding_enabled,
         "reduced_motion": reduced_motion,
+        "default_game_speed": default_game_speed,
+        "autosave_enabled": autosave_enabled,
+        "text_scale": text_scale,
         "seen_release_reveal": seen_release_reveal
     }, "\t"))
     file.close()
@@ -111,4 +159,9 @@ func load_settings() -> void:
     haptics_enabled = bool(data.get("haptics_enabled", true))
     onboarding_enabled = bool(data.get("onboarding_enabled", true))
     reduced_motion = bool(data.get("reduced_motion", false))
+    # Other autoloads are not guaranteed to exist yet at load time, so this only
+    # sets values -- GameClock and VisualTheme read them from their own _ready().
+    default_game_speed = clampi(int(data.get("default_game_speed", 0)), 0, 2)
+    autosave_enabled = bool(data.get("autosave_enabled", true))
+    text_scale = _snapped_text_scale(float(data.get("text_scale", 1.0)))
     seen_release_reveal = bool(data.get("seen_release_reveal", false))

@@ -168,11 +168,24 @@ func difficulty() -> Dictionary:
     var found := DataManager.get_difficulty(difficulty_id)
     return found if not found.is_empty() else {
         "starting_cash": 10_000, "sales_multiplier": 1.0,
-        "expense_multiplier": 1.0, "grace_weeks": 6
+        "expense_multiplier": 1.0, "grace_weeks": 6,
+        "salary_multiplier": 1.0, "project_risk_multiplier": 1.0
     }
 
 func grace_weeks() -> int:
     return int(difficulty().get("grace_weeks", 6))
+
+## Candidate salary pressure: how much more (or less) than the priced market
+## value a labor-market candidate asks for. 1.0 on Normal -- the canonical
+## balance target -- so BalanceProbe is unaffected. See EmployeeManager.
+func difficulty_salary_multiplier() -> float:
+    return float(difficulty().get("salary_multiplier", 1.0))
+
+## Project risk: a scalar on new-bug generation during development. 1.0 on
+## Normal. Does not touch content compatibility, only how forgiving a build is.
+## See DevelopmentSimulator.
+func difficulty_project_risk_multiplier() -> float:
+    return float(difficulty().get("project_risk_multiplier", 1.0))
 
 func next_request_id() -> String:
     var id := "request_%06d" % next_request_number

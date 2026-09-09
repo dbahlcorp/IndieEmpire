@@ -33,6 +33,19 @@ func _ready() -> void:
     get_tree().tree_changed.connect(_queue_focus_refresh)
     call_deferred("_style_scene", get_tree().current_scene)
 
+## Rebuild the theme at the current text scale and push it onto the live scene.
+## Called by Settings.set_text_scale(). Dynamically built labels that pin their
+## own font size through UiBuilder pick the new scale up on their next rebuild;
+## everything driven by the theme updates immediately.
+func apply_text_scale() -> void:
+    game_theme = _build_theme()
+    var scene := get_tree().current_scene
+    if scene is Control:
+        (scene as Control).theme = game_theme
+
+func _fs(base: int) -> int:
+    return maxi(1, int(round(float(base) * Settings.text_scale)))
+
 func _build_theme() -> Theme:
     var theme := Theme.new()
     var regular := SystemFont.new()
@@ -42,7 +55,7 @@ func _build_theme() -> Theme:
     bold.font_weight = 700
 
     theme.default_font = regular
-    theme.default_font_size = 15
+    theme.default_font_size = _fs(15)
     theme.set_constant("separation", "VBoxContainer", 10)
     theme.set_constant("separation", "HBoxContainer", 10)
     theme.set_constant("h_separation", "GridContainer", 12)
@@ -150,7 +163,7 @@ func _build_theme() -> Theme:
     theme.set_stylebox("hover", "PopupMenu", _box(Color("#f2c77e"), Color.TRANSPARENT, 6, 0))
     theme.set_stylebox("panel", "TooltipPanel", _box(SURFACE_DARK, Color("#789397"), 9, 1, 4))
     theme.set_color("font_color", "TooltipLabel", CREAM)
-    theme.set_font_size("font_size", "TooltipLabel", 13)
+    theme.set_font_size("font_size", "TooltipLabel", _fs(13))
     theme.set_stylebox("panel", "AcceptDialog", _box(PAPER, PANEL_EDGE, 16, 2, 8))
     theme.set_stylebox("panel", "Window", _box(PAPER, PANEL_EDGE, 16, 2, 8))
     return theme

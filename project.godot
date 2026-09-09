@@ -65,6 +65,7 @@ VisualTheme="*res://autoload/VisualTheme.gd"
 World="*res://autoload/World.gd"
 GameClock="*res://autoload/GameClock.gd"
 SaveManager="*res://autoload/SaveManager.gd"
+AppLifecycle="*res://autoload/AppLifecycle.gd"
 
 [rendering]
 

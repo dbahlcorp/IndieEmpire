@@ -20,8 +20,22 @@ var _accumulated := 0.0
 
 func _ready() -> void:
     process_mode = Node.PROCESS_MODE_ALWAYS
+    speed_index = clampi(Settings.default_game_speed, 0, SPEEDS.size() - 1)
     EventBus.company_bankruptcy_warning.connect(_on_trouble)
     EventBus.company_bankrupt.connect(_on_bankrupt)
+    # SaveManager is initialised after this node, so wire the load hook once the
+    # autoload tree is fully built.
+    _wire_load_hook.call_deferred()
+
+func _wire_load_hook() -> void:
+    SaveManager.game_loaded.connect(apply_default_speed)
+
+func apply_default_speed() -> void:
+    ## A fresh company or a freshly loaded one starts at the player's preferred
+    ## speed. Live changes from the clock bar are intentionally not persisted.
+    speed_index = clampi(Settings.default_game_speed, 0, SPEEDS.size() - 1)
+    _accumulated = 0.0
+    state_changed.emit()
 
 func _process(delta: float) -> void:
     if not is_running():

@@ -40,13 +40,31 @@ func _build() -> void:
     list.add_child(UiBuilder.label(
         "Release reveals, count-ups and charts appear instantly instead of animating.", 13))
 
+    _option_row("Text size", Settings.TEXT_SCALE_LABELS, Settings.text_scale_index(),
+        func(index): Settings.set_text_scale(Settings.TEXT_SCALES[index]); _rebuild())
+    list.add_child(UiBuilder.label(
+        "Enlarges interface text. Larger sizes trade on-screen space for readability.", 13))
+
+    list.add_child(UiBuilder.divider())
+    list.add_child(UiBuilder.heading("GAMEPLAY"))
+    _option_row("Starting game speed", GameClock.SPEED_LABELS, Settings.default_game_speed,
+        func(index): Settings.set_default_game_speed(index))
+    list.add_child(UiBuilder.label(
+        "The clock speed a company begins and resumes at.", 13))
+
+    var autosave := UiBuilder.toggle("Autosave", Settings.autosave_enabled)
+    autosave.toggled.connect(func(value): Settings.set_autosave_enabled(value))
+    list.add_child(autosave)
+    list.add_child(UiBuilder.label(
+        "Saves automatically as you play. The game still saves when it is closed or interrupted.", 13))
+
     list.add_child(UiBuilder.divider())
     list.add_child(UiBuilder.heading("NOTIFICATIONS"))
     var toasts := UiBuilder.toggle("Show notifications", Settings.notifications_enabled)
     toasts.toggled.connect(_on_toasts_toggled)
     list.add_child(toasts)
 
-    var onboarding := UiBuilder.toggle("Contextual onboarding", Settings.onboarding_enabled)
+    var onboarding := UiBuilder.toggle("Tutorials", Settings.onboarding_enabled)
     onboarding.toggled.connect(func(value): Settings.set_onboarding_enabled(value))
     list.add_child(onboarding)
     list.add_child(UiBuilder.label(
@@ -72,6 +90,31 @@ func _volume_control(label_text: String, value: float, setter: Callable) -> void
         heading.text = "%s   %d%%" % [label_text, int(round(percent))]
         setter.call(percent / 100.0))
     list.add_child(slider)
+
+func _option_row(label_text: String, options: Array, selected: int, on_pick: Callable) -> void:
+    list.add_child(UiBuilder.label(label_text, 14))
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 6)
+    var buttons: Array[Button] = []
+    for index in options.size():
+        var choice := UiBuilder.button(str(options[index]))
+        choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        choice.toggle_mode = true
+        choice.button_pressed = index == selected
+        choice.theme_type_variation = &"PrimaryButton" if index == selected else &"SecondaryButton"
+        var this_index := index
+        choice.pressed.connect(func():
+            for other in buttons.size():
+                buttons[other].button_pressed = other == this_index
+                buttons[other].theme_type_variation = (
+                    &"PrimaryButton" if other == this_index else &"SecondaryButton")
+            on_pick.call(this_index))
+        buttons.append(choice)
+        row.add_child(choice)
+    list.add_child(row)
+
+func _rebuild() -> void:
+    _build()
 
 func _on_numbers_toggled(value: bool) -> void:
     Settings.set_compact_numbers(value)

@@ -135,6 +135,7 @@ func _on_start_pressed() -> void:
     )
     SaveManager.has_active_company = true
     World.sync_year()
+    GameClock.apply_default_speed()
     SaveManager.autosave()
     get_tree().change_scene_to_file("res://scenes/studio/StudioScreen.tscn")
 

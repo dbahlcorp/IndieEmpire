@@ -70,6 +70,17 @@ func slot_summary(slot: String) -> Dictionary:
 func autosave() -> bool:
     if not has_active_company:
         return false
+    # The player can opt out of routine autosaves, but never out of the safety
+    # save on backgrounding or quit -- that path calls save_game() directly.
+    if not Settings.autosave_enabled:
+        return false
+    return save_game(AUTOSAVE)
+
+func safety_save() -> bool:
+    ## Unconditional autosave-slot write for lifecycle events (app backgrounded,
+    ## interrupted or quitting). Ignores the autosave preference on purpose.
+    if not has_active_company:
+        return false
     return save_game(AUTOSAVE)
 
 func save_game(slot: String = AUTOSAVE) -> bool:
