@@ -18,6 +18,7 @@ func _ready() -> void:
         "res://scenes/company/CompanyScreen.tscn"))
     EventBus.week_ticked.connect(func(_y, _m, _w): _refresh())
     _refresh()
+    TutorialManager.offer("research", list)
 
 func _refresh() -> void:
     UiBuilder.clear(list)

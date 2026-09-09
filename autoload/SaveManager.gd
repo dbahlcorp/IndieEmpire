@@ -10,7 +10,7 @@ signal game_saved(slot: String)
 const SAVE_DIR := "user://saves"
 const AUTOSAVE := "autosave"
 const MANUAL_SLOTS := ["save_1", "save_2", "save_3"]
-const SAVE_VERSION := 21
+const SAVE_VERSION := 22
 const MIN_SUPPORTED_VERSION := 5
 
 var has_active_company: bool = false
@@ -187,6 +187,12 @@ func _collect_save_data() -> Dictionary:
             "milestones": GameState.milestones,
             "culture": GameState.culture
         },
+        "onboarding": {
+            "completed": GameState.tutorial_completed,
+            "pending": GameState.tutorial_pending,
+            "context_seen": GameState.tutorial_context_seen,
+            "skipped": GameState.tutorial_skipped
+        },
         "workforce": {
             "next_employee_number": GameState.next_employee_number,
             "employees": GameState.employees.map(func(employee: Employee): return employee.to_dict()),
@@ -249,6 +255,14 @@ func _apply_save_data(data: Dictionary) -> void:
     GameState.next_id = int(company.get("next_id", 1))
     GameState.overdrawn_weeks = int(company.get("overdrawn_weeks", 0))
     GameState.bankrupt = bool(company.get("bankrupt", false))
+
+    var onboarding: Dictionary = data.get("onboarding", {})
+    GameState.tutorial_completed.assign(_string_array(onboarding.get("completed", [])))
+    GameState.tutorial_pending.assign(_string_array(onboarding.get("pending", [])))
+    GameState.tutorial_context_seen.assign(_string_array(onboarding.get("context_seen", [])))
+    # Older careers remain unobtrusive: they were already playing without an
+    # onboarding state, so loading one must not suddenly start lesson one.
+    GameState.tutorial_skipped = bool(onboarding.get("skipped", not data.has("onboarding")))
 
     var date: Dictionary = data.get("date", {})
     TimeManager.set_date(

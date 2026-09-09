@@ -39,7 +39,8 @@ func _refresh() -> void:
     stats += "Total costs: $%s" % Format.exact(CompanyStats.lifetime_costs())
     list.add_child(UiBuilder.label(stats, 15))
 
-    _culture()
+    if TutorialManager.system_visible("culture"):
+        _culture()
     _strengths()
     _experience()
     _saves()
@@ -122,17 +123,20 @@ func _experience() -> void:
 func _saves() -> void:
     list.add_child(UiBuilder.divider())
 
-    var research := UiBuilder.button("RESEARCH")
-    research.pressed.connect(_go.bind("res://scenes/company/ResearchScreen.tscn"))
-    list.add_child(research)
+    if TutorialManager.system_visible("research"):
+        var research := UiBuilder.button("RESEARCH")
+        research.pressed.connect(_go.bind("res://scenes/company/ResearchScreen.tscn"))
+        list.add_child(research)
 
-    var engines := UiBuilder.button("ENGINE LAB")
-    engines.pressed.connect(_go.bind("res://scenes/company/EngineLabScreen.tscn"))
-    list.add_child(engines)
+    if TutorialManager.system_visible("engine"):
+        var engines := UiBuilder.button("ENGINE LAB")
+        engines.pressed.connect(_go.bind("res://scenes/company/EngineLabScreen.tscn"))
+        list.add_child(engines)
 
-    var financials := UiBuilder.button("FINANCIALS")
-    financials.pressed.connect(_go.bind("res://scenes/company/FinancialsScreen.tscn"))
-    list.add_child(financials)
+    if TutorialManager.system_visible("financials"):
+        var financials := UiBuilder.button("FINANCIALS")
+        financials.pressed.connect(_go.bind("res://scenes/company/FinancialsScreen.tscn"))
+        list.add_child(financials)
 
     var records := UiBuilder.button("RECORDS")
     records.pressed.connect(_go.bind("res://scenes/company/RecordsScreen.tscn"))

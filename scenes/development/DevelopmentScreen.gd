@@ -43,6 +43,7 @@ func _ready() -> void:
 
     GameClock.enter_gameplay()
     _refresh()
+    TutorialManager.offer("development", phase_label)
 
 func _on_week(_year: int, _month: int, _week: int) -> void:
     if project == null:
@@ -487,6 +488,7 @@ func _build_bottleneck_section() -> void:
         ], 14, true))
     bottleneck_container.add_child(UiBuilder.label(
         "Recommendation:\n%s" % str(found.get("recommendation", "")), 13, true))
+    TutorialManager.context("bottleneck", bottleneck_container)
 
 func _status(done: bool) -> String:
     if FinanceManager.is_in_trouble():

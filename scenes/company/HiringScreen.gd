@@ -15,6 +15,7 @@ func _ready() -> void:
     EventBus.week_ticked.connect(func(_y, _m, _w): _build())
     EventBus.labor_market_refreshed.connect(_on_market_refreshed)
     _build()
+    TutorialManager.offer("first_hire", list)
 
 func _build() -> void:
     UiBuilder.clear(list)

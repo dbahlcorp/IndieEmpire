@@ -18,6 +18,13 @@ window/size/window_height_override=800
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[audio]
+
+# Ambient respects the iOS silent switch and mixes politely with the player's
+# audio. PA.8 never forces Playback category over a user's device preference.
+general/ios/session_category=0
+general/ios/mix_with_others=true
+
 [autoload]
 
 EventBus="*res://autoload/EventBus.gd"
@@ -36,6 +43,7 @@ ExperienceManager="*res://autoload/ExperienceManager.gd"
 PlatformManager="*res://autoload/PlatformManager.gd"
 MarketManager="*res://autoload/MarketManager.gd"
 UnlockManager="*res://autoload/UnlockManager.gd"
+TutorialManager="*res://autoload/TutorialManager.gd"
 ProjectManager="*res://autoload/ProjectManager.gd"
 SalesManager="*res://autoload/SalesManager.gd"
 ContractManager="*res://autoload/ContractManager.gd"

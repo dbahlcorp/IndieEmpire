@@ -36,6 +36,7 @@ func _ready() -> void:
     %FinanceButton.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/company/FinancialsScreen.tscn"))
     _setup_surface()
     _refresh()
+    TutorialManager.offer("bedroom", develop_button)
 
 func _refresh() -> void:
     company_label.text = GameState.company_name.to_upper()
@@ -94,6 +95,10 @@ func _refresh() -> void:
             "" if FinanceManager.weeks_of_grace_left() == 1 else "s"
         ]
     _refresh_attention()
+    contracts_button.visible = TutorialManager.system_visible("contracts")
+    %FinanceButton.visible = TutorialManager.system_visible("financials")
+    if "office_growth" in GameState.tutorial_pending:
+        TutorialManager.offer("office_growth", office_button)
 
 func _runway_text() -> String:
     ## How long the cash on hand actually lasts at the current burn rate --
@@ -254,7 +259,13 @@ func _setup_surface() -> void:
         "CompanyButton": "res://scenes/company/CompanyScreen.tscn"
     }
     for id in destinations:
-        get_node("%" + id).pressed.connect(_go_to.bind(destinations[id]))
+        var destination_button := get_node("%" + id) as Button
+        destination_button.pressed.connect(_go_to.bind(destinations[id]))
+        var system_id: String = {
+            "StaffButton": "staff", "HiringButton": "staff", "GamesButton": "games",
+            "MarketButton": "market", "EngineButton": "engine", "CompanyButton": "company"
+        }[id]
+        destination_button.visible = TutorialManager.system_visible(system_id)
     resized.connect(_layout_surface)
     _layout_surface.call_deferred()
 

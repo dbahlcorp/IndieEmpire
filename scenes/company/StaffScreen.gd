@@ -17,6 +17,7 @@ func _ready() -> void:
     EventBus.employee_departed.connect(func(_employee): _build())
     EventBus.employee_laid_off.connect(func(_employee): _build())
     _build()
+    TutorialManager.offer("assignment", list)
 
 func _build() -> void:
     UiBuilder.clear(list)

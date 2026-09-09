@@ -23,6 +23,8 @@ func _ready() -> void:
 
     heading.text = "POSTMORTEM"
     _build()
+    TutorialManager.queue_step("research")
+    TutorialManager.offer("research", list)
 
 func _build() -> void:
     UiBuilder.clear(list)

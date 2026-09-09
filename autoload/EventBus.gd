@@ -90,9 +90,19 @@ signal size_unlocked(id: String, name: String)
 signal experience_level_up(kind: String, id: String, name: String, level: int)
 signal research_points_gained(amount: float, reason: String)
 signal research_started(tech_id: String, display_name: String)
+signal research_completed(tech_id: String, display_name: String)
 signal technology_researched(tech_id: String, display_name: String)
 signal engine_project_started(name: String)
 signal engine_completed(engine_id: String, name: String)
+## Reserved for the awards presentation layer. PA.8 can provide feedback now;
+## a later awards simulation can emit these without changing AudioManager.
+signal award_nominated(project: GameProject, award_name: String)
+signal award_won(project: GameProject, award_name: String)
+
+# --- Contextual onboarding ---
+signal tutorial_presented(id: String)
+signal tutorial_completed(id: String)
+signal onboarding_skipped()
 
 # --- Feed and toasts ---
 signal news_posted(item: Dictionary)

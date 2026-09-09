@@ -9,6 +9,7 @@ func _ready() -> void:
     GameClock.enter_gameplay(false)
     EventBus.week_ticked.connect(func(_y, _m, _w): _build())
     _build()
+    TutorialManager.offer("office_growth", list)
 
 func _build() -> void:
     UiBuilder.clear(list)

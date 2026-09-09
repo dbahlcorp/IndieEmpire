@@ -126,6 +126,15 @@ var news: Array = []
 var culture: Dictionary = {}
 var milestones: Array = []
 
+# --- Onboarding ---
+## Company-scoped so a loaded career resumes exactly where it stopped. The
+## global preference in Settings decides whether a newly-created company opts
+## in; it never erases the history recorded here.
+var tutorial_completed: Array[String] = []
+var tutorial_pending: Array[String] = []
+var tutorial_context_seen: Array[String] = []
+var tutorial_skipped: bool = false
+
 # --- Solvency ---
 var overdrawn_weeks: int = 0
 var bankrupt: bool = false
@@ -323,6 +332,11 @@ func reset_company() -> void:
     news.clear()
     milestones.clear()
 
+    tutorial_completed.clear()
+    tutorial_pending.clear()
+    tutorial_context_seen.clear()
+    tutorial_skipped = not Settings.onboarding_enabled
+
     overdrawn_weeks = 0
     bankrupt = false
 
@@ -330,3 +344,4 @@ func reset_company() -> void:
     PlatformManager.sync_year()
     UnlockManager.refresh(false)
     NewsManager.post_founding()
+    TutorialManager.start_new_company()

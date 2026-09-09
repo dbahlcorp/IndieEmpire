@@ -19,6 +19,8 @@ func _ready() -> void:
         current = get_tree().current_scene.scene_file_path
 
     for tab in TABS:
+        if not TutorialManager.system_visible(str(tab["id"])):
+            continue
         var button := Button.new()
         button.text = ""
         button.tooltip_text = str(tab["label"])
@@ -31,6 +33,10 @@ func _ready() -> void:
         add_child(button)
         _add_button_contents(button, str(tab["id"]), str(tab["label"]))
         _add_badge(button, _badge_count(str(tab["id"])))
+        if str(tab["id"]) == "market":
+            TutorialManager.offer("market", button)
+        elif str(tab["id"]) == "staff":
+            TutorialManager.offer("first_hire", button)
 
 func _add_button_contents(button: Button, icon_id: String, label_text: String) -> void:
     var stack := VBoxContainer.new()

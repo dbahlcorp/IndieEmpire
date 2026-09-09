@@ -52,7 +52,26 @@ func _ready() -> void:
     back_button.pressed.connect(_on_back_pressed)
 
     _restore_draft()
+    _apply_progressive_disclosure()
     _refresh()
+    if TutorialManager.first_project_setup():
+        TutorialManager.offer("first_game", title_input)
+    elif TutorialManager.is_complete("first_technology"):
+        TutorialManager.offer("second_game_feature", feature_list)
+
+func _apply_progressive_disclosure() -> void:
+    if not TutorialManager.first_project_setup():
+        return
+    # The first form is deliberately only the four decisions a new player
+    # needs. Hidden controls retain their safe Tiny/founder defaults.
+    for node_name in [
+        "SizeLabel", "SizeOption", "EngineLabel", "EngineOption", "TeamLabel",
+        "TeamOption", "RolesLabel", "RoleAssignments", "FeaturesLabel",
+        "FeaturesHint", "FeatureList", "KnowledgeLabel", "CostLabel", "BudgetContainer"
+    ]:
+        $Margin/Scroll/VBox.get_node(node_name).hide()
+    if _priorities_body != null:
+        _priorities_body.get_parent().get_parent().hide()
 
 func _restore_draft() -> void:
     ## Coming back from the greenlight screen to change something keeps every
@@ -342,6 +361,7 @@ func _refresh() -> void:
         int(complexity_budget.get("recommended_max", 0))]
     if bool(complexity_budget.get("over_scoped", false)):
         cost_text += "⚠ OVER-SCOPED\nExpected consequences:\n• Longer development\n• Higher bug risk\n• Greater schedule uncertainty\n"
+        TutorialManager.context("complexity", feature_list)
     cost_text += "\nScope\n%s (ideal team %s)\nRequired Effort %d\n\nAssigned Team\n%d employee%s\n\n" % [
         str(size.get("name", "")), ScopeSimulator.team_size_label(ideal_min, ideal_max),
         int(DevelopmentSimulator.required_effort(size_id, _selected_feature_ids)),
