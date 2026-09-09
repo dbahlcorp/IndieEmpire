@@ -3,6 +3,16 @@
 A Godot 4 prototype for a mobile-first game-development tycoon.
 Built and verified against Godot 4.7.2 stable.
 
+First-hour contextual onboarding, progressive disclosure, skip behavior, and
+save compatibility are documented in [docs/ONBOARDING.md](docs/ONBOARDING.md).
+
+Audio states, original feedback assets, iOS behavior, and haptic architecture
+are documented in [docs/AUDIO_AND_GAME_FEEL.md](docs/AUDIO_AND_GAME_FEEL.md).
+
+Simulation-driven employee activity, office-tier presentation, deterministic
+movement, and save reconstruction are documented in
+[docs/STUDIO_VISUAL_FEEDBACK.md](docs/STUDIO_VISUAL_FEEDBACK.md).
+
 ## Open it
 
 1. Install Godot 4.7 or newer.
@@ -69,6 +79,18 @@ platforms cost more to develop for.
 
 **News.** Platform, market, company, game, industry and financial stories,
 including sales milestones, breakout hits and commercial failures.
+
+**Release presentation.** Shipping a game plays a staged reveal: a launch
+beat, the critic outlets one at a time, the average score, the initial player
+response, week-one sales on a self-drawn chart, and the change to revenue,
+fans and reputation -- ending on a headline verdict (`RECORD LAUNCH`,
+`CRITICAL ACCLAIM`, `100K COPIES`, `SALES COLLAPSE`, `TECHNICAL PROBLEMS`,
+...) and a short plain-language account of what carried the game or held it
+back. A tap fast-forwards each beat; a SKIP button appears once the player
+has seen a full reveal; a Reduce Motion setting makes it all instant. The
+whole thing is presentation over numbers the simulation already produced --
+`ReleaseSummarySimulator` and the results screen never mutate anything. The
+same verdict and sales chart are on each game's detail page in Game History.
 
 **Money.** Every transaction is written to a ledger. Per-year income, costs and
 net are kept permanently for the studio's whole life, while the transaction
@@ -272,7 +294,17 @@ making do drags development efficiency down until the trouble passes. Events
 are authored in
 `data/studio_events.json` with a plain three-token condition grammar
 (`employee_art > 45`, `has_active_project == 1`), a weight, a cooldown and a
-list of choices with typed effects, so new ones are added as data.
+list of choices with typed effects, so new ones are added as data. The
+catalogue is around a hundred events; every one carries a marked default so
+ignoring it is a real answer.
+
+The authored content catalogues -- roughly 15 genres, 55 themes (each with a
+full per-genre affinity map), a continuous fictional platform timeline from
+1985 through the present, ~30 employee traits, ~20 studio customizations,
+and ~95 technologies and game features combined -- are all data-driven
+through `DataManager` and lint-checked by `ContentValidationTest`
+(duplicate ids, broken prerequisites, missing names, dangling references,
+impossible unlocks, malformed platform timelines, out-of-range affinities).
 
 Office progression runs sequentially from a one-person bedroom through a shared
 workspace, small office and professional studio to a twelve-person large studio
@@ -397,9 +429,15 @@ Named project assignments act as discipline leads. Other members of the active
 team contribute as project support at 35% workload, allowing the full twelve-
 person output curve without turning project setup into dozens of role toggles.
 
-Employees carry one or two visible gameplay traits: perfectionist, workhorse,
-team player, lone wolf, visionary, bug hunter or fast learner. Their tradeoffs
-feed contribution, overload, burnout, chemistry and learning directly. Actual
+Employees carry one or two visible gameplay traits drawn from a catalogue of
+around thirty (perfectionist, workhorse, lone wolf, code poet, night owl,
+burnout-prone and so on). Each trait's mechanical effect is authored as a
+structured `effects` block in `data/employee_traits.json` and read through
+`EmployeeTraitSimulator` (pure); the contribution, overload, burnout,
+chemistry, learning and market-value call sites consult it rather than
+checking trait ids one by one, so a new trait is a data change. Their
+tradeoffs feed contribution, overload, burnout, chemistry and learning
+directly. Actual
 weekly role use awards discipline-specific XP; support work awards slower XP in
 the employee's specialty. Each skill has its own level and progress bar, and a
 level-up adds five points to that underlying skill rather than a generic stat

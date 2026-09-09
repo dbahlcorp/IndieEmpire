@@ -101,9 +101,9 @@ below:
 | PA.2 | Research & Technology | **Implemented** (2026-09-08; balance pass deferred) | Low–Medium |
 | PA.3 | Game Features | **Implemented** (2026-09-08) | Complete |
 | PA.4 | Engine Progression | **Implemented** (2026-09-08; balance pass deferred) | Medium |
-| PA.5 | Content Expansion | **Partial** (breadth uneven) | Low–Medium (content authoring, not engineering) |
+| PA.5 | Content Expansion | **Implemented** (2026-09-08) | Low–Medium (content authoring, not engineering) |
 | PA.6 | Onboarding & Progressive Disclosure | **Missing** | Medium–High |
-| PA.7 | Release/Review Presentation | **Partial** | Low–Medium |
+| PA.7 | Release, Reviews & Sales Presentation | **Implemented** (2026-09-08) | Low–Medium |
 | PA.8 | Audio & Feedback | **Mostly missing** | Medium (asset-bound) |
 | PA.9 | Studio Visual Feedback | **Substantially complete** | Low–Medium (polish only) |
 | PA.10 | Sequels & Franchises | **Missing** | Medium–High |
@@ -493,6 +493,41 @@ deadlock guard.
 
 ## PA.5 — Content Expansion
 
+**Status: implemented, 2026-09-08.** A data/content pass against schemas that
+already existed. Full write-up in `docs/CONTENT_EXPANSION_2026-09-08.md`.
+
+### Implementation notes (as built)
+
+- **Volumes:** themes 25 → 55 (full per-genre affinity maps), platforms
+  17 → 20 (three added to close timeline gaps; release→peak coverage is now
+  continuous every year 1985–2026), technologies 40 → 64, game features
+  20 → 31 (95 combined, past the 75+ target), employee traits 9 → 32,
+  office customizations 5 → 22, **studio events 3 → 112**. Genres deliberately
+  left at 15 — already inside the 10–15 target, and every affinity/audience
+  matrix is keyed to exactly that set.
+- **Traits became data-driven.** Effects were hardcoded `if "workhorse" in
+  employee.trait_ids` checks across six files. Each trait now carries a
+  structured `effects` block; `EmployeeTraitSimulator` (new, pure — not a
+  manager) is the single reader; the call sites consult it. The nine
+  originals were ported number-for-number (`EmployeeTraitTest` pins each);
+  the 23 new traits get real effect through the same path. This is the only
+  code of consequence in the section — everything else is `data/*.json`.
+- **No new managers, no simulation changes.** Studio-event effects match the
+  three shipped events' magnitude bands; every event has a marked default
+  (the headless probe auto-resolves to it), and ~⅓ of defaults are
+  neutral-to-slightly-positive so ignoring events is not a hidden tax.
+- **Validation:** `ContentValidationTest` (new) lints every catalog for
+  duplicate ids, broken prerequisites, missing names, dangling references,
+  impossible unlocks, malformed platform timelines and out-of-range
+  affinities — a content-lint suite, not a balance test.
+- **Balance:** `BalanceProbe` re-run, 8 seeds to 1996 and 4 seeds to 2010;
+  results and comparison against `artifacts/tiny-bar-2026-09-08/` are in
+  `artifacts/content-expansion-2026-09-08/`.
+- Project-size naming inconsistency and the "no tier above AAA" question
+  (both flagged below) were left as-is — out of scope for a content pass.
+
+The plan text below this note is the pre-implementation record.
+
 ### Current repository state (volume by file)
 
 | File | Entries |
@@ -661,6 +696,42 @@ other PA section, since onboarding has to explain whatever they add.
 ---
 
 ## PA.7 — Release/Review Presentation
+
+**Status: implemented, 2026-09-08.** Full write-up in
+`docs/RELEASE_PRESENTATION_2026-09-08.md`.
+
+### Implementation notes (as built)
+
+- **No simulation change.** `ReviewSimulator`, `SalesSimulator`,
+  `SalesManager`, `PublishingManager` untouched. New work is one pure helper
+  (`ReleaseSummarySimulator` — verdict / strengths / weaknesses / initial
+  response / impact rows, all read-only), one self-drawn `SalesChart`
+  control, a reworked `ReleaseResultsScreen`, and a fuller
+  `GameDetailScreen`.
+- **Sequence:** launch beat → critic cards one at a time → average →
+  initial player response → week-one sales + chart → impact (revenue / fans
+  / reputation) → headline verdict + why. Tap (`_hurry`) finishes the
+  current beat; a SKIP button appears once `Settings.seen_release_reveal` is
+  set (first full watch), which also paces later reveals ~2x faster.
+- **Reduce Motion:** new `Settings.reduced_motion` (Settings → Display).
+  Instant beats, no eased interpolation, chart at full height. Both new
+  flags are player-scoped in `Settings`, not the save — no `SAVE_VERSION`
+  bump.
+- **Hit / flop banners** from `verdict()`: `1M`/`100K`/`10K COPIES`,
+  `RECORD LAUNCH`, `CRITICAL ACCLAIM`, `STUDIO BEST`, `BREAKOUT HIT`,
+  `STRONG REVIEWS` / `SALES COLLAPSE`, `COMMERCIAL FAILURE`,
+  `TECHNICAL PROBLEMS`, `POOR RECEPTION`, `MIXED REVIEWS`. Explains, never
+  shames.
+- **Game History:** `GameDetailScreen` gained a RELEASE section (verdict,
+  strengths/weaknesses, `SalesChart`) — the revisit path.
+- **Tests:** `ReleaseSummaryTest` (39), `ReleasePresentationTest` (64,
+  incl. skip / tap / reduced-motion / save-load / history / a no-mutation
+  snapshot), `ReviewRevealTest` updated.
+- **Deferred:** written per-outlet pull-quotes, particle celebration, and
+  the Batch 2/3 icon assets (publisher marks, feature icons) — asset work,
+  not gate work.
+
+The plan text below is the pre-implementation record.
 
 ### Current repository state
 More built than the checklist in `docs/ASSET_UI_PLAN.md` suggests at a

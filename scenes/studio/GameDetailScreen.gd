@@ -45,10 +45,36 @@ func _build() -> void:
             14, true))
     list.add_child(UiBuilder.divider())
 
+    _verdict()
     _reviews()
     _sales()
     _money()
     _development()
+
+func _verdict() -> void:
+    var verdict := ReleaseSummarySimulator.verdict(game)
+    list.add_child(UiBuilder.heading("RELEASE"))
+    var banner := UiBuilder.label(str(verdict["title"]), 20)
+    banner.add_theme_color_override("font_color",
+        ReleaseSummarySimulator.tone_color(str(verdict["tone"])))
+    list.add_child(banner)
+    list.add_child(UiBuilder.label(str(verdict["subtitle"]), 14, true))
+
+    var strengths: Array = game.went_well if game.postmortem_reviewed \
+        else ReleaseSummarySimulator.strengths(game)
+    var weaknesses: Array = game.went_poorly if game.postmortem_reviewed \
+        else ReleaseSummarySimulator.weaknesses(game)
+    if not strengths.is_empty():
+        list.add_child(UiBuilder.label("WHAT CARRIED IT\n%s" % _bullet_list(strengths), 14))
+    if not weaknesses.is_empty():
+        list.add_child(UiBuilder.label("WHAT HELD IT BACK\n%s" % _bullet_list(weaknesses), 14))
+    list.add_child(UiBuilder.divider())
+
+func _bullet_list(items: Array) -> String:
+    var text := ""
+    for item in items:
+        text += "• %s\n" % str(item)
+    return text.strip_edges()
 
 func _reviews() -> void:
     list.add_child(UiBuilder.heading("REVIEWS"))
@@ -64,16 +90,16 @@ func _reviews() -> void:
 func _sales() -> void:
     list.add_child(UiBuilder.heading("SALES"))
 
-    var text := ""
-    for index in game.weekly_sales.size():
-        text += "Week %-4d %10s\n" % [index + 1, Format.exact(game.weekly_sales[index])]
-    if text.is_empty():
-        text = "No sales recorded.\n"
-    list.add_child(UiBuilder.label(text.strip_edges(), 14))
+    var chart := SalesChart.new()
+    chart.custom_minimum_size = Vector2(0, 132)
+    chart.configure(game.weekly_sales, false)
+    list.add_child(chart)
+    list.add_child(UiBuilder.label(chart.text_summary(), 13))
 
-    list.add_child(UiBuilder.label("Lifetime  %s\nRevenue   $%s" % [
+    list.add_child(UiBuilder.label("Lifetime  %s\nRevenue   $%s\nFans gained  %s" % [
         Format.exact(game.lifetime_sales),
-        Format.exact(game.lifetime_revenue)
+        Format.exact(game.lifetime_revenue),
+        Format.exact(game.fans_gained)
     ], 16))
     list.add_child(UiBuilder.divider())
 

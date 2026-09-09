@@ -33,15 +33,21 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
-
 [node name="ClockBar" parent="Margin/Scroll/VBox" instance=ExtResource("2")]
 layout_mode = 2
 
 [node name="Heading" type="Label" parent="Margin/Scroll/VBox"]
 layout_mode = 2
-text = "REVIEWS ARE IN"
+text = "LAUNCH DAY"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 20
+
+[node name="SkipButton" type="Button" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 8
+visible = false
+text = "SKIP"
 
 [node name="TitleLabel" type="Label" parent="Margin/Scroll/VBox"]
 layout_mode = 2
@@ -49,45 +55,86 @@ text = "GAME"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 28
 
+[node name="RevealStatusLabel" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 12
+
 [node name="ScoreLabel" type="Label" parent="Margin/Scroll/VBox"]
 layout_mode = 2
 text = "— / 10"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 38
 
-[node name="RevealStatusLabel" type="Label" parent="Margin/Scroll/VBox"]
-layout_mode = 2
-text = "REVIEWS ARRIVING..."
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 12
-
 [node name="CriticsContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="SalesScroll" type="ScrollContainer" parent="Margin/Scroll/VBox"]
-custom_minimum_size = Vector2(0, 180)
+[node name="ResponseLabel" type="Label" parent="Margin/Scroll/VBox"]
 layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="SalesList" type="Label" parent="Margin/Scroll/VBox/SalesScroll"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Week 1"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 18
-
-[node name="BannerLabel" type="Label" parent="Margin/Scroll/VBox"]
-layout_mode = 2
+visible = false
 text = ""
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 16
 
+[node name="SalesHeader" type="Label" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+visible = false
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 17
+
+[node name="SalesScroll" type="ScrollContainer" parent="Margin/Scroll/VBox"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+visible = false
+horizontal_scroll_mode = 0
+
+[node name="SalesList" type="Label" parent="Margin/Scroll/VBox/SalesScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+theme_override_font_sizes/font_size = 13
+
+[node name="ImpactContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+visible = false
+theme_override_constants/separation = 6
+
+[node name="BannerPanel" type="PanelContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+visible = false
+
+[node name="BannerBox" type="VBoxContainer" parent="Margin/Scroll/VBox/BannerPanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BannerTitle" type="Label" parent="Margin/Scroll/VBox/BannerPanel/BannerBox"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+
+[node name="BannerSub" type="Label" parent="Margin/Scroll/VBox/BannerPanel/BannerBox"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 14
+
+[node name="ReasonsContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]
+layout_mode = 2
+visible = false
+theme_override_constants/separation = 6
+
 [node name="TotalsLabel" type="Label" parent="Margin/Scroll/VBox"]
 layout_mode = 2
-text = "Lifetime"
+visible = false
+text = ""
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 15
@@ -95,5 +142,5 @@ theme_override_font_sizes/font_size = 15
 [node name="ContinueButton" type="Button" parent="Margin/Scroll/VBox"]
 custom_minimum_size = Vector2(0, 54)
 layout_mode = 2
-text = "REVEALING REVIEWS..."
+text = "…"
 disabled = true
