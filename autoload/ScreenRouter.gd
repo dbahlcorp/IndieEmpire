@@ -7,6 +7,16 @@ var selected_game_id: String = ""
 var selected_franchise_id: String = ""
 var selected_team_id: String = ""
 var selected_employee_id: String = ""
+## Release year of the awards ceremony AwardsCeremonyScreen should show. 0 ==
+## the most recent one.
+var selected_ceremony_year: int = 0
+## Where AwardsCeremonyScreen's CONTINUE button returns to. Survives a detour
+## into a winning game's detail page and back.
+var awards_return_scene: String = "res://scenes/company/RecordsScreen.tscn"
+
+func open_awards_ceremony(year: int, from_scene: String) -> void:
+    selected_ceremony_year = year
+    awards_return_scene = from_scene
 var return_scene: String = "res://scenes/studio/StudioScreen.tscn"
 ## The project the player has set up on NewGameScreen but not yet greenlit.
 ## Deliberately not part of GameState/saves -- like every field above, it is

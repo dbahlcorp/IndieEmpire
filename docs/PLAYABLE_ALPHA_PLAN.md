@@ -107,7 +107,7 @@ below:
 | PA.8 | Audio & Feedback | **Mostly missing** | Medium (asset-bound) |
 | PA.9 | Studio Visual Feedback | **Substantially complete** | Low–Medium (polish only) |
 | PA.10 | Sequels & Franchises | **Implemented** (2026-09-09) | Medium–High |
-| PA.11 | Awards | **Missing** (one placeholder field) | Medium |
+| PA.11 | Awards | **Implemented** (2026-09-09) | Medium |
 | PA.12 | Statistics & Graphs | **Missing UI, data exists** | Medium |
 | PA.13 | Financial Crisis/Recovery | **Partial** (cliff exists, no guided recovery) | Medium |
 | PA.14 | Difficulty & Accessibility | **Partial** (difficulty done, accessibility not) | Medium (breadth, not depth) |

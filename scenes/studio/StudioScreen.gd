@@ -18,6 +18,7 @@ extends Control
 @onready var develop_button: Button = %DevelopButton
 @onready var postmortem_button: Button = %PostmortemButton
 @onready var event_button: Button = %EventButton
+@onready var awards_button: Button = %AwardsButton
 @onready var contracts_button: Button = %ContractsButton
 
 func _ready() -> void:
@@ -30,6 +31,7 @@ func _ready() -> void:
     develop_button.pressed.connect(_on_develop_pressed)
     postmortem_button.pressed.connect(_on_postmortem_pressed)
     event_button.pressed.connect(_on_event_pressed)
+    awards_button.pressed.connect(_on_awards_pressed)
     contracts_button.pressed.connect(_on_contracts_pressed)
     office_button.pressed.connect(_on_office_pressed)
     teams_button.pressed.connect(_on_teams_pressed)
@@ -81,6 +83,11 @@ func _refresh() -> void:
     event_button.visible = StudioEventManager.has_pending()
     if StudioEventManager.has_pending():
         event_button.text = str(StudioEventManager.pending_event().get("title", "STUDIO EVENT"))
+
+    var ceremony := AwardsManager.unseen_ceremony()
+    awards_button.visible = not ceremony.is_empty()
+    if not ceremony.is_empty():
+        awards_button.text = "%d GAME AWARDS" % (int(ceremony.get("year", 0)) + 1)
 
     warning_label.text = ""
     var waiting := RetentionManager.requests().size() + RetentionManager.leaving().size()
@@ -162,6 +169,14 @@ func _on_postmortem_pressed() -> void:
 func _on_event_pressed() -> void:
     if StudioEventManager.has_pending():
         get_tree().change_scene_to_file("res://scenes/company/StudioEventScreen.tscn")
+
+func _on_awards_pressed() -> void:
+    var ceremony := AwardsManager.unseen_ceremony()
+    if ceremony.is_empty():
+        return
+    ScreenRouter.open_awards_ceremony(
+        int(ceremony.get("year", 0)), "res://scenes/studio/StudioScreen.tscn")
+    get_tree().change_scene_to_file("res://scenes/company/AwardsCeremonyScreen.tscn")
 
 func _on_office_pressed() -> void:
     get_tree().change_scene_to_file("res://scenes/studio/OfficeScreen.tscn")
@@ -335,6 +350,7 @@ func _refresh_attention() -> void:
     var count := RetentionManager.requests().size() + RetentionManager.leaving().size()
     count += GameState.pending_postmortems().size()
     count += 1 if StudioEventManager.has_pending() else 0
+    count += 1 if AwardsManager.has_unseen_ceremony() else 0
     count += 1 if FinanceManager.is_in_trouble() else 0
     %AttentionButton.visible = count > 0
     %AttentionButton.text = "%d STUDIO MATTER%s · REVIEW" % [count, "S" if count != 1 else ""]

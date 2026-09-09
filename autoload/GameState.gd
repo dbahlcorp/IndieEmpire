@@ -41,6 +41,15 @@ var next_id: int = 1
 ## by sequels. See FranchiseManager and Franchise.
 var franchises: Array[Franchise] = []
 var next_series_number: int = 1
+## Annual Game Awards (PA.11). One entry per year a ceremony was held, oldest
+## first. Each: {year, held_year, seen, categories: [...], rewards: {...}} --
+## see AwardsSimulator.build_ceremony() and AwardsManager. Permanent: the
+## studio's whole nomination and award history.
+var award_ceremonies: Array = []
+## The most recent release year that has been judged for awards. Guards a
+## ceremony against re-running on load, and an older save against being
+## flooded with back-years. Set to founded_year - 1 at company creation.
+var last_awards_year: int = 0
 
 # --- People ---
 var employees: Array[Employee] = []
@@ -184,6 +193,12 @@ func find_game(id: String) -> GameProject:
             return game
     return null
 
+func find_ceremony(year: int) -> Dictionary:
+    for ceremony in award_ceremonies:
+        if int(ceremony.get("year", 0)) == year:
+            return ceremony
+    return {}
+
 func find_franchise(series_id: String) -> Franchise:
     if series_id.is_empty():
         return null
@@ -295,6 +310,8 @@ func reset_company() -> void:
     founded_year = TimeManager.current_year
     founded_month = TimeManager.current_month
     founded_week = TimeManager.current_week
+    # A studio's first full year is judged at the following year's ceremony.
+    last_awards_year = founded_year - 1
 
     current_project = null
     active_projects.clear()
@@ -303,6 +320,7 @@ func reset_company() -> void:
     next_id = 1
     franchises.clear()
     next_series_number = 1
+    award_ceremonies.clear()
     # Clear technology before anyone is seeded -- Employee.is_away() consults
     # ResearchManager and EngineManager, so no stale in-flight work must linger.
     EngineManager.reset_technology()

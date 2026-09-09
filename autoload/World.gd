@@ -20,6 +20,7 @@ extends Node
 ##     SalesManager      games on the market sell another week
 ##     MarketManager     trends drift, saturation decays
 ##     FranchiseManager  franchise fatigue and fan interest cool with time
+##     AwardsManager     once a year, the previous year's releases are judged
 ##     LaborMarketManager candidates rotate
 ##     EmployeeManager   monthly payroll settles
 ##     ExperienceManager (awarded on postmortem, nothing weekly yet)
@@ -58,6 +59,7 @@ func _on_week_advanced(year: int, month: int, week: int) -> void:
     SalesManager.process_week()
     MarketManager.process_week()
     FranchiseManager.process_week()
+    AwardsManager.process_week()
     LaborMarketManager.process_week()
     EmployeeManager.process_week()
     UnlockManager.refresh()

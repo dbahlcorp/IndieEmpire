@@ -18,7 +18,7 @@ func _build() -> void:
     list.add_child(UiBuilder.heading(str(current.get("name", "Office")).to_upper()))
     list.add_child(OfficeArtwork.view(GameState.office_id, 205))
     var facts := GridContainer.new()
-    facts.columns = 2
+    facts.columns = _columns(4)
     facts.add_theme_constant_override("h_separation", 8)
     facts.add_theme_constant_override("v_separation", 8)
     facts.add_child(UiBuilder.stat_card("capacity", "Capacity", "%d / %d" % [
@@ -32,54 +32,84 @@ func _build() -> void:
     list.add_child(facts)
 
     list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.heading("TEAM"))
+    list.add_child(UiBuilder.section_header(
+        "Team in this office", "Open a profile to manage workload, training, and equipment."))
+    var team_grid := GridContainer.new()
+    team_grid.columns = 1
+    team_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     for employee in EmployeeManager.active_employees():
         var card := PanelContainer.new()
+        card.theme_type_variation = &"ElevatedPanel"
+        card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         var stack := VBoxContainer.new()
         stack.add_child(UiBuilder.employee_header(employee, EmployeeManager.job_title(employee)))
         var person := UiBuilder.button("VIEW PROFILE")
+        person.tooltip_text = "Open skills, workload, morale, and equipment"
         person.pressed.connect(_open_employee.bind(employee.id))
         stack.add_child(person)
         card.add_child(stack)
-        list.add_child(card)
+        team_grid.add_child(card)
+    list.add_child(team_grid)
 
     list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.heading("MONTHLY COST"))
+    list.add_child(UiBuilder.section_header(
+        "Monthly cost", "The recurring operating cost of this office and its team."))
     var expenses := EmployeeManager.monthly_expenses()
-    list.add_child(UiBuilder.status_row("payroll", "Payroll\n$%s" %
-        Format.exact(int(expenses["salaries"])), 15))
-    list.add_child(UiBuilder.status_row("rent", "Rent\n$%s" %
-        Format.exact(int(expenses["rent"])), 15))
-    list.add_child(UiBuilder.status_row("utilities", "Utilities\n$%s" %
-        Format.exact(int(expenses["utilities"])), 15))
-    list.add_child(UiBuilder.status_row("skills", "Software\n$%s" %
-        Format.exact(int(expenses["software"])), 15))
-    list.add_child(UiBuilder.label("TOTAL\n$%s" % Format.exact(int(expenses["total"])), 22, true))
+    list.add_child(UiBuilder.stat_grid([
+        {"icon": "payroll", "label": "Payroll", "value":
+            Format.money_exact(int(expenses["salaries"]))},
+        {"icon": "rent", "label": "Rent", "value":
+            Format.money_exact(int(expenses["rent"]))},
+        {"icon": "utilities", "label": "Utilities", "value":
+            Format.money_exact(int(expenses["utilities"]))},
+        {"icon": "skills", "label": "Software", "value":
+            Format.money_exact(int(expenses["software"]))}
+    ], _columns(4)))
+    list.add_child(UiBuilder.info_card(
+        "Total %s / month" % Format.money_exact(int(expenses["total"])),
+        "These costs are paid automatically as simulation time advances.", "cash"))
 
     _workstation_section()
     _customization_shop()
 
     list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.heading("EXPAND"))
+    list.add_child(UiBuilder.section_header(
+        "Expand", "Larger offices unlock more headcount and stronger working conditions."))
 
+    var office_grid := GridContainer.new()
+    office_grid.columns = 1
+    office_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     for office in DataManager.offices:
         if str(office.get("id", "")) == GameState.office_id:
             continue
         if int(office.get("tier", 0)) <= int(current.get("tier", 0)):
             continue
-        list.add_child(UiBuilder.divider())
-        list.add_child(UiBuilder.heading(str(office.get("name", "Office")).to_upper()))
-        list.add_child(OfficeArtwork.view(str(office.get("id", "bedroom")), 185))
-        list.add_child(UiBuilder.label(OfficeManager.description(office), 15))
+        var office_panel := PanelContainer.new()
+        office_panel.theme_type_variation = &"ElevatedPanel"
+        office_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        var office_stack := VBoxContainer.new()
+        office_stack.add_child(UiBuilder.heading(str(office.get("name", "Office")).to_upper()))
+        office_stack.add_child(OfficeArtwork.view(str(office.get("id", "bedroom")), 185))
+        office_stack.add_child(UiBuilder.label(OfficeManager.description(office), 15))
         var move_cost := OfficeManager.move_in_cost(office)
-        list.add_child(UiBuilder.label("Move-in cost    $%s" % Format.exact(move_cost), 15))
+        office_stack.add_child(UiBuilder.stat_grid([
+            {"icon": "capacity", "label": "Capacity", "value": str(office.get("capacity", 1))},
+            {"icon": "cash", "label": "Move-in", "value": Format.money_exact(move_cost)}
+        ], 2))
         var is_next := int(office.get("tier", 0)) == int(current.get("tier", 0)) + 1
         var button := UiBuilder.major_button(
             "MOVE FOR $%s" % Format.exact(move_cost) if is_next else "LOCKED — MOVE IN ORDER"
         )
         button.disabled = not OfficeManager.can_move_to(str(office.get("id", "")))
+        button.tooltip_text = (
+            "Move the studio into this office"
+            if not button.disabled else "Offices must be unlocked in order and paid for in cash")
         button.pressed.connect(_move.bind(str(office.get("id", ""))))
-        list.add_child(button)
+        office_stack.add_child(button)
+        office_panel.add_child(office_stack)
+        office_grid.add_child(office_panel)
+    if office_grid.get_child_count() > 0:
+        list.add_child(office_grid)
 
     if int(current.get("tier", 0)) >= _highest_tier():
         list.add_child(UiBuilder.divider())
@@ -87,16 +117,21 @@ func _build() -> void:
 
 func _workstation_section() -> void:
     list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.heading("WORKSTATIONS"))
-    list.add_child(UiBuilder.label(
-        "Every employee wants a machine of their own. Basic just about does the "
-        + "job; Standard and Pro pay off in the disciplines that lean on hardware. "
-        + "Buy or upgrade one for a specific person from their profile.", 12))
+    list.add_child(UiBuilder.section_header(
+        "Workstations",
+        "Better hardware improves the disciplines that lean on it; upgrades remain employee-specific."))
 
     var headcount := EmployeeManager.active_employees().size()
     var missing := OfficeManager.unequipped_employees()
-    list.add_child(UiBuilder.label(
-        "%d of %d employees equipped" % [headcount - missing.size(), headcount], 14, true))
+    var equipped := headcount - missing.size()
+    var panel := UiBuilder.info_card(
+        "%d of %d employees equipped" % [equipped, headcount],
+        "Everyone has a workstation." if missing.is_empty()
+        else "%d employee%s still need basic hardware." % [
+            missing.size(), "" if missing.size() == 1 else "s"],
+        "skills")
+    panel.theme_type_variation = &"PositivePanel" if missing.is_empty() else &"WarningPanel"
+    list.add_child(panel)
 
     if missing.is_empty():
         return
@@ -105,6 +140,9 @@ func _workstation_section() -> void:
     var button := UiBuilder.major_button(
         "EQUIP THE REST WITH BASIC -- $%s" % Format.exact(cost))
     button.disabled = not FinanceManager.can_afford(cost)
+    button.tooltip_text = (
+        "Buy basic workstations for every unequipped employee"
+        if not button.disabled else "The studio cannot afford these workstations")
     button.pressed.connect(_equip_everyone_missing_one)
     list.add_child(button)
 
@@ -133,13 +171,20 @@ func _quality_stars(label_text: String) -> String:
 
 func _customization_shop() -> void:
     list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.heading("CUSTOMIZE OFFICE"))
-    list.add_child(UiBuilder.label(
-        "Buy a style pack, apply the complete remodel, or mix its pieces in the room editor.", 13, true))
+    list.add_child(UiBuilder.section_header(
+        "Customize office",
+        "Buy a style pack, apply a complete remodel, or mix owned pieces in the room editor."))
+    var catalog_grid := GridContainer.new()
+    catalog_grid.columns = 1
+    catalog_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     for item in OfficeCustomizationManager.catalog():
         var id := str(item.get("id", ""))
         var panel := PanelContainer.new()
+        panel.theme_type_variation = &"ElevatedPanel"
+        panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        panel.custom_minimum_size = Vector2(300, 0)
         var stack := VBoxContainer.new()
+        stack.add_theme_constant_override("separation", 9)
         var swatch := ColorRect.new()
         swatch.color = Color(str(item.get("accent", "#e98d48")))
         swatch.custom_minimum_size = Vector2(0, 12)
@@ -161,45 +206,49 @@ func _customization_shop() -> void:
         if GameState.equipped_office_customization == id:
             button = UiBuilder.button("FULL REMODEL APPLIED")
             button.disabled = true
+            button.tooltip_text = "This complete style is currently applied"
         elif OfficeCustomizationManager.is_owned(id):
             button = UiBuilder.button("APPLY FULL REMODEL")
+            button.tooltip_text = "Apply every component from this owned style pack"
             button.pressed.connect(_equip_customization.bind(id))
         elif str(item.get("purchase_type", "cash")) == "cash":
             var price := FinanceManager.expense(int(item.get("price", 0)))
             button = UiBuilder.major_button("BUY  $%s" % Format.exact(price))
             button.disabled = not OfficeCustomizationManager.can_buy(id)
+            button.tooltip_text = (
+                "Purchase this permanent office style pack"
+                if not button.disabled else "The studio cannot afford this style pack")
             button.pressed.connect(_buy_customization.bind(id))
         else:
             button = UiBuilder.button("PREMIUM — COMING LATER")
             button.disabled = true
+            button.tooltip_text = "This optional cosmetic pack is not available yet"
         stack.add_child(button)
         panel.add_child(stack)
-        list.add_child(panel)
+        catalog_grid.add_child(panel)
+    list.add_child(catalog_grid)
     _room_editor()
 
 func _room_editor() -> void:
     list.add_child(UiBuilder.divider())
-    list.add_child(UiBuilder.heading("ROOM EDITOR"))
-    list.add_child(UiBuilder.label(
-        "Every part can use a different owned style. Changes apply immediately.", 13, true))
+    list.add_child(UiBuilder.section_header(
+        "Room editor", "Each office component can use a different owned style. Changes apply immediately."))
     var owned := GameState.owned_office_customizations.duplicate()
+    var editor_grid := GridContainer.new()
+    editor_grid.columns = 1
+    editor_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     for category in OfficeCustomizationManager.CATEGORIES:
         var category_id := str(category["id"])
-        var row := HBoxContainer.new()
-        row.add_theme_constant_override("separation", 8)
-        var title := UiBuilder.label(str(category["name"]), 14)
-        title.custom_minimum_size = Vector2(128, 0)
-        title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-        row.add_child(title)
-        var category_icon := TextureRect.new()
-        category_icon.texture = UiIcons.texture("remodel_%s" % category_id)
-        category_icon.custom_minimum_size = Vector2(24, 24)
-        category_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-        category_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-        row.add_child(category_icon)
+        var category_panel := PanelContainer.new()
+        category_panel.theme_type_variation = &"ElevatedPanel"
+        category_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        var category_stack := VBoxContainer.new()
+        category_stack.add_child(UiBuilder.status_row(
+            "remodel_%s" % category_id, str(category["name"]).to_upper(), 14))
         var choice := OptionButton.new()
         choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         choice.custom_minimum_size = Vector2(0, UiBuilder.TAP_HEIGHT)
+        choice.tooltip_text = "Choose an owned style for %s" % str(category["name"]).to_lower()
         var selected_index := 0
         for index in owned.size():
             var style_id := str(owned[index])
@@ -212,8 +261,13 @@ func _room_editor() -> void:
                 selected_index = index
         choice.select(selected_index)
         choice.item_selected.connect(_on_component_selected.bind(category_id, choice))
-        row.add_child(choice)
-        list.add_child(row)
+        category_stack.add_child(choice)
+        category_panel.add_child(category_stack)
+        editor_grid.add_child(category_panel)
+    list.add_child(editor_grid)
+
+func _columns(wide_count: int) -> int:
+    return min(2, wide_count)
 
 func _buy_customization(id: String) -> void:
     if OfficeCustomizationManager.buy(id):

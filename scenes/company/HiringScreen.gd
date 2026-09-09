@@ -1,7 +1,7 @@
 extends Control
 
-## A deliberately small labor market. Candidate details expand in place so the
-## whole hiring flow remains comfortable on a portrait screen.
+## Recruitment is presented as a small talent board instead of a spreadsheet.
+## Offer resolution and every hiring rule still live in LaborMarketManager.
 
 @onready var rotation_label: Label = $Margin/VBox/RotationLabel
 @onready var list: VBoxContainer = $Margin/VBox/Scroll/List
@@ -19,150 +19,184 @@ func _ready() -> void:
 
 func _build() -> void:
     UiBuilder.clear(list)
-    rotation_label.text = "New candidates in %d week%s   Cash $%s\nEmployees %d / %d" % [
+    rotation_label.text = "New candidates in %d week%s" % [
         GameState.labor_market_weeks_left,
-        "" if GameState.labor_market_weeks_left == 1 else "s",
-        Format.exact(GameState.cash),
-        OfficeManager.headcount(), OfficeManager.capacity()
-    ]
+        "" if GameState.labor_market_weeks_left == 1 else "s"]
+
     var reputation := LaborMarketManager.employer_reputation()
-    list.add_child(UiBuilder.label("EMPLOYER REPUTATION\n%s  %s" % [
-        str(reputation["display"]), str(reputation["label"])], 15, true))
-    list.add_child(UiBuilder.label(
-        "Better places to work draw better candidates. Pay, the office, how "
-        + "games do, crunch and how the current team feels all count.", 12))
-    list.add_child(UiBuilder.divider())
+    var expenses := EmployeeManager.monthly_expenses()
+    list.add_child(UiBuilder.stat_grid([
+        {"icon": "reputation", "label": "Employer reputation", "value": "%s · %s" % [
+            str(reputation["display"]), str(reputation["label"])]},
+        {"icon": "capacity", "label": "Team capacity", "value": "%d / %d" % [
+            OfficeManager.headcount(), OfficeManager.capacity()]},
+        {"icon": "payroll", "label": "Monthly burn", "value":
+            Format.money_exact(int(expenses["total"]))},
+        {"icon": "cash", "label": "Cash", "value": Format.money_exact(GameState.cash)}
+    ], _columns(4)))
+    list.add_child(UiBuilder.info_card(
+        "A workplace people want to join",
+        "Pay, office quality, successful releases, crunch, and team morale all shape the talent you attract.",
+        "capacity"))
 
     if not OfficeManager.has_capacity():
-        list.add_child(UiBuilder.label(
-            "OFFICE FULL\n\nYour current office cannot support additional employees.", 15, true
-        ))
-        var offices_button := UiBuilder.major_button("VIEW OFFICES")
+        var warning := UiBuilder.info_card(
+            "Office full", "Move to a larger office before making another hire.", "warning")
+        warning.theme_type_variation = &"WarningPanel"
+        var warning_stack := warning.get_child(0) as VBoxContainer
+        var offices_button := UiBuilder.button("VIEW OFFICES")
         offices_button.pressed.connect(func():
             get_tree().change_scene_to_file("res://scenes/studio/OfficeScreen.tscn"))
-        list.add_child(offices_button)
-        list.add_child(UiBuilder.divider())
+        warning_stack.add_child(offices_button)
+        list.add_child(warning)
 
     if not _result_message.is_empty():
-        list.add_child(UiBuilder.label(_result_message, 15, true))
-        list.add_child(UiBuilder.divider())
+        var result := UiBuilder.info_card("Recruitment update", _result_message, "info")
+        result.theme_type_variation = (
+            &"PositivePanel" if _result_message.contains("accepted") else &"WarningPanel")
+        list.add_child(result)
 
+    list.add_child(UiBuilder.divider())
+    list.add_child(UiBuilder.section_header(
+        "Candidates", "Compare the strongest skills, then expand a profile before making an offer."))
     if GameState.labor_candidates.is_empty():
-        list.add_child(UiBuilder.label(
-            "No candidates remain in this rotation. New talent will arrive soon.", 15, true
-        ))
+        list.add_child(UiBuilder.empty_state(
+            "No candidates this rotation",
+            "The labor market refreshes automatically when the countdown reaches zero.")["panel"])
         return
 
-    for candidate in GameState.labor_candidates:
-        _candidate_card(candidate)
+    if _expanded != null and GameState.labor_candidates.has(_expanded):
+        list.add_child(_candidate_panel(_expanded, true))
+        _offer_controls(_expanded)
+        if GameState.labor_candidates.size() > 1:
+            list.add_child(UiBuilder.section_header("More candidates"))
 
-func _candidate_card(candidate: Employee) -> void:
+    var grid := GridContainer.new()
+    grid.columns = 2 if get_viewport_rect().size.x >= 800.0 else 1
+    grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    for candidate in GameState.labor_candidates:
+        if candidate == _expanded:
+            continue
+        grid.add_child(_candidate_panel(candidate, false))
+    if grid.get_child_count() > 0:
+        list.add_child(grid)
+
+func _candidate_panel(candidate: Employee, expanded: bool) -> PanelContainer:
     var rarity := DataManager.get_candidate_rarity(candidate.rarity_id)
+    var panel := PanelContainer.new()
+    panel.theme_type_variation = &"SpecialPanel" if not str(rarity.get("card_label", "")).is_empty() else &"ElevatedPanel"
+    panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    panel.custom_minimum_size = Vector2(300, 0)
+    var stack := VBoxContainer.new()
+    stack.add_theme_constant_override("separation", 9)
+
     var card_label := str(rarity.get("card_label", ""))
     if not card_label.is_empty():
-        list.add_child(UiBuilder.label(card_label, 15, true))
-    list.add_child(UiBuilder.employee_header(candidate, EmployeeManager.job_title(candidate)))
+        stack.add_child(UiBuilder.status_chip(card_label, "special"))
+    stack.add_child(UiBuilder.employee_header(
+        candidate, "%s · age %d" % [EmployeeManager.job_title(candidate), candidate.age]))
     var tier := EmployeeManager.reputation_tier(candidate)
     if not tier.is_empty():
-        list.add_child(UiBuilder.label(
-            "INDUSTRY REPUTATION: %s\nA known name -- expect to pay for it." % tier, 13, true))
+        stack.add_child(UiBuilder.status_chip("Industry reputation: %s" % tier, "special"))
     if not candidate.trait_ids.is_empty():
         var trait_id := candidate.trait_ids[0]
-        list.add_child(UiBuilder.label("%s\n%s" % [
-            EmployeeManager.trait_name(trait_id).to_upper(),
-            EmployeeManager.trait_description(trait_id)
-        ], 13))
+        stack.add_child(UiBuilder.info_card(
+            EmployeeManager.trait_name(trait_id),
+            EmployeeManager.trait_description(trait_id), "traits"))
 
-    var highlights := _highlights(candidate)
-    list.add_child(UiBuilder.label(
-        "%s\nAge          %d\n\nSalary       $%s / month\nHiring fee   $%s" % [
-            highlights,
-            candidate.age,
-            Format.exact(candidate.salary),
-            Format.exact(candidate.hiring_fee)
-        ], 14
-    ))
+    var highlights := _highlight_values(candidate)
+    var skill_items: Array = []
+    for highlight in highlights:
+        skill_items.append({"icon": "skills", "label": str(highlight["name"]),
+            "value": str(highlight["value"])})
+    stack.add_child(UiBuilder.stat_grid(skill_items, 3))
+    stack.add_child(UiBuilder.stat_grid([
+        {"icon": "payroll", "label": "Salary", "value": "%s / mo" %
+            Format.money_exact(candidate.salary)},
+        {"icon": "cash", "label": "Hiring fee", "value":
+            Format.money_exact(candidate.hiring_fee)}
+    ], 2))
 
-    if _expanded == candidate:
-        list.add_child(UiBuilder.label(_full_profile(candidate), 13))
-        _offer_controls(candidate)
+    if expanded:
+        var profile := UiBuilder.label(_full_profile(candidate), 13)
+        profile.theme_type_variation = &"MutedLabel"
+        stack.add_child(profile)
     else:
-        var view_button := UiBuilder.button("VIEW")
+        var view_button := UiBuilder.button("VIEW CANDIDATE")
+        view_button.tooltip_text = "Review the full profile and prepare a salary offer"
         view_button.pressed.connect(_view.bind(candidate))
-        list.add_child(view_button)
-    list.add_child(UiBuilder.divider())
+        stack.add_child(view_button)
+    panel.add_child(stack)
+    return panel
 
-func _highlights(candidate: Employee) -> String:
+func _highlight_values(candidate: Employee) -> Array:
     var values: Array = []
     for field in EmployeeManager.SKILL_FIELDS:
         values.append({"name": str(field).capitalize(), "value": int(candidate.get(field))})
     for field in ["creativity", "teamwork", "quality", "leadership"]:
         values.append({"name": str(field).capitalize(), "value": int(candidate.get(field))})
     values.sort_custom(func(a, b): return int(a["value"]) > int(b["value"]))
-    var lines: Array[String] = []
-    for index in mini(3, values.size()):
-        lines.append("%-13s %d" % [values[index]["name"], values[index]["value"]])
-    return "\n".join(lines)
+    return values.slice(0, mini(3, values.size()))
 
 func _full_profile(candidate: Employee) -> String:
-    return "Programming %d   Design %d   Art %d\nWriting %d   Audio %d   Production %d\nTesting %d   Research %d\n\nCreativity %d   Speed %d   Quality %d\nTeamwork %d   Adaptability %d   Leadership %d" % [
+    return "FULL PROFILE\nProgramming %d   Design %d   Art %d\nWriting %d   Audio %d   Production %d\nTesting %d   Research %d\n\nCreativity %d   Speed %d   Quality %d\nTeamwork %d   Adaptability %d   Leadership %d" % [
         candidate.programming, candidate.design, candidate.art, candidate.writing,
         candidate.audio, candidate.production, candidate.testing, candidate.research,
         candidate.creativity, candidate.speed, candidate.quality, candidate.teamwork,
-        candidate.adaptability, candidate.leadership
-    ]
+        candidate.adaptability, candidate.leadership]
 
 func _offer_controls(candidate: Employee) -> void:
     var chance := RecruitmentSimulator.acceptance_probability(
-        candidate.salary, _offer_salary, LaborMarketManager.company_attractiveness()
-    )
-    list.add_child(UiBuilder.label("YOUR OFFER", 13, true))
+        candidate.salary, _offer_salary, LaborMarketManager.company_attractiveness())
+    list.add_child(UiBuilder.heading("PAYROLL FORECAST"))
+    var current := EmployeeManager.monthly_expenses()
+    var after := EmployeeManager.forecast_monthly_expenses(_offer_salary)
+    var cash_after_fee := GameState.cash - candidate.hiring_fee
+    var runway := FinanceManager.cash_runway_months(cash_after_fee, int(after["total"]))
+    list.add_child(UiBuilder.label(
+        "CURRENT MONTHLY BURN\n%s\n\nAfter Hire\n%s\n\nCash Runway\n%s" % [
+            Format.money_exact(int(current["total"])),
+            Format.money_exact(int(after["total"])),
+            Format.runway_label(runway)], 14, true))
 
+    var offer_panel := PanelContainer.new()
+    offer_panel.theme_type_variation = &"ElevatedPanel"
+    var stack := VBoxContainer.new()
+    stack.add_child(UiBuilder.heading("Your salary offer"))
     var row := HBoxContainer.new()
     row.add_theme_constant_override("separation", 8)
-    var minus := UiBuilder.button("-")
+    var minus := UiBuilder.button("−")
     minus.custom_minimum_size.x = 58
+    minus.tooltip_text = "Lower monthly salary offer"
     minus.disabled = _offer_salary <= _minimum_offer(candidate)
     minus.pressed.connect(_change_offer.bind(candidate, -50))
     row.add_child(minus)
-    var amount := UiBuilder.label("$%s / month" % Format.exact(_offer_salary), 17, true)
+    var amount := UiBuilder.label("%s / month" % Format.money_exact(_offer_salary), 20, true)
+    amount.theme_type_variation = &"HeroValue"
     amount.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     amount.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
     row.add_child(amount)
     var plus := UiBuilder.button("+")
     plus.custom_minimum_size.x = 58
+    plus.tooltip_text = "Raise monthly salary offer"
     plus.disabled = _offer_salary >= _maximum_offer(candidate)
     plus.pressed.connect(_change_offer.bind(candidate, 50))
     row.add_child(plus)
-    list.add_child(row)
-
-    list.add_child(UiBuilder.label("Chance of acceptance: %s" %
-        RecruitmentSimulator.acceptance_label(chance), 14, true))
-    _payroll_forecast(candidate)
+    stack.add_child(row)
+    stack.add_child(UiBuilder.status_chip(
+        "Acceptance chance: %s" % RecruitmentSimulator.acceptance_label(chance),
+        "positive" if chance >= 0.65 else "warning"))
     var offer_button := UiBuilder.major_button("MAKE OFFER")
     offer_button.disabled = (
         not FinanceManager.can_afford(candidate.hiring_fee)
-        or not OfficeManager.has_capacity()
-    )
+        or not OfficeManager.has_capacity())
+    offer_button.tooltip_text = (
+        "Pay the hiring fee and send this salary offer"
+        if not offer_button.disabled else "Requires office space and enough cash for the hiring fee")
     offer_button.pressed.connect(_make_offer.bind(candidate))
-    list.add_child(offer_button)
-
-func _payroll_forecast(candidate: Employee) -> void:
-    ## What this specific offer would do to the books, before it's made.
-    ## Nothing here changes what the offer costs -- it's purely informational.
-    var current := EmployeeManager.monthly_expenses()
-    var after := EmployeeManager.forecast_monthly_expenses(_offer_salary)
-    var cash_after_fee := GameState.cash - candidate.hiring_fee
-    var runway := FinanceManager.cash_runway_months(cash_after_fee, int(after["total"]))
-
-    list.add_child(UiBuilder.label("PAYROLL FORECAST", 13, true))
-    list.add_child(UiBuilder.label(
-        "CURRENT MONTHLY BURN\n%s\n\nAfter Hire\n%s\n\nCash Runway\n%s" % [
-            Format.money_exact(int(current["total"])),
-            Format.money_exact(int(after["total"])),
-            Format.runway_label(runway)
-        ], 14, true
-    ))
+    stack.add_child(offer_button)
+    offer_panel.add_child(stack)
+    list.add_child(offer_panel)
 
 func _view(candidate: Employee) -> void:
     _expanded = candidate
@@ -172,8 +206,7 @@ func _view(candidate: Employee) -> void:
 
 func _change_offer(candidate: Employee, delta: int) -> void:
     _offer_salary = clampi(
-        _offer_salary + delta, _minimum_offer(candidate), _maximum_offer(candidate)
-    )
+        _offer_salary + delta, _minimum_offer(candidate), _maximum_offer(candidate))
     _build()
 
 func _make_offer(candidate: Employee) -> void:
@@ -197,6 +230,9 @@ func _minimum_offer(candidate: Employee) -> int:
 
 func _maximum_offer(candidate: Employee) -> int:
     return int(ceil(float(candidate.salary) * 1.50 / 50.0)) * 50
+
+func _columns(wide_count: int) -> int:
+    return wide_count if get_viewport_rect().size.x >= 800.0 else min(2, wide_count)
 
 func _on_market_refreshed() -> void:
     _expanded = null

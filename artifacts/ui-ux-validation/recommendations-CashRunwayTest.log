@@ -1,0 +1,51 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Identifier "AwardsSimulator" not declared in the current scope.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:50)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "ceremony" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:50)
+SCRIPT ERROR: Parse Error: Identifier "AwardsSimulator" not declared in the current scope.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:57)
+SCRIPT ERROR: Parse Error: Identifier "AwardsSimulator" not declared in the current scope.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:140)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/World.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/SaveManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/TeamManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/EmployeeManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/ResearchManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/models/Employee.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/GameState.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/TimeManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/models/GameProject.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/EventBus.gd:0)
+ERROR: Failed to load script "res://autoload/EventBus.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+ERROR: Failed to instantiate an autoload, script 'res://autoload/AwardsManager.gd' does not inherit from 'Node'.
+   at: start (main/main.cpp:4539)
+=== CashRunwayTest ===
+
+-- the estimate is exactly cash divided by burn --
+
+-- a real runway reads as N.N months --
+
+-- no burn at all is indefinite, not zero --
+
+-- an already-negative balance reads as overdrawn --
+
+-- the home screen leads with runway, not just the raw cash figure --
+
+-- a new hire raises the burn shown, in real time --
+
+-- a frightening runway is information, not a gate --
+
+CashRunwayTest PASSED (23 checks)

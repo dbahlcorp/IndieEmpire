@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+=== OfficeFloorTest ===
+
+-- physical office layouts --
+
+-- modular employee portraits --
+
+-- visible development output --
+
+-- employee conditions have visible reactions --
+
+-- active work becomes visible --
+
+-- employees move through the room --
+
+-- new hire arrival and workstation assignment --
+
+-- simulation-backed visual states --
+
+-- office moves feel physical --
+
+-- save/load visual reconstruction --
+
+OfficeFloorTest PASSED (264 checks)

@@ -97,10 +97,13 @@ signal research_completed(tech_id: String, display_name: String)
 signal technology_researched(tech_id: String, display_name: String)
 signal engine_project_started(name: String)
 signal engine_completed(engine_id: String, name: String)
-## Reserved for the awards presentation layer. PA.8 can provide feedback now;
-## a later awards simulation can emit these without changing AudioManager.
+## Annual Game Awards (PA.11). award_nominated / award_won fire once per
+## category per game as a ceremony is applied; awards_ceremony_held fires once
+## with the whole year's result (the GameState.award_ceremonies entry) for the
+## news feed and the ceremony screen.
 signal award_nominated(project: GameProject, award_name: String)
 signal award_won(project: GameProject, award_name: String)
+signal awards_ceremony_held(ceremony: Dictionary)
 
 # --- Contextual onboarding ---
 signal tutorial_presented(id: String)

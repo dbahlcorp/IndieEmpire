@@ -1,0 +1,145 @@
+[
+  {
+    "id": "goty",
+    "name": "Game of the Year",
+    "kind": "overall",
+    "min_eligible": 4,
+    "min_review": 7.5,
+    "nominees": 5,
+    "weights": {
+      "review": 0.28,
+      "reception": 0.22,
+      "innovation": 0.18,
+      "impact": 0.17,
+      "polish": 0.15
+    }
+  },
+  {
+    "id": "best_rpg",
+    "name": "Best RPG",
+    "kind": "genre",
+    "genre_id": "rpg",
+    "min_eligible": 3,
+    "min_review": 6.5,
+    "nominees": 4,
+    "weights": {
+      "review": 0.34,
+      "gameplay": 0.24,
+      "story": 0.22,
+      "innovation": 0.20
+    }
+  },
+  {
+    "id": "best_action",
+    "name": "Best Action Game",
+    "kind": "genre",
+    "genre_id": "action",
+    "min_eligible": 3,
+    "min_review": 6.5,
+    "nominees": 4,
+    "weights": {
+      "review": 0.34,
+      "gameplay": 0.30,
+      "performance": 0.16,
+      "polish": 0.20
+    }
+  },
+  {
+    "id": "best_strategy",
+    "name": "Best Strategy Game",
+    "kind": "genre",
+    "genre_id": "strategy",
+    "min_eligible": 3,
+    "min_review": 6.5,
+    "nominees": 4,
+    "weights": {
+      "review": 0.34,
+      "gameplay": 0.28,
+      "balance": 0.22,
+      "innovation": 0.16
+    }
+  },
+  {
+    "id": "best_simulation",
+    "name": "Best Simulation Game",
+    "kind": "genre",
+    "genre_id": "simulation",
+    "min_eligible": 3,
+    "min_review": 6.5,
+    "nominees": 4,
+    "weights": {
+      "review": 0.34,
+      "gameplay": 0.24,
+      "technology": 0.20,
+      "balance": 0.22
+    }
+  },
+  {
+    "id": "best_technology",
+    "name": "Best Technology",
+    "kind": "craft",
+    "min_eligible": 3,
+    "min_review": 6.0,
+    "nominees": 4,
+    "weights": {
+      "technology": 0.40,
+      "engine": 0.24,
+      "innovation": 0.14,
+      "stability": 0.22
+    }
+  },
+  {
+    "id": "best_visuals",
+    "name": "Best Visuals",
+    "kind": "craft",
+    "min_eligible": 3,
+    "min_review": 6.0,
+    "nominees": 4,
+    "weights": {
+      "visuals": 0.50,
+      "polish": 0.26,
+      "technology": 0.24
+    }
+  },
+  {
+    "id": "best_narrative",
+    "name": "Best Narrative",
+    "kind": "craft",
+    "min_eligible": 3,
+    "min_review": 6.0,
+    "nominees": 4,
+    "weights": {
+      "story": 0.34,
+      "writing": 0.34,
+      "review": 0.16,
+      "innovation": 0.16
+    }
+  },
+  {
+    "id": "most_innovative",
+    "name": "Most Innovative",
+    "kind": "special",
+    "min_eligible": 3,
+    "min_review": 6.0,
+    "nominees": 4,
+    "weights": {
+      "innovation": 0.58,
+      "review": 0.22,
+      "gameplay": 0.20
+    }
+  },
+  {
+    "id": "best_indie",
+    "name": "Best Indie Game",
+    "kind": "special",
+    "min_eligible": 3,
+    "min_review": 6.5,
+    "nominees": 4,
+    "eligibility": ["team_size <= 5"],
+    "weights": {
+      "review": 0.40,
+      "innovation": 0.30,
+      "gameplay": 0.30
+    }
+  }
+]

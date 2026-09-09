@@ -596,6 +596,40 @@ Architecture is prepared for remakes, remasters, spin-offs and expansions as
 future entry kinds without further model changes, but only the sequel is
 implemented here.
 
+## The Annual Game Awards
+
+Once a year a fictional industry ceremony judges the previous calendar year's
+releases. Categories are authored in `data/awards.json` -- Game of the Year,
+Best RPG / Action / Strategy / Simulation, Best Technology, Best Visuals, Best
+Narrative, Most Innovative and Best Indie Game -- each with a review-score
+floor, a minimum number of eligible releases before it forms at all, and a set
+of weights over the underlying craft it is about. A narrative award scores
+story and writing execution, not the review number; Best Technology scores the
+engine, stability and innovation; Game of the Year scores overall quality,
+reception and commercial reach. `AwardsSimulator` is the pure maths and
+`AwardsManager` owns the yearly cadence off `World`'s tick, the same way the
+platform and unlock systems do. With no rival studios yet (M4) every eligible
+release is one of the player's own, so a ceremony that forms is the studio's to
+sweep -- the eligibility pool simply widens when competitors arrive.
+
+Winning is a prestige goal, not an economic lever. The rewards are one-off and
+touch only soft systems: a capped bump to consumer reputation, fans, employer
+(recruiting) reputation and studio-wide morale, plus a little renewed fan
+interest for a winning entry's franchise. Nothing here ever grants cash or
+changes a game's quality, and every per-ceremony figure is capped so a clean
+sweep is a good year rather than a windfall -- `AwardsEconomyTest` sweeps
+fifteen dominant years and pins that the awards contribution stays a rounding
+error next to what the catalogue earns on its own.
+
+Every nomination and win is kept permanently on `GameState.award_ceremonies`
+and, for the credited team of a winning game, on each person's career record
+(`Employee.awards`). The short annual ceremony screen lists each category's
+nominees and winner and the prestige the night brought; a game's detail page
+shows the awards it took; the Records screen carries the full history and the
+Company screen's statistics show total nominations, total awards and Game of
+the Year wins. Save format is v24; older careers load with an empty history and
+begin judging from the year they are opened in.
+
 ## M6 foundation
 
 The Engine Lab lets studios research era-appropriate technology and combine

@@ -1,0 +1,41 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Function "_award_ceremonies()" not found in base self.
+   at: GDScript::reload (res://autoload/SaveManager.gd:511)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/TeamManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/EmployeeManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/ResearchManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/models/Employee.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/GameState.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/TimeManager.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/models/GameProject.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/EventBus.gd:0)
+ERROR: Failed to load script "res://autoload/EventBus.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Parse Error: Identifier "AwardsSimulator" not declared in the current scope.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:50)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "ceremony" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:50)
+SCRIPT ERROR: Parse Error: Identifier "AwardsSimulator" not declared in the current scope.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:57)
+SCRIPT ERROR: Parse Error: Identifier "AwardsSimulator" not declared in the current scope.
+   at: GDScript::reload (res://autoload/AwardsManager.gd:140)
+ERROR: Failed to load script "res://autoload/AwardsManager.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+ERROR: Failed to instantiate an autoload, script 'res://autoload/AwardsManager.gd' does not inherit from 'Node'.
+   at: start (main/main.cpp:4539)
+ERROR: Failed to instantiate an autoload, script 'res://autoload/SaveManager.gd' does not inherit from 'Node'.
+   at: start (main/main.cpp:4539)
+=== CeoCustomizationTest ===
+
+-- CEO appearance --
+
+CeoCustomizationTest PASSED (8 checks)

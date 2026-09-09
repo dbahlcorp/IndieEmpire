@@ -1,0 +1,23 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+=== PayrollForecastTest ===
+
+-- the forecast adds exactly the offered salary --
+
+-- software licences scale with the would-be new hire too --
+
+-- cash runway is cash over burn, in months --
+
+-- the fee is spent before the runway clock starts --
+
+-- no burn at all does not divide by zero --
+
+-- a negative balance under a real burn rate is not confused with no burn at all --
+
+-- viewing a candidate shows the forecast --
+
+-- raising the offer raises the forecast --
+
+-- a frightening forecast is information, not a gate --
+
+PayrollForecastTest PASSED (23 checks)

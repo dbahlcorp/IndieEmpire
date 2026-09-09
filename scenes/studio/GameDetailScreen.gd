@@ -68,6 +68,7 @@ func _build() -> void:
 
     _verdict()
     _franchise()
+    _awards()
     _reviews()
     _sales()
     _money()
@@ -116,6 +117,18 @@ func _franchise() -> void:
         ScreenRouter.open_franchise(franchise.id, "res://scenes/studio/GameDetailScreen.tscn")
         get_tree().change_scene_to_file("res://scenes/studio/FranchiseDetailScreen.tscn"))
     list.add_child(view)
+    list.add_child(UiBuilder.divider())
+
+func _awards() -> void:
+    var entries := CompanyStats.awards_for_game(game.id)
+    if entries.is_empty():
+        return
+    list.add_child(UiBuilder.heading("AWARDS"))
+    var text := ""
+    for entry in entries:
+        var verb := "Won" if bool(entry["won"]) else "Nominated"
+        text += "%s — %s (%d)\n" % [str(entry["name"]), verb, int(entry["year"]) + 1]
+    list.add_child(UiBuilder.label(text.strip_edges(), 15))
     list.add_child(UiBuilder.divider())
 
 func _actions() -> void:

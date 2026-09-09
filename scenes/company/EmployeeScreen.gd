@@ -56,8 +56,24 @@ func _build() -> void:
                 EmployeeManager.trait_description(trait_id)], 13))
             list.add_child(trait_panel)
 
+    _awards_section(employee)
     _workstation_section(employee)
     _layoff_section(employee)
+
+func _awards_section(employee: Employee) -> void:
+    if employee.awards.is_empty():
+        return
+    list.add_child(UiBuilder.divider())
+    list.add_child(UiBuilder.status_row("reputation", "AWARDS", 16))
+    var recent := employee.awards.duplicate()
+    recent.reverse()
+    var text := ""
+    for entry in recent:
+        var game := GameState.find_game(str(entry.get("project_id", "")))
+        var title := game.title if game != null else "a game"
+        text += "%s (%d)\n  for %s\n" % [
+            str(entry.get("name", "")), int(entry.get("year", 0)) + 1, title]
+    list.add_child(UiBuilder.label(text.strip_edges(), 14))
 
 func _contribution_section(employee: Employee) -> void:
     ## Not the whole simulation -- attributes, experience, equipment and

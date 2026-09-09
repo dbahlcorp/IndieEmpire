@@ -39,6 +39,7 @@ func run() -> void:
     _game_features()
     _employee_traits()
     _studio_events()
+    _awards()
     _office_content()
 
 func _index() -> void:
@@ -76,6 +77,7 @@ func _no_duplicate_ids() -> void:
         ["offices", DataManager.offices],
         ["office_customizations", DataManager.office_customizations],
         ["specializations", DataManager.specializations],
+        ["awards", DataManager.awards],
     ]:
         check_empty(_dupe_ids(pair[1]), "%s: duplicate ids %s" % [pair[0], _dupe_ids(pair[1])])
 
@@ -372,6 +374,46 @@ func _check_event_effect(event_id: String, etype: String, effect: Dictionary) ->
                 "event %s dev_efficiency swing stays restrained" % event_id)
         _:
             check(false, "event %s has an unknown effect kind '%s'" % [event_id, kind])
+
+func _awards() -> void:
+    section("game awards")
+    check_greater(float(DataManager.awards.size()), 7.0,
+        "the awards catalogue covers the spec's categories")
+    var known_signals := ["review", "gameplay", "technology", "visuals", "graphics",
+        "story", "writing", "narrative", "sound", "innovation", "polish", "performance",
+        "balance", "stability", "engine", "reception", "impact", "commercial"]
+    var elig_vars := ["review", "sales", "innovation", "bugs", "fans", "team_size",
+        "size_index", "genre"]
+    var has_goty := false
+    for award in DataManager.awards:
+        var id := str(award.get("id", "?"))
+        if id == "goty":
+            has_goty = true
+        check(not str(award.get("name", "")).strip_edges().is_empty(),
+            "award %s has a display name" % id)
+        check(int(award.get("min_eligible", 3)) >= 1, "award %s needs at least one eligible game" % id)
+        check(int(award.get("nominees", 4)) >= 1, "award %s shortlists someone" % id)
+        var genre_id := str(award.get("genre_id", ""))
+        check(genre_id.is_empty() or _genre_ids.has(genre_id),
+            "award %s genre %s exists" % [id, genre_id])
+        var weights: Dictionary = award.get("weights", {})
+        check(not weights.is_empty(), "award %s scores on something" % id)
+        for key in weights:
+            check(str(key) in known_signals, "award %s weight key %s is a known signal" % [id, key])
+            check(float(weights[key]) > 0.0, "award %s weight %s is positive" % [id, key])
+        for raw in award.get("eligibility", []):
+            var condition := str(raw)
+            var op := ""
+            for candidate in [">=", "<=", "==", "!=", ">", "<"]:
+                if condition.contains(" %s " % candidate):
+                    op = candidate
+                    break
+            check(not op.is_empty(), "award %s eligibility '%s' has an operator" % [id, condition])
+            if op.is_empty():
+                continue
+            var lhs := condition.split(" %s " % op, false)[0].strip_edges()
+            check(lhs in elig_vars, "award %s eligibility variable %s is known" % [id, lhs])
+    check(has_goty, "there is a Game of the Year category")
 
 func _office_content() -> void:
     section("offices and customizations")

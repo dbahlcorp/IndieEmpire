@@ -140,4 +140,57 @@ static func summary_lines() -> Array[String]:
     lines.append("Total sales: %s" % Format.count(lifetime_units()))
     lines.append("Total revenue: $%s" % Format.count(lifetime_revenue()))
     lines.append("Average review: %.1f" % average_review())
+    if not GameState.award_ceremonies.is_empty():
+        lines.append("Award nominations: %d" % total_award_nominations())
+        lines.append("Awards won: %d" % total_awards_won())
+        lines.append("Game of the Year wins: %d" % goty_wins())
     return lines
+
+# --- Annual Game Awards (PA.11) --------------------------------------------
+## Read straight off GameState.award_ceremonies. With no rival studios yet
+## every nominee is one of the studio's own games, so every nominee slot is a
+## studio nomination and every category winner is a studio award.
+
+static func total_award_nominations() -> int:
+    var total := 0
+    for ceremony in GameState.award_ceremonies:
+        for category in ceremony.get("categories", []):
+            total += (category.get("nominees", []) as Array).size()
+    return total
+
+static func total_awards_won() -> int:
+    var total := 0
+    for ceremony in GameState.award_ceremonies:
+        total += (ceremony.get("categories", []) as Array).size()
+    return total
+
+static func goty_wins() -> int:
+    var total := 0
+    for ceremony in GameState.award_ceremonies:
+        for category in ceremony.get("categories", []):
+            if str(category.get("award_id", "")) == "goty":
+                total += 1
+    return total
+
+static func awards_for_game(game_id: String) -> Array:
+    ## [{award_id, name, year, won}] for every nomination and win a game
+    ## collected, newest first.
+    var out: Array = []
+    for ceremony in GameState.award_ceremonies:
+        var year := int(ceremony.get("year", 0))
+        for category in ceremony.get("categories", []):
+            var nominated := false
+            for nominee in category.get("nominees", []):
+                if str(nominee.get("game_id", "")) == game_id:
+                    nominated = true
+                    break
+            if not nominated:
+                continue
+            out.append({
+                "award_id": str(category.get("award_id", "")),
+                "name": str(category.get("name", "")),
+                "year": year,
+                "won": str(category.get("winner_id", "")) == game_id,
+            })
+    out.reverse()
+    return out

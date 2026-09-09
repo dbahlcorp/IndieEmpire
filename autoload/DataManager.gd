@@ -13,6 +13,10 @@ var offices: Array = []
 var employee_traits: Array = []
 var office_customizations: Array = []
 var studio_events: Array = []
+## Annual Game Awards categories (PA.11): id, display name, eligibility floor,
+## nominee count and the quality-signal weights the winner is scored on. See
+## AwardsSimulator and AwardsManager.
+var awards: Array = []
 var game_features: Array = []
 ## The technology tree: nine branches of researchable capability, read through
 ## get_technology(). Replaces the old hardcoded EngineManager.FEATURES -- see
@@ -56,6 +60,7 @@ func _ready() -> void:
     employee_traits = _load_json_array("res://data/employee_traits.json")
     office_customizations = _load_json_array("res://data/office_customizations.json")
     studio_events = _load_json_array("res://data/studio_events.json")
+    awards = _load_json_array("res://data/awards.json")
     game_features = _load_json_array("res://data/game_features.json")
     technologies = _load_json_array("res://data/technologies.json")
     specializations = _load_json_array("res://data/specializations.json")
@@ -121,6 +126,9 @@ func get_office_customization(id: String) -> Dictionary:
 
 func get_studio_event(id: String) -> Dictionary:
     return _find_by_id(studio_events, id)
+
+func get_award(id: String) -> Dictionary:
+    return _find_by_id(awards, id)
 
 func get_game_feature(id: String) -> Dictionary:
     return _find_by_id(game_features, id)

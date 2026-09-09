@@ -10,7 +10,7 @@ signal game_saved(slot: String)
 const SAVE_DIR := "user://saves"
 const AUTOSAVE := "autosave"
 const MANUAL_SLOTS := ["save_1", "save_2", "save_3"]
-const SAVE_VERSION := 23
+const SAVE_VERSION := 24
 const MIN_SUPPORTED_VERSION := 5
 
 var has_active_company: bool = false
@@ -228,6 +228,10 @@ func _collect_save_data() -> Dictionary:
         "franchises": {
             "next_series_number": GameState.next_series_number,
             "list": GameState.franchises.map(func(f: Franchise): return f.to_dict())
+        },
+        "awards": {
+            "last_awards_year": GameState.last_awards_year,
+            "ceremonies": GameState.award_ceremonies
         }
     }
 
@@ -499,6 +503,13 @@ func _apply_save_data(data: Dictionary) -> void:
     if int(data.get("version", 0)) < 23:
         FranchiseManager.backfill_from_history()
 
+    # v24: Annual Game Awards (PA.11). A save from before it has no ceremonies;
+    # last_awards_year defaults to 0, which AwardsManager reads as "adopt the
+    # current year without retro-awarding a whole career of back-years".
+    var awards_block: Dictionary = data.get("awards", {})
+    GameState.last_awards_year = int(awards_block.get("last_awards_year", 0))
+    GameState.award_ceremonies = _award_ceremonies(awards_block.get("ceremonies", []))
+
     GameState.active_projects.clear()
     for entry in data.get("active_projects", []):
         if entry is Dictionary:
@@ -525,6 +536,51 @@ func _apply_save_data(data: Dictionary) -> void:
     GameState.select_project(selected)
 
     UnlockManager.refresh(false)
+
+func _award_ceremonies(source) -> Array:
+    ## Coerce the awards history back to native types -- JSON has no integers, so
+    ## every year would otherwise return as a float.
+    var out: Array = []
+    if not (source is Array):
+        return out
+    for entry in source:
+        if not (entry is Dictionary):
+            continue
+        var categories: Array = []
+        for raw_category in entry.get("categories", []):
+            if not (raw_category is Dictionary):
+                continue
+            var nominees: Array = []
+            for raw_nominee in raw_category.get("nominees", []):
+                if raw_nominee is Dictionary:
+                    nominees.append({
+                        "game_id": str(raw_nominee.get("game_id", "")),
+                        "title": str(raw_nominee.get("title", "")),
+                        "score": float(raw_nominee.get("score", 0.0)),
+                    })
+            categories.append({
+                "award_id": str(raw_category.get("award_id", "")),
+                "name": str(raw_category.get("name", "")),
+                "kind": str(raw_category.get("kind", "special")),
+                "nominees": nominees,
+                "winner_id": str(raw_category.get("winner_id", "")),
+                "winner_title": str(raw_category.get("winner_title", "")),
+            })
+        var rewards_source = entry.get("rewards", {})
+        var rewards: Dictionary = {}
+        if rewards_source is Dictionary:
+            for key in ["wins", "goty_wins", "nominations", "fans", "morale"]:
+                rewards[key] = int(rewards_source.get(key, 0))
+            for key in ["reputation", "employer_reputation"]:
+                rewards[key] = float(rewards_source.get(key, 0.0))
+        out.append({
+            "year": int(entry.get("year", 0)),
+            "held_year": int(entry.get("held_year", 0)),
+            "seen": bool(entry.get("seen", true)),
+            "categories": categories,
+            "rewards": rewards,
+        })
+    return out
 
 func _int_dictionary(source) -> Dictionary:
     # JSON returns every number as a float; counters must stay integers.

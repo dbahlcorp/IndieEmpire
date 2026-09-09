@@ -60,6 +60,30 @@ func post_founding() -> void:
         "%s has founded %s with %s in the bank." % [
             GameState.founder_name, GameState.company_name, Format.money_exact(GameState.cash)])
 
+func post_awards_ceremony(ceremony: Dictionary) -> void:
+    ## The annual Game Awards (PA.11). One story listing the studio's haul and
+    ## the Game of the Year winner if it took one.
+    var year := int(ceremony.get("year", 0)) + 1
+    var categories: Array = ceremony.get("categories", [])
+    if categories.is_empty():
+        return
+    var lines: Array[String] = []
+    var goty := ""
+    for category in categories:
+        var name := str(category.get("name", ""))
+        var winner := str(category.get("winner_title", ""))
+        lines.append("%s — %s" % [name, winner])
+        if str(category.get("award_id", "")) == "goty":
+            goty = winner
+    var wins := categories.size()
+    var headline := "%s TAKES %d AT THE %d GAME AWARDS" % [
+        GameState.company_name.to_upper(), wins, year]
+    if not goty.is_empty():
+        headline = "%s NAMED %d GAME OF THE YEAR" % [goty.to_upper(), year]
+    post(INDUSTRY, headline,
+        "The %d Game Awards recognised %s.\n\n%s" % [
+            year, GameState.company_name, "\n".join(lines)])
+
 func post_trend_shift(risen: String, gain: float, fallen: String, drop: float) -> void:
     if not risen.is_empty() and gain >= absf(drop):
         post(MARKET, "%s SALES SURGE" % risen.to_upper(),

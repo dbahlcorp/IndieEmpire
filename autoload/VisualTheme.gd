@@ -25,10 +25,12 @@ const WARNING := Color("#d77b38")
 const SURFACE_DARK := Color("#18363b")
 
 var game_theme: Theme
+var _focus_refresh_queued := false
 
 func _ready() -> void:
     game_theme = _build_theme()
     get_tree().scene_changed.connect(func(): _style_scene(get_tree().current_scene))
+    get_tree().tree_changed.connect(_queue_focus_refresh)
     call_deferred("_style_scene", get_tree().current_scene)
 
 func _build_theme() -> Theme:
@@ -205,6 +207,7 @@ func _style_scene(root: Node) -> void:
     _add_studio_context(control)
     _apply_mobile_safe_area(control)
     _style_tree(control)
+    call_deferred("_wire_focus_scene", control)
     _reveal_scene(control)
     if control.name != "StudioScreen":
         _fit_management_screen(control)
@@ -259,6 +262,8 @@ func _style_button(button: Button) -> void:
         button.set_meta("motion_hooked", true)
         button.mouse_entered.connect(_button_hover.bind(button, true))
         button.mouse_exited.connect(_button_hover.bind(button, false))
+        button.focus_entered.connect(_button_hover.bind(button, true))
+        button.focus_exited.connect(_button_hover.bind(button, false))
 
 func _style_label(label: Label) -> void:
     var node_name := String(label.name)
@@ -321,6 +326,41 @@ func _button_hover(button: Button, entered: bool) -> void:
     var tween := button.create_tween()
     tween.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
     tween.tween_property(button, "scale", Vector2.ONE * (1.015 if entered else 1.0), 0.12)
+
+func _queue_focus_refresh() -> void:
+    if _focus_refresh_queued:
+        return
+    _focus_refresh_queued = true
+    call_deferred("_refresh_focus_navigation")
+
+func _refresh_focus_navigation() -> void:
+    _focus_refresh_queued = false
+    var root := get_tree().current_scene as Control
+    if root != null:
+        _style_tree(root)
+        _wire_focus_scene(root)
+
+func _wire_focus_scene(root: Control) -> void:
+    if root != null and is_instance_valid(root) and root.is_inside_tree():
+        UiFocus.wire(root)
+
+func _unhandled_input(event: InputEvent) -> void:
+    if not (event is InputEventJoypadButton or event is InputEventJoypadMotion):
+        return
+    if not (event.is_action_pressed("ui_up") or event.is_action_pressed("ui_down")
+            or event.is_action_pressed("ui_left") or event.is_action_pressed("ui_right")
+            or event.is_action_pressed("ui_accept")):
+        return
+    var viewport := get_viewport()
+    if viewport.gui_get_focus_owner() != null:
+        return
+    var root := get_tree().current_scene as Control
+    if root == null:
+        return
+    var first := UiFocus.first(root)
+    if first != null:
+        first.grab_focus()
+        viewport.set_input_as_handled()
 
 func _reveal_scene(control: Control) -> void:
     if Settings.reduced_motion or DisplayServer.get_name() == "headless":
