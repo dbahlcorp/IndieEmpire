@@ -33,21 +33,54 @@ func _build() -> void:
     heading.text = "%d GAME AWARDS" % (release_year + 1)
     AwardsManager.mark_seen(release_year)
 
+    var stage := TextureRect.new()
+    stage.texture = AssetCatalog.texture("award_presentation", "ceremony")
+    stage.custom_minimum_size = Vector2(0, 112)
+    stage.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    stage.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    list.add_child(stage)
+    if not Settings.reduced_motion:
+        stage.modulate.a = 0.0
+        stage.scale = Vector2(0.96, 0.96)
+        stage.pivot_offset = Vector2(190, 56)
+        var reveal := create_tween().set_parallel(true)
+        reveal.tween_property(stage, "modulate:a", 1.0, 0.45)
+        reveal.tween_property(stage, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
+
     list.add_child(UiBuilder.label(
         "The annual industry ceremony, honouring games released in %d." % release_year,
         13, true))
+    list.add_child(UiBuilder.company_identity_row("Representing the studio on awards night", 48))
 
     var winner_ids := {}
     for category in ceremony.get("categories", []):
         winner_ids[str(category.get("winner_id", ""))] = true
         list.add_child(UiBuilder.divider())
-        list.add_child(UiBuilder.heading(str(category.get("name", "")).to_upper()))
+        var award_id := str(category.get("award_id", ""))
+        list.add_child(UiBuilder.identity_row(IdentityArtwork.award_texture(award_id),
+            str(category.get("name", "")).to_upper(), Vector2(62, 62), 18))
         var winner_id := str(category.get("winner_id", ""))
         var text := ""
         for nominee in category.get("nominees", []):
             var is_winner := str(nominee.get("game_id", "")) == winner_id
             text += "%s %s\n" % ["WINNER  " if is_winner else "nominee ", str(nominee.get("title", ""))]
-        list.add_child(UiBuilder.label(text.strip_edges(), 15))
+        var result_row := HBoxContainer.new()
+        result_row.add_theme_constant_override("separation", 12)
+        var winner_badge := TextureRect.new()
+        winner_badge.texture = AssetCatalog.texture("award_presentation", "winner")
+        winner_badge.custom_minimum_size = Vector2(36, 36)
+        winner_badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+        winner_badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+        result_row.add_child(winner_badge)
+        var winner_game := GameState.find_game(winner_id)
+        if winner_game != null:
+            var cover := GameCoverArt.new().configure(winner_game)
+            cover.custom_minimum_size = Vector2(64, 84)
+            result_row.add_child(cover)
+        var nominee_copy := UiBuilder.label(text.strip_edges(), 15)
+        nominee_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        result_row.add_child(nominee_copy)
+        list.add_child(result_row)
 
     for winner_id in winner_ids:
         var game := GameState.find_game(str(winner_id))

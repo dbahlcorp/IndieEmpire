@@ -61,9 +61,15 @@ func _build() -> void:
         {"icon": "fans", "label": "Fans gained", "value": Format.count(game.fans_gained)}
     ], 3 if get_viewport_rect().size.x >= 760 else 2))
     if not game.feature_ids.is_empty():
-        var features := UiBuilder.info_card(
-            "Features", FeatureSimulator.feature_names(game.feature_ids), "technology")
-        list.add_child(features)
+        list.add_child(UiBuilder.section_header("Features", "The shipped game's player-facing identity."))
+        for feature_id in game.feature_ids:
+            var feature := DataManager.get_game_feature(str(feature_id))
+            list.add_child(UiBuilder.identity_row(
+                IdentityArtwork.feature_texture(str(feature_id)),
+                FeatureSimulator.display_name(feature), Vector2(34, 34), 14))
+    if not game.engine_id.is_empty():
+        list.add_child(UiBuilder.engine_identity_row(
+            EngineManager.engine_name(game.engine_id), game.engine_id, "Engine used for this release"))
     list.add_child(UiBuilder.divider())
 
     _verdict()

@@ -8,10 +8,25 @@ const PATHS := {
     "news": "res://assets/ui/icons/nav_news.svg",
     "staff": "res://assets/ui/icons/nav_staff.svg",
     "company": "res://assets/ui/icons/nav_company.svg",
-    "research": "res://assets/ui/icons/employee_attributes.svg",
+    "research": "res://assets/icons/ui/research.svg",
+    "engines": "res://assets/icons/ui/engines.svg",
+    "finance": "res://assets/icons/ui/finance.svg",
+    "statistics": "res://assets/icons/ui/statistics.svg",
+    "awards": "res://assets/icons/ui/awards.svg",
+    "milestones": "res://assets/icons/ui/milestones.svg",
+    "franchises": "res://assets/icons/ui/franchises.svg",
+    "records": "res://assets/icons/ui/records.svg",
+    "release": "res://assets/icons/ui/release.svg",
+    "development": "res://assets/icons/ui/development.svg",
+    "settings": "res://assets/icons/ui/settings.svg",
+    "calendar": "res://assets/icons/ui/calendar.svg",
+    "contracts": "res://assets/icons/ui/contracts.svg",
+    "training": "res://assets/icons/ui/training.svg",
+    "publishers": "res://assets/icons/ui/publishers.svg",
+    "marketing": "res://assets/icons/ui/marketing.svg",
     "info": "res://assets/ui/icons/nav_news.svg",
-    "success": "res://assets/ui/icons/status_reputation.svg",
-    "warning": "res://assets/ui/icons/status_stress.svg",
+    "success": "res://assets/icons/statuses/complete.svg",
+    "warning": "res://assets/icons/statuses/warning.svg",
     "design": "res://assets/ui/icons/employee_skills.svg",
     "technology": "res://assets/ui/icons/employee_attributes.svg",
     "sales": "res://assets/ui/icons/nav_games.svg",
@@ -53,4 +68,4 @@ const PATHS := {
 
 static func texture(id: String) -> Texture2D:
     var path := str(PATHS.get(id, ""))
-    return load(path) as Texture2D if not path.is_empty() else null
+    return load(path) as Texture2D if not path.is_empty() else AssetCatalog.texture("ui", id)

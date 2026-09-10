@@ -17,6 +17,7 @@ func _ready() -> void:
 
 func _build() -> void:
     UiBuilder.clear(list)
+    list.add_child(UiBuilder.company_identity_row("Career scrapbook", 48))
     list.add_child(UiBuilder.section_header(
         "Career overview", "The story your studio has built so far."))
     list.add_child(UiBuilder.stat_grid(CompanyStats.overview(),

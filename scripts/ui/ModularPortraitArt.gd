@@ -85,6 +85,10 @@ static func signature(modules: Dictionary) -> String:
 static func expression(employee: Employee) -> String:
     if employee.stress >= 70:
         return "stressed"
+    if employee.energy <= 30:
+        return "tired"
+    if employee.morale >= 90 and employee.stress <= 25 and employee.energy >= 60:
+        return "excited"
     if employee.morale >= 70:
         return "happy"
     if employee.morale < 35:
@@ -214,13 +218,19 @@ static func _draw_features(canvas: CanvasItem, center: Vector2, side: float,
     var eye_y := center.y - side * 0.015
     var current_expression := expression(employee)
     var stressed := current_expression == "stressed"
-    var happy := current_expression == "happy"
+    var happy := current_expression in ["happy", "excited"]
+    var excited := current_expression == "excited"
+    var tired := current_expression == "tired"
     var low := current_expression == "worried"
-    var brow_tilt := side * (0.022 if stressed else -0.008 if happy else 0.0)
+    var brow_tilt := side * (0.022 if stressed else -0.018 if excited else -0.008 if happy else 0.0)
     for direction in [-1.0, 1.0]:
         var eye := Vector2(center.x + spacing * direction, eye_y)
-        canvas.draw_circle(eye, side * 0.032, Color.WHITE)
-        canvas.draw_circle(eye + Vector2(direction * side * 0.004, 0), side * 0.016, ink)
+        if tired:
+            canvas.draw_line(eye - Vector2(side * 0.03, 0), eye + Vector2(side * 0.03, side * 0.008),
+                ink, maxf(1.4, side * 0.018), true)
+        else:
+            canvas.draw_circle(eye, side * 0.032, Color.WHITE)
+            canvas.draw_circle(eye + Vector2(direction * side * 0.004, 0), side * 0.016, ink)
         canvas.draw_line(eye + Vector2(-side * 0.035, -side * 0.055 - brow_tilt * direction),
             eye + Vector2(side * 0.035, -side * 0.055 + brow_tilt * direction),
             hair.darkened(0.18), maxf(1.2, side * 0.018), true)
@@ -231,7 +241,12 @@ static func _draw_features(canvas: CanvasItem, center: Vector2, side: float,
     _draw_facial_hair(canvas, center, side, int(modules["facial_hair"]), hair)
 
     var mouth_y := center.y + side * 0.13
-    if happy:
+    if excited:
+        canvas.draw_arc(Vector2(center.x, mouth_y - side * 0.035), side * 0.077,
+            0.12, PI - 0.12, 16, ink, maxf(1.6, side * 0.02), true)
+        canvas.draw_circle(center + Vector2(-side * 0.24, -side * 0.16), side * 0.018, Color("#f0b34f"))
+        canvas.draw_circle(center + Vector2(side * 0.24, -side * 0.18), side * 0.018, Color("#f0b34f"))
+    elif happy:
         canvas.draw_arc(Vector2(center.x, mouth_y - side * 0.025), side * 0.065,
             0.18, PI - 0.18, 14, ink, maxf(1.4, side * 0.018), true)
     elif low:
@@ -241,6 +256,9 @@ static func _draw_features(canvas: CanvasItem, center: Vector2, side: float,
         canvas.draw_line(Vector2(center.x - side * 0.05, mouth_y),
             Vector2(center.x + side * 0.05, mouth_y - side * 0.012), ink,
             maxf(1.4, side * 0.018), true)
+    elif tired:
+        canvas.draw_line(Vector2(center.x - side * 0.045, mouth_y),
+            Vector2(center.x + side * 0.045, mouth_y), ink, maxf(1.3, side * 0.016), true)
     else:
         canvas.draw_arc(Vector2(center.x, mouth_y - side * 0.015), side * 0.045,
             0.25, PI - 0.25, 12, ink, maxf(1.2, side * 0.015), true)

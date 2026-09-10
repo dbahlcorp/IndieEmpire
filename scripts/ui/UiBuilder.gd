@@ -54,6 +54,39 @@ static func employee_header(employee: Employee, subtitle: String = "", portrait_
     row.add_child(copy)
     return row
 
+static func company_identity_row(subtitle: String = "", emblem_size: int = 54) -> HBoxContainer:
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 10)
+    var emblem := CompanyEmblem.new().configure(GameState.company_name, GameState.founder_name)
+    emblem.custom_minimum_size = Vector2(emblem_size, emblem_size)
+    row.add_child(emblem)
+    var copy := VBoxContainer.new()
+    copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    copy.alignment = BoxContainer.ALIGNMENT_CENTER
+    copy.add_child(label(GameState.company_name.to_upper(), 17))
+    if not subtitle.is_empty():
+        var detail := label(subtitle, 12)
+        detail.theme_type_variation = &"MutedLabel"
+        copy.add_child(detail)
+    row.add_child(copy)
+    return row
+
+static func engine_identity_row(name: String, id: String, subtitle: String = "") -> HBoxContainer:
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 10)
+    var emblem := EngineEmblem.new().configure(name, id)
+    emblem.custom_minimum_size = Vector2(48, 48)
+    row.add_child(emblem)
+    var copy := VBoxContainer.new()
+    copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    copy.add_child(label(name.to_upper(), 16))
+    if not subtitle.is_empty():
+        var detail := label(subtitle, 12)
+        detail.theme_type_variation = &"MutedLabel"
+        copy.add_child(detail)
+    row.add_child(copy)
+    return row
+
 static func status_row(icon_id: String, text: String, size: int = 15) -> HBoxContainer:
     var row := HBoxContainer.new()
     row.add_theme_constant_override("separation", 8)
@@ -135,10 +168,19 @@ static func status_chip(text: String, tone: String = "info") -> PanelContainer:
 static func empty_state(title: String, body: String, action_text: String = "") -> Dictionary:
     var panel := PanelContainer.new()
     panel.theme_type_variation = &"ElevatedPanel"
-    panel.custom_minimum_size = Vector2(0, 190)
+    panel.custom_minimum_size = Vector2(0, 230)
     var stack := VBoxContainer.new()
     stack.alignment = BoxContainer.ALIGNMENT_CENTER
     stack.add_theme_constant_override("separation", 10)
+    var empty_id := _empty_state_id(title)
+    var illustration := TextureRect.new()
+    illustration.texture = AssetCatalog.texture("empty_states", empty_id)
+    illustration.custom_minimum_size = Vector2(168, 92)
+    illustration.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    illustration.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    illustration.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+    illustration.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    stack.add_child(illustration)
     var title_label := label(title.to_upper(), 21, true)
     title_label.theme_type_variation = &"SectionHeading"
     stack.add_child(title_label)
@@ -153,6 +195,13 @@ static func empty_state(title: String, body: String, action_text: String = "") -
         stack.add_child(action)
     panel.add_child(stack)
     return {"panel": panel, "action": action}
+
+static func _empty_state_id(title: String) -> String:
+    var normalized := title.to_lower()
+    for candidate in ["games", "staff", "contracts", "finances", "records", "research", "franchises", "awards"]:
+        if candidate in normalized or candidate.trim_suffix("s") in normalized:
+            return candidate
+    return "records"
 
 static func action_card(title: String, body: String, action_text: String,
         icon_id: String = "info") -> Dictionary:

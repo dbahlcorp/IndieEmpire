@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="deep sea">
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 26c7-7 13 7 20 0s13 7 20 0M12 38c7-7 13 7 20 0s13 7 20 0M17 49c6-5 11 5 17 0"/><path d="M32 12c-5 7-9 11-9 16" fill="#4f91a2"/></g>
+</svg>

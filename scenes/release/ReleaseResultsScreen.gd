@@ -71,6 +71,9 @@ func _ready() -> void:
     var cover_center := CenterContainer.new()
     cover_center.add_child(_cover)
     var vbox := $Margin/Scroll/VBox
+    var studio_mark := UiBuilder.company_identity_row("Presents", 44)
+    vbox.add_child(studio_mark)
+    vbox.move_child(studio_mark, heading_label.get_index() + 1)
     vbox.add_child(cover_center)
     vbox.move_child(cover_center, title_label.get_index() + 1)
 

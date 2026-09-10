@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="superheroes">
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 49V27h12v22M26 49V16h15v33M41 49V31h9v18" fill="#4f91a2"/><path d="M10 49h44M31 22v4m0 7v4"/></g>
+</svg>

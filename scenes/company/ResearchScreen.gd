@@ -73,9 +73,9 @@ func _in_progress() -> void:
         var weeks := ResearchSimulator.weeks_estimate(tech, output, GameState.research_points)
 
         var card := _card()
-        card.add_child(UiBuilder.label("%s\n%s  %d / %d" % [
-            ResearchSimulator.display_name(tech), UiBuilder.meter(percent),
-            int(round(progress)), cost], 15))
+        card.add_child(UiBuilder.identity_row(IdentityArtwork.technology_texture(tech_id),
+            "%s\n%s  %d / %d" % [ResearchSimulator.display_name(tech), UiBuilder.meter(percent),
+            int(round(progress)), cost], Vector2(40, 40), 15))
         card.add_child(UiBuilder.label("Researchers: %s\nEstimated: %s" % [
             "none (pool only)" if names.is_empty() else ", ".join(names),
             ("%d week%s" % [weeks, "" if weeks == 1 else "s"]) if weeks < 999
@@ -118,7 +118,8 @@ func _tech_card(tech: Dictionary, parent: Container) -> void:
         "completed": "COMPLETED", "researching": "RESEARCHING",
         "available": "AVAILABLE", "locked": "LOCKED"
     }.get(state, state.to_upper())
-    card.add_child(UiBuilder.label(ResearchSimulator.display_name(tech), 17))
+    card.add_child(UiBuilder.identity_row(IdentityArtwork.technology_texture(id),
+        ResearchSimulator.display_name(tech), Vector2(42, 42), 17))
     card.add_child(UiBuilder.status_chip(chip, {
         "completed": "positive", "researching": "info",
         "available": "special", "locked": "warning"

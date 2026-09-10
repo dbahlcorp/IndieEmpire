@@ -1549,3 +1549,32 @@ M4 territory and were deliberately cut off:
 - PA.13's crisis levers stop at a loan against the studio's own future
   earnings — no acquisition offer, buyout, or external investor, all of
   which are M4/M8+ territory per the README.
+
+---
+
+## PA.16 visual identity and asset production — implemented 2026-09-09
+
+PA.16 preserves the production-ready brand, painted offices and employee art,
+then closes the fragmented management-screen coverage found in the mandatory
+pre-implementation audit. A 275-entry manifest now covers every genre, theme,
+platform, technology, feature and award plus shared UI, status, empty-state and
+era families. `AssetCatalog` supplies typed family lookup, caching and explicit
+fallbacks; `IdentityArtwork` no longer owns hard-coded path catalogs.
+
+The visible integration includes year-selected office technology overlays,
+era-aware deterministic covers with stable franchise identity, two-line long
+titles, complete research/engine marks, category-specific trophies, illustrated
+empty states, a deterministic company emblem, cover-rich franchise/awards
+surfaces, and tired/excited portrait states. Existing simulation rules are not
+changed and no M4 competitor, acquisition, manufacturing or global-studio work
+is included.
+
+Verification is split deliberately:
+
+- `AssetValidationTest.tscn` checks data coverage, resource resolution,
+  fallbacks, era boundaries and portrait states.
+- `PA16VisualSnapshot.tscn` captures 22 actual application screens at
+  430 × 932 using a fixed long-title/franchise/award fixture.
+- `docs/PA16_VISUAL_ACCEPTANCE.md` records the completed 22-screen graphical run
+  and the full 72-scene, 13,521-check headless matrix. Physical-iPhone sharpness,
+  safe-area and performance validation remain the only acceptance gate.

@@ -244,6 +244,9 @@ func _feature_row(feature: Dictionary, id: String) -> Control:
     var locked := not missing.is_empty()
 
     var toggle := UiBuilder.toggle(FeatureSimulator.display_name(feature), id in _selected_feature_ids)
+    toggle.icon = IdentityArtwork.feature_texture(id)
+    toggle.expand_icon = true
+    toggle.add_theme_constant_override("icon_max_width", 32)
     toggle.disabled = locked
     toggle.toggled.connect(_on_feature_toggled.bind(id))
     stack.add_child(toggle)

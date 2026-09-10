@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" role="img" aria-label="era 1980s office technology">
+  <path d="M520 451c57-24 157-24 212 0" fill="#b88743" opacity=".12"/>
+  <g fill="#fff7df" stroke="#263c40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="565" y="340" width="84" height="58" rx="5"/><path d="M578 353h58v32h-58zM607 398v20M585 418h45"/><rect x="665" y="369" width="38" height="24" rx="3"/></g>
+  <circle cx="719" cy="420" r="10" fill="#b88743"/><circle cx="690" cy="424" r="6" fill="#b88743" opacity=".7"/>
+</svg>

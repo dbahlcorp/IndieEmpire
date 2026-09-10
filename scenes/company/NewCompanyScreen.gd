@@ -15,9 +15,27 @@ extends Control
 @onready var difficulty_label: Label = $Margin/Scroll/VBox/DifficultyLabel
 @onready var start_button: Button = $Margin/Scroll/VBox/StartButton
 @onready var load_button: Button = $Margin/Scroll/VBox/LoadButton
+var _emblem: CompanyEmblem
 
 func _ready() -> void:
     GameClock.enter_menu()
+    var story_row := HBoxContainer.new()
+    story_row.add_theme_constant_override("separation", 12)
+    _emblem = CompanyEmblem.new().configure("Nova Forge Studios", "Your name")
+    _emblem.custom_minimum_size = Vector2(76, 76)
+    story_row.add_child(_emblem)
+    var bedroom := TextureRect.new()
+    bedroom.texture = OfficeArtwork.texture("bedroom")
+    bedroom.custom_minimum_size = Vector2(220, 92)
+    bedroom.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    bedroom.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+    bedroom.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+    story_row.add_child(bedroom)
+    var form := $Margin/Scroll/VBox
+    form.add_child(story_row)
+    form.move_child(story_row, 1)
+    name_input.text_changed.connect(func(_value): _refresh_emblem())
+    founder_input.text_changed.connect(func(_value): _refresh_emblem())
     for pronoun_set in Pronouns.SETS:
         pronoun_option.add_item(str(pronoun_set["label"]))
         pronoun_option.set_item_metadata(pronoun_option.item_count - 1, pronoun_set["id"])
@@ -64,6 +82,13 @@ func _ready() -> void:
 
     load_button.visible = SaveManager.has_any_save()
     _refresh()
+
+func _refresh_emblem() -> void:
+    if _emblem == null:
+        return
+    _emblem.configure(
+        name_input.text if not name_input.text.strip_edges().is_empty() else "Nova Forge Studios",
+        founder_input.text if not founder_input.text.strip_edges().is_empty() else "Your name")
 
 func _selected_difficulty() -> String:
     if difficulty_option.item_count == 0 or difficulty_option.selected < 0:

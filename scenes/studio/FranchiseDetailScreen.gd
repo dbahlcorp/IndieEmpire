@@ -63,9 +63,15 @@ func _timeline() -> void:
     list.add_child(UiBuilder.heading("TIMELINE"))
     for game in franchise.entries():
         var status := "on sale, week %d" % game.weeks_on_market if game.sales_active else "finished"
+        var timeline_row := HBoxContainer.new()
+        timeline_row.add_theme_constant_override("separation", 10)
+        var cover := GameCoverArt.new().configure(game)
+        cover.custom_minimum_size = Vector2(70, 92)
+        timeline_row.add_child(cover)
         var row := Button.new()
         row.alignment = HORIZONTAL_ALIGNMENT_LEFT
         row.custom_minimum_size = Vector2(0, 118)
+        row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         row.add_theme_font_size_override("font_size", 13)
         row.text = "#%d  %s\n%s\n%s  %.1f\n%s copies   ·   $%s   ·   %s" % [
             game.sequel_number, game.title.to_upper(),
@@ -76,7 +82,8 @@ func _timeline() -> void:
         row.pressed.connect(func():
             ScreenRouter.open_game(game.id, "res://scenes/studio/FranchiseDetailScreen.tscn")
             get_tree().change_scene_to_file("res://scenes/studio/GameDetailScreen.tscn"))
-        list.add_child(row)
+        timeline_row.add_child(row)
+        list.add_child(timeline_row)
     list.add_child(UiBuilder.divider())
 
 func _actions() -> void:

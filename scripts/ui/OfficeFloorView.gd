@@ -557,6 +557,9 @@ func _draw() -> void:
     # sized texture drawn after this point can make a walking person disappear.
     if atmosphere_texture != null:
         draw_texture_rect(atmosphere_texture, art_rect, false)
+    var current_era := EraVisuals.texture_for_year(TimeManager.current_year)
+    if current_era != null:
+        draw_texture_rect(current_era, art_rect, false)
     var drawables: Array[Dictionary] = []
     for prop in floor_plan["props"]:
         drawables.append({"kind": "furniture", "item": prop, "depth": OfficeLayout.project(Vector2(prop["cell"]) + Vector2(0.5, 0.5), floor_plan["dimensions"]).y})

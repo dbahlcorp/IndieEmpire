@@ -12,12 +12,18 @@ func _ready() -> void:
 func _refresh() -> void:
     UiBuilder.clear(list)
 
-    list.add_child(UiBuilder.info_card(GameState.company_name, "Founded %s by %s\n%s old  ·  %s difficulty" % [
+    var identity_row := HBoxContainer.new()
+    identity_row.add_theme_constant_override("separation", 12)
+    identity_row.add_child(CompanyEmblem.new().configure(GameState.company_name, GameState.founder_name))
+    var company_card := UiBuilder.info_card(GameState.company_name, "Founded %s by %s\n%s old  ·  %s difficulty" % [
         TimeManager.format_month(GameState.founded_year, GameState.founded_month),
         GameState.founder_name,
         TimeManager.company_age_label(),
         DataManager.display_name(DataManager.difficulties, GameState.difficulty_id)
-    ], "company"))
+    ], "company")
+    company_card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    identity_row.add_child(company_card)
+    list.add_child(identity_row)
 
     var customize_ceo := UiBuilder.button("CUSTOMIZE CEO")
     customize_ceo.pressed.connect(_go.bind("res://scenes/company/CeoCustomizationScreen.tscn"))

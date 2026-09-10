@@ -96,6 +96,9 @@ func _render_engine(engine_id: String) -> void:
         return
     var engine := EngineManager.get_engine(engine_id)
     var condition: Dictionary = _estimate.get("engine", EngineManager.condition_for(engine_id))
+    identity_container.add_child(UiBuilder.engine_identity_row(
+        EngineManager.engine_name(engine_id), engine_id,
+        "%s · %d years old" % [EngineSimulator.generation_label(int(condition.get("generation", 1))), int(condition.get("age_years", 0))]))
     identity_container.add_child(UiBuilder.label(
         "  %s · %d yrs · %s (%d shipped)" % [
             EngineSimulator.generation_label(int(condition.get("generation", 1))),

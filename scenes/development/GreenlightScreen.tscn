@@ -38,8 +38,10 @@ theme_override_font_sizes/font_size = 28
 
 [node name="TitleLabel" type="Label" parent="Margin/Scroll/VBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = ""
 horizontal_alignment = 1
+autowrap_mode = 3
 theme_override_font_sizes/font_size = 22
 
 [node name="IdentityContainer" type="VBoxContainer" parent="Margin/Scroll/VBox"]

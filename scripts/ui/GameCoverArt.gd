@@ -8,6 +8,8 @@ var game_title := "UNTITLED"
 var theme_id := "space"
 var genre_id := "action"
 var platform_id := "microstar_64"
+var franchise_id := ""
+var era_year := 1985
 
 func _init() -> void:
     custom_minimum_size = Vector2(86, 112)
@@ -19,6 +21,8 @@ func configure(project: GameProject) -> GameCoverArt:
     theme_id = project.theme_id
     genre_id = project.genre_id
     platform_id = project.platform_id
+    franchise_id = project.series_id
+    era_year = project.release_year if project.release_year > 0 else project.start_year
     tooltip_text = "%s cover" % project.title
     queue_redraw()
     return self
@@ -28,6 +32,8 @@ func configure_preview(title: String, selected_theme: String, selected_genre: St
     theme_id = selected_theme
     genre_id = selected_genre
     platform_id = selected_platform
+    franchise_id = ""
+    era_year = TimeManager.current_year
     queue_redraw()
     return self
 
@@ -40,7 +46,8 @@ func _draw() -> void:
     var cream := Color("#f7e7bf")
     var accent := IdentityArtwork.theme_colour(theme_id)
     var dark := accent.darkened(0.28)
-    var seed := absi((game_title + theme_id + genre_id + platform_id).hash())
+    var identity_key := franchise_id if not franchise_id.is_empty() else game_title
+    var seed := absi((identity_key + theme_id + genre_id + platform_id).hash())
 
     var shell := StyleBoxFlat.new()
     shell.bg_color = dark
@@ -51,7 +58,21 @@ func _draw() -> void:
 
     var art_rect := Rect2(5, 5, size.x - 10, size.y * 0.66)
     draw_rect(art_rect, accent)
-    if seed % 3 == 0:
+    var era := EraVisuals.id_for_year(era_year)
+    if era == "era_1980s":
+        for index in 5:
+            var x := art_rect.position.x + 6.0 + index * art_rect.size.x / 5.0
+            draw_line(Vector2(x, art_rect.position.y), Vector2(x, art_rect.end.y), _alpha(cream, 0.16), 2.0)
+    elif era == "era_1990s":
+        draw_rect(art_rect.grow(-5), _alpha(cream, 0.45), false, 4.0)
+        draw_line(art_rect.position + Vector2(4, 8), art_rect.position + Vector2(art_rect.size.x - 4, 8), _alpha(cream, 0.4), 5.0)
+    elif era == "era_2000s":
+        draw_colored_polygon(PackedVector2Array([art_rect.position, Vector2(art_rect.end.x, art_rect.position.y), art_rect.get_center()]), _alpha(cream, 0.18))
+        draw_colored_polygon(PackedVector2Array([art_rect.position, Vector2(art_rect.position.x, art_rect.end.y), art_rect.get_center()]), _alpha(dark, 0.22))
+    elif era == "era_2010s":
+        for index in 3:
+            draw_arc(art_rect.get_center(), 9.0 + index * 10.0, PI, TAU, 18, _alpha(cream, 0.22), 4.0)
+    elif seed % 3 == 0:
         draw_colored_polygon(PackedVector2Array([
             art_rect.position,
             Vector2(art_rect.end.x, art_rect.position.y),
@@ -75,10 +96,9 @@ func _draw() -> void:
     var footer_y := art_rect.end.y
     draw_rect(Rect2(5, footer_y, size.x - 10, size.y - footer_y - 5), cream)
     var font := ThemeDB.fallback_font
-    var display := game_title.strip_edges().to_upper()
-    if display.length() > 16:
-        display = display.left(15) + "…"
-    draw_string(font, Vector2(9, footer_y + 17), display, HORIZONTAL_ALIGNMENT_CENTER, size.x - 18, 11, ink)
+    var lines := _title_lines(game_title.strip_edges().to_upper(), 14)
+    for index in lines.size():
+        draw_string(font, Vector2(9, footer_y + 14 + index * 11), lines[index], HORIZONTAL_ALIGNMENT_CENTER, size.x - 18, 10, ink)
 
     var theme_badge := IdentityArtwork.theme_texture(theme_id)
     if theme_badge != null:
@@ -90,4 +110,27 @@ func _draw() -> void:
 func _alpha(colour: Color, value: float) -> Color:
     var result := colour
     result.a = value
+    return result
+
+func _title_lines(title: String, limit: int) -> Array[String]:
+    var result: Array[String] = []
+    if title.length() <= limit:
+        result.append(title)
+        return result
+    var words := title.split(" ", false)
+    var first := ""
+    var second := ""
+    for word in words:
+        var candidate := str(word) if first.is_empty() else first + " " + str(word)
+        if candidate.length() <= limit or first.is_empty():
+            first = candidate
+        else:
+            second = str(word) if second.is_empty() else second + " " + str(word)
+    if second.length() > limit:
+        second = second.left(limit - 1) + "…"
+    if not second.is_empty():
+        result.append(first.left(limit))
+        result.append(second)
+    else:
+        result.append(first.left(limit - 1) + "…")
     return result

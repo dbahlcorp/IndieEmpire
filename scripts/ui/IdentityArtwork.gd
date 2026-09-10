@@ -1,28 +1,8 @@
 class_name IdentityArtwork
 extends RefCounted
 
-## Stable artwork lookup for game and market identity. External SVGs cover the
-## semantic families; generated badges keep the much larger theme list compact.
-
-const PLATFORM_PATHS := {
-    "microstar_64": "res://assets/ui/platforms/microstar_64.svg",
-    "ibm_compatible": "res://assets/ui/platforms/ibm_compatible.svg",
-    "famiclone": "res://assets/ui/platforms/famiclone.svg",
-    "pocket_play": "res://assets/ui/platforms/pocket_play.svg",
-    "mega16": "res://assets/ui/platforms/mega16.svg",
-    "playbox32": "res://assets/ui/platforms/playbox32.svg",
-}
-
-const GENRE_PATHS := {
-    "action": "res://assets/ui/genres/action.svg",
-    "adventure": "res://assets/ui/genres/adventure.svg",
-    "rpg": "res://assets/ui/genres/rpg.svg",
-    "strategy": "res://assets/ui/genres/strategy.svg",
-    "simulation": "res://assets/ui/genres/simulation.svg",
-    "puzzle": "res://assets/ui/genres/puzzle.svg",
-    "racing": "res://assets/ui/genres/racing.svg",
-    "shooter": "res://assets/ui/genres/shooter.svg",
-}
+## Stable artwork lookup for game and market identity. Paths live in the asset
+## manifest; these helpers preserve the compact API used throughout the UI.
 
 const THEME_COLOURS := {
     "space": "596bb3", "fantasy": "7a6bb0", "military": "68785d",
@@ -36,28 +16,25 @@ const THEME_COLOURS := {
     "business": "5e7790",
 }
 
-const THEME_INITIALS := {
-    "space": "SP", "fantasy": "FA", "military": "MI", "horror": "HO",
-    "pirates": "PI", "aliens": "AL", "western": "WE", "detective": "DE",
-    "history": "HI", "espionage": "ES", "cyberpunk": "CY", "robots": "RO",
-    "racing_theme": "RA", "sports": "ST", "crime": "CR", "dinosaurs": "DI",
-    "superheroes": "SU", "survival": "SV", "post_apocalypse": "PA",
-    "zombies": "ZO", "time_travel": "TT", "farming": "FM",
-    "city_building": "CB", "medical": "MD", "business": "BU",
-}
-
-static var _loaded: Dictionary = {}
 static var _generated: Dictionary = {}
 
 static func platform_texture(id: String) -> Texture2D:
-    return _load_texture(str(PLATFORM_PATHS.get(id, "")))
+    return AssetCatalog.texture("platforms", id)
 
 static func genre_texture(id: String) -> Texture2D:
-    return _load_texture(str(GENRE_PATHS.get(id, "")))
+    return AssetCatalog.texture("genres", id)
 
 static func theme_texture(id: String) -> Texture2D:
-    var colour := str(THEME_COLOURS.get(id, "607d80"))
-    return _badge_texture("theme:%s" % id, str(THEME_INITIALS.get(id, "??")), colour, "f7e7bf")
+    return AssetCatalog.texture("themes", id)
+
+static func technology_texture(id: String) -> Texture2D:
+    return AssetCatalog.texture("technologies", id)
+
+static func feature_texture(id: String) -> Texture2D:
+    return AssetCatalog.texture("features", id)
+
+static func award_texture(id: String) -> Texture2D:
+    return AssetCatalog.texture("awards", id)
 
 static func size_texture(id: String) -> Texture2D:
     var letters := {"small": "S", "medium": "M", "large": "L", "aaa": "XL"}
@@ -66,13 +43,6 @@ static func size_texture(id: String) -> Texture2D:
 
 static func theme_colour(id: String) -> Color:
     return Color("#%s" % str(THEME_COLOURS.get(id, "607d80")))
-
-static func _load_texture(path: String) -> Texture2D:
-    if path.is_empty():
-        return null
-    if not _loaded.has(path):
-        _loaded[path] = load(path)
-    return _loaded[path] as Texture2D
 
 static func _badge_texture(key: String, letters: String, fill: String, ink: String) -> Texture2D:
     if _generated.has(key):

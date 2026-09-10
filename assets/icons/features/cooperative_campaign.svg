@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="cooperative campaign">
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="25" r="7" fill="#e98d48"/><circle cx="42" cy="28" r="6" fill="#4f91a2"/><path d="M11 48c2-10 9-14 16-14s14 4 16 14M36 39c8-2 14 2 17 9"/></g>
+</svg>

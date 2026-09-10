@@ -14,7 +14,7 @@ func _ready() -> void:
 func _build() -> void:
     UiBuilder.clear(list)
 
-    list.add_child(UiBuilder.label(GameState.company_name.to_upper(), 22, true))
+    list.add_child(UiBuilder.company_identity_row("A studio history, now complete", 68))
     list.add_child(UiBuilder.label("%d - %d" % [GameState.founded_year, TimeManager.current_year], 16, true))
     list.add_child(UiBuilder.divider())
 
@@ -25,7 +25,15 @@ func _build() -> void:
 
     var highest := CompanyStats.highest_rated()
     if highest != null:
-        list.add_child(UiBuilder.label("Highest rated\n%s - %.1f" % [highest.title, highest.review_score], 15))
+        var high_row := HBoxContainer.new()
+        high_row.add_theme_constant_override("separation", 10)
+        var cover := GameCoverArt.new().configure(highest)
+        cover.custom_minimum_size = Vector2(64, 84)
+        high_row.add_child(cover)
+        var high_copy := UiBuilder.label("Highest rated\n%s - %.1f" % [highest.title, highest.review_score], 15)
+        high_copy.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        high_row.add_child(high_copy)
+        list.add_child(high_row)
 
     var best := CompanyStats.best_selling()
     if best != null:

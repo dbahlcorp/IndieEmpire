@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="skeletal anim">
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 40l6-13h27l6 13v8H12z" fill="#e98d48"/><circle cx="21" cy="48" r="5" fill="#fff7df"/><circle cx="44" cy="48" r="5" fill="#fff7df"/><path d="M19 40h28"/></g>
+</svg>

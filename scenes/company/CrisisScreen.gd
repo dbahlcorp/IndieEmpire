@@ -31,6 +31,15 @@ func _build() -> void:
 
     heading.text = CrisisSimulator.level_label(level) if level >= CrisisSimulator.RUNWAY_LOW else "FINANCES"
 
+    var status_id: String = str({
+        CrisisSimulator.RUNWAY_LOW: "low_runway",
+        CrisisSimulator.TROUBLE: "financial_trouble",
+        CrisisSimulator.CRITICAL: "critical",
+        CrisisSimulator.INSOLVENT: "insolvent",
+    }.get(level, "low_runway"))
+    list.add_child(UiBuilder.identity_row(AssetCatalog.texture("statuses", status_id),
+        heading.text, Vector2(46, 46), 17))
+
     _position(snap)
     _driver(snap)
     _actions(snap)

@@ -13,6 +13,12 @@ Simulation-driven employee activity, office-tier presentation, deterministic
 movement, and save reconstruction are documented in
 [docs/STUDIO_VISUAL_FEEDBACK.md](docs/STUDIO_VISUAL_FEEDBACK.md).
 
+PA.16 visual identity, complete asset coverage, manifest/fallback rules and the
+deterministic portrait-screen review matrix are documented in
+[docs/VISUAL_IDENTITY_GUIDE.md](docs/VISUAL_IDENTITY_GUIDE.md),
+[docs/PA16_ASSET_MANIFEST.md](docs/PA16_ASSET_MANIFEST.md) and
+[docs/PA16_VISUAL_ACCEPTANCE.md](docs/PA16_VISUAL_ACCEPTANCE.md).
+
 ## Open it
 
 1. Install Godot 4.7 or newer.

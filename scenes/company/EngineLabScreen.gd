@@ -49,6 +49,9 @@ func _in_development() -> void:
     var project := GameState.active_engine_project
     list.add_child(UiBuilder.heading("IN DEVELOPMENT"))
     var card := _card()
+    var project_emblem := EngineEmblem.new().configure(str(project.get("name", "Engine")), str(project.get("id", "active")))
+    project_emblem.custom_minimum_size = Vector2(52, 52)
+    card.add_child(project_emblem)
     var percent := clampf(float(project.get("progress", 0.0)), 0.0, 100.0)
     card.add_child(UiBuilder.label("%s\n%s  %d%%" % [
         str(project.get("name", "Engine")), UiBuilder.meter(percent), int(percent)], 15))
@@ -101,6 +104,9 @@ func _engine_card(engine: Dictionary) -> void:
     var id := str(engine.get("id", ""))
     var condition := EngineManager.condition_for(id)
     var card := _card()
+    var emblem := EngineEmblem.new().configure(str(engine.get("name", "Engine")), id)
+    emblem.custom_minimum_size = Vector2(52, 52)
+    card.add_child(emblem)
     var header := UiBuilder.button("%s   %s" % [
         str(engine.get("name", "Engine")).to_upper(),
         EngineSimulator.generation_label(int(condition["generation"]))])
@@ -148,6 +154,9 @@ func _upgrade_picker(card: VBoxContainer, engine: Dictionary) -> void:
         pick.toggle_mode = true
         pick.button_group = group
         pick.text = str(tech.get("display_name", tech.get("id", "")))
+        pick.icon = IdentityArtwork.technology_texture(str(tech.get("id", "")))
+        pick.expand_icon = true
+        pick.add_theme_constant_override("icon_max_width", 32)
         pick.custom_minimum_size = Vector2(0, UiBuilder.TAP_HEIGHT)
         pick.button_pressed = (_upgrade_tech == str(tech.get("id", "")))
         pick.toggled.connect(func(pressed):
@@ -195,6 +204,9 @@ func _create_form(message: String) -> void:
             var id := str(tech.get("id", ""))
             var toggle := UiBuilder.toggle(
                 str(tech.get("display_name", id)), bool(_tech_selected.get(id, false)))
+            toggle.icon = IdentityArtwork.technology_texture(id)
+            toggle.expand_icon = true
+            toggle.add_theme_constant_override("icon_max_width", 30)
             toggle.toggled.connect(func(pressed):
                 _tech_selected[id] = pressed
                 _update_estimate())

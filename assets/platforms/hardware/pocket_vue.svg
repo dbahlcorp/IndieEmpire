@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="pocket vue">
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="15" width="30" height="27" rx="3" fill="#4f91a2"/><path d="M17 21h18v14H17zM16 51h31M26 42v9"/><rect x="44" y="22" width="9" height="25" rx="2" fill="#e98d48"/></g>
+</svg>
