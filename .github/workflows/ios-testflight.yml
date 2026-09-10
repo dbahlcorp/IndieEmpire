@@ -108,10 +108,17 @@ jobs:
       - name: Export Xcode project
         run: |
           set -euo pipefail
-          mkdir -p build/ios
+          rm -rf build/ios && mkdir -p build/ios
+          # Godot treats this path as "<folder>/<project name>" and writes
+          # <name>.xcodeproj plus sources into the folder; the exact bundle name
+          # is not worth predicting, so locate it afterwards.
           godot --headless --path . --export-release "${EXPORT_PRESET}" \
-            "$(pwd)/build/ios/IndieEmpire.xcodeproj"
+            "$(pwd)/build/ios/IndieEmpire"
           ls -la build/ios
+          xcodeproj="$(find build/ios -maxdepth 2 -name '*.xcodeproj' -type d | head -1)"
+          test -n "$xcodeproj" || { echo "::error::Godot produced no .xcodeproj"; exit 1; }
+          echo "XCODEPROJ=$xcodeproj" >> "$GITHUB_ENV"
+          echo "Xcode project: $xcodeproj"
 
       - name: Import signing certificate
         uses: apple-actions/import-codesign-certs@v7
@@ -129,7 +136,7 @@ jobs:
         id: scheme
         run: |
           set -euo pipefail
-          scheme="$(xcodebuild -project build/ios/IndieEmpire.xcodeproj -list -json \
+          scheme="$(xcodebuild -project "$XCODEPROJ" -list -json \
             | python3 -c 'import json,sys; print(json.load(sys.stdin)["project"]["schemes"][0])')"
           echo "name=$scheme" >> "$GITHUB_OUTPUT"
           echo "Scheme: $scheme"
@@ -137,7 +144,7 @@ jobs:
       - name: Archive
         run: |
           set -euo pipefail
-          xcodebuild -project build/ios/IndieEmpire.xcodeproj \
+          xcodebuild -project "$XCODEPROJ" \
             -scheme "${{ steps.scheme.outputs.name }}" \
             -configuration Release \
             -destination 'generic/platform=iOS' \
@@ -174,7 +181,7 @@ jobs:
           if-no-files-found: error
 
       - name: Upload to TestFlight
-        uses: apple-actions/upload-testflight-build@v4
+        uses: apple-actions/upload-testflight-build@v5
         with:
           app-path: ${{ env.IPA_PATH }}
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
