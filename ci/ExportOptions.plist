@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!-- Consumed by .github/workflows/ios-testflight.yml. __TEAM_ID__ is replaced
-     with the APPSTORE_TEAM_ID secret at export time. "app-store" is the
-     TestFlight/App Store distribution method; newer Xcode also accepts
-     "app-store-connect". -->
+     with the APPSTORE_TEAM_ID secret at export time. -->
 <plist version="1.0">
 <dict>
   <key>method</key>
-  <string>app-store</string>
+  <string>app-store-connect</string>
   <key>teamID</key>
   <string>__TEAM_ID__</string>
   <key>signingStyle</key>

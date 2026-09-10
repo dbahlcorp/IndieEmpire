@@ -1,9 +1,10 @@
 # iOS TestFlight build
 
-Status: **CI pipeline scaffolded — needs Apple secrets before it can run.** No
-build has been produced. The GitHub Actions workflow builds and uploads from a
-hosted macOS runner, so no local Mac is required — but an Apple Developer Program
-account and the secrets below are.
+Status: **repository-side release preparation complete — Apple account setup and
+the first signed CI run remain.** No `.ipa` has been produced or uploaded yet.
+The GitHub Actions workflow builds and uploads from a hosted macOS 26 / Xcode 26
+runner, so no local Mac is required, but an Apple Developer Program account and
+the credentials below are.
 
 This produces the build for the physical session in
 [ALPHA_RC1_DEVICE_TEST.md](ALPHA_RC1_DEVICE_TEST.md). A successful upload is not
@@ -14,12 +15,16 @@ acceptance.
 `.github/workflows/ios-testflight.yml`, manual trigger (Actions tab → "iOS
 TestFlight" → Run workflow). It:
 
-1. installs Godot `4.7.2-stable` + iOS export templates (cached),
-2. injects the bundle id and team id into `export_presets.cfg`,
-3. exports the Xcode project (`application/export_project_only=true`),
-4. archives and exports a signed `.ipa` with `xcodebuild` using App Store Connect
+1. validates that every required repository variable and secret is present,
+2. installs Godot `4.7.2-stable` + iOS export templates (cached),
+3. injects the bundle id, team id, display name, and a unique
+   `<run-number>.<attempt>` iOS build number,
+4. runs `ci/validate_ios_release.py`, then exports the Xcode project
+   (`application/export_project_only=true`),
+5. archives and exports a signed `.ipa` with `xcodebuild` using App Store Connect
    API-key authentication and automatic signing,
-5. uploads to TestFlight and also attaches the `.ipa` as a run artifact.
+6. uploads to TestFlight, waits for processing, attaches the supplied test notes,
+   and also saves the `.ipa` as a run artifact.
 
 ### One-time Apple setup
 
@@ -58,29 +63,32 @@ Settings → Secrets and variables → Actions.
 | `DIST_CERT_P12_BASE64` | `base64 -i dist.p12` (macOS) / `base64 -w0 dist.p12` (Linux) |
 | `DIST_CERT_PASSWORD` | the `.p12` export password |
 
-`export_presets.cfg` is committed with those identifier fields **blank on
-purpose**; the workflow fills them per run and never commits the result.
+`export_presets.cfg` contains a non-secret fallback bundle ID, while the Team ID
+and signing identity remain blank. The workflow replaces the bundle ID and fills
+the Team ID per run; it never commits those runtime changes.
 
 ### Per-release
 
-- Bump `application/version` (build number) in `export_presets.cfg` — TestFlight
-  rejects a duplicate build number. `application/short_version` is the marketing
-  version; keep it in step with `config/version` in `project.godot`.
+- Bump `application/short_version` and `config/version` together when changing
+  the marketing version. The workflow uses its monotonically increasing GitHub
+  run and attempt numbers for `application/version`, preventing duplicate
+  TestFlight build strings without a source edit, including workflow re-runs.
 - Confirm `main` is green (see `docs/PA16B_FINAL_REPORT.md` for the reference
   suite run) before triggering.
-- Trigger the workflow. Processing on App Store Connect takes a few minutes;
-  then complete the export-compliance question (this build uses no non-exempt
-  encryption) and add internal testers.
+- Trigger the workflow and enter concise tester notes. The preset declares that
+  the game uses no non-exempt encryption, and the upload action sends the same
+  answer while waiting for App Store Connect processing. Confirm that declaration
+  remains accurate whenever a native SDK or plugin is added, then add internal
+  testers.
 
 ### If the workflow needs iteration
 
-Untested end to end from this repo. Likely first-run friction: the Godot release
-asset URL/name for `4.7.2-stable`, the generated Xcode scheme name (the workflow
-auto-detects it), `ExportOptions.plist` `method` (`app-store` vs
-`app-store-connect` on newer Xcode), and whether automatic signing resolves the
-profile on the first archive. The `.ipa` is uploaded as a run artifact so a build
-can be inspected or hand-uploaded via Transporter while the upload step is sorted
-out.
+Untested end to end because Apple credentials are not available in this
+workspace. The workflow uses the current `app-store-connect` export method and
+auto-detects the generated scheme. The most likely first-run friction is automatic
+signing resolving the initial provisioning profile. The `.ipa` is retained as a
+run artifact, so it can be inspected or hand-uploaded with Transporter if only
+the final upload step needs iteration.
 
 ## Route B — local Mac
 
@@ -95,10 +103,12 @@ setup as Route A steps 1–4.
 - `.github/workflows/ios-testflight.yml` — the pipeline above.
 - `ci/ExportOptions.plist` — `xcodebuild -exportArchive` options; `__TEAM_ID__`
   is substituted at run time.
+- `ci/validate_ios_release.py` — dependency-free preflight for versions, portrait
+  target, arm64, entitlement policy, export declaration, and icon integrity.
 - `export_presets.cfg` — `iOS` preset: portrait iPhone target
   (`targeted_device_family=1`), min iOS 14, launch-screen storyboard on the
-  splash colour, `increased_memory_limit` entitlement, no camera / mic / photo /
-  tracking, `export_project_only=true`.
+  splash colour, no unmeasured increased-memory entitlement, no camera / mic /
+  photo / tracking, explicit app icons, `export_project_only=true`.
 - `project.godot` — `config/version="0.1.0"`,
   `display/window/handheld/orientation="portrait"`, existing
   `audio/general/ios/*` mixing settings.
@@ -108,6 +118,10 @@ setup as Route A steps 1–4.
 
 - If analytics or tracking are added later, update `privacy/*` in
   `export_presets.cfg` and the App Store Connect privacy questionnaire.
+- If a native dependency adds non-exempt encryption, change both
+  `ITSAppUsesNonExemptEncryption` in the preset and
+  `uses-non-exempt-encryption` in the workflow after completing Apple's export
+  compliance determination.
 - `artifacts/balance-2026-09-07/**` emits duplicate-UID import warnings; it is
   excluded from the bundle via the preset `exclude_filter` and does not ship.
 - Physical acceptance remains governed by `ALPHA_RC1_DEVICE_TEST.md`. Do not
