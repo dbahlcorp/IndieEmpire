@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="audio tools">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M26 19v27M26 22l22-5v24"/><circle cx="19" cy="47" r="7" fill="#e98d48"/><circle cx="41" cy="42" r="7" fill="#4f91a2"/></g>
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="8" height="56" rx="4" fill="#e98d48" stroke="none"/><path d="M15 28h9l12-10v28L24 36h-9z"/><path d="M43 25c5 4 5 10 0 14M48 19c10 8 10 18 0 26"/><circle cx="46" cy="12" r="2.5" fill="#e98d48" stroke="none"/></g>
 </svg>

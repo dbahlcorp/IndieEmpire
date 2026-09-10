@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" role="img" aria-label="era 2000s office technology">
-  <path d="M520 451c57-24 157-24 212 0" fill="#7866a6" opacity=".12"/>
-  <g fill="#fff7df" stroke="#263c40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="548" y="335" width="73" height="54" rx="5"/><rect x="635" y="335" width="73" height="54" rx="5"/><path d="M557 344h55v34h-55M644 344h55v34h-55M622 374h13"/><circle cx="679" cy="407" r="16"/></g>
-  <circle cx="719" cy="420" r="10" fill="#7866a6"/><circle cx="690" cy="424" r="6" fill="#7866a6" opacity=".7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" role="img" aria-label="era 2000s integrated office technology">
+  <g fill="#1e2d2f" opacity=".16" stroke="none"><ellipse cx="290" cy="365" rx="78" ry="14"/><ellipse cx="567" cy="202" rx="64" ry="9"/><ellipse cx="137" cy="416" rx="55" ry="10"/></g>
+  <g fill="#7d8588" stroke="#40484c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="243" y="302" width="61" height="38" rx="3"/><path d="M251 309h45v22h-45zM273 340v19"/><path d="M313 344h48l-8-31h-33z"/><circle cx="346" cy="354" r="6"/><rect x="523" y="153" width="45" height="31" rx="3"/><path d="M530 159h31v18h-31zM545 184v11"/><rect x="579" y="151" width="28" height="45" rx="3"/><rect x="99" y="382" width="45" height="28" rx="3"/><circle cx="121" cy="396" r="9"/><path d="M152 386h22v24h-22z"/></g>
+  <g fill="none" stroke="#fff7df" stroke-width="2" opacity=".55"><path d="M250 307l51 0M530 159h30M105 389h31"/></g>
 </svg>

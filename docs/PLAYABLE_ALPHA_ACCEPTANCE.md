@@ -1,6 +1,6 @@
 # Mobile Playable Alpha acceptance
 
-Status: **Automated implementation complete — physical mobile acceptance pending.**
+Status: **Alpha RC1 candidate prepared — physical mobile acceptance pending.**
 
 `PASS` means repository evidence exists and passed on Godot 4.7.2. `BLOCKED`
 means the check requires an actual iPhone and a human playthrough; it is not a
@@ -22,6 +22,8 @@ software failure. No physical-device result is claimed in this document.
 | Safe background pause and lifecycle save | PASS | `LifecycleTest` (10 checks) |
 | Save/load across connected career phases | PASS | Phase A–D and system persistence suites |
 | Content IDs, descriptions and prerequisites | PASS | `ContentValidationTest` (7,770 checks) |
+| PA.16B final visual families | PASS | 155 SVG audits, nine final contact sheets, 100-cover before/after audit |
+| Complete 430 × 932 visual fixture | PASS | 22/22 real-renderer application captures, 2026-09-10 |
 | Long-career economy does not compound or collapse | PASS | `EconomyPlateauTest` (12 checks) |
 | Financial recovery cannot defer insolvency forever | PASS | `CrisisEconomyTest` (7 checks) |
 
@@ -55,6 +57,9 @@ information remains summary-first and manageable.
 
 ## Physical iPhone checklist
 
+The authoritative run sheet and evidence template is now
+`docs/ALPHA_RC1_DEVICE_TEST.md`. The concise checklist below remains a quick gate.
+
 - [ ] Launch the game from a clean install.
 - [ ] Create a company and type company/founder names.
 - [ ] Create and name the first game using touch only.
@@ -82,4 +87,3 @@ Playable Alpha is `PASS` only after every physical row above has recorded
 evidence and no release-blocking `FAIL`. Until then the recommendation is:
 
 **PHYSICAL DEVICE ACCEPTANCE REQUIRED**
-

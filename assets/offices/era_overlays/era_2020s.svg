@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" role="img" aria-label="era 2020s office technology">
-  <path d="M520 451c57-24 157-24 212 0" fill="#e98d68" opacity=".12"/>
-  <g fill="#fff7df" stroke="#263c40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M554 389h96l-10-56h-76z"/><path d="M575 349h54v26h-54M601 389v24M577 413h49"/><rect x="669" y="340" width="30" height="58" rx="7"/><circle cx="684" cy="389" r="2"/></g>
-  <circle cx="719" cy="420" r="10" fill="#e98d68"/><circle cx="690" cy="424" r="6" fill="#e98d68" opacity=".7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" role="img" aria-label="era 2020s integrated office technology">
+  <g fill="#1e2d2f" opacity=".16" stroke="none"><ellipse cx="290" cy="365" rx="78" ry="14"/><ellipse cx="567" cy="202" rx="64" ry="9"/><ellipse cx="137" cy="416" rx="55" ry="10"/></g>
+  <g fill="#6a8582" stroke="#254a50" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M232 338h91l-10-40h-71zM277 338v23M252 361h52"/><rect x="333" y="301" width="30" height="48" rx="6"/><path d="M341 308h14v27h-14z"/><rect x="372" y="319" width="33" height="21" rx="3"/><path d="M518 179h61l-7-32h-47zM548 179v17"/><rect x="588" y="149" width="26" height="47" rx="5"/><path d="M594 157h14v27h-14z"/><rect x="99" y="382" width="47" height="29" rx="4"/><path d="M107 389h31v15h-31"/><rect x="157" y="379" width="33" height="34" rx="5"/></g>
+  <g fill="none" stroke="#fff7df" stroke-width="2" opacity=".55"><path d="M250 307l51 0M530 159h30M105 389h31"/></g>
 </svg>

@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="treasure hunting">
   <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 17h30v35H17z" fill="#f0b34f"/><path d="M24 17v35M30 25h11m-11 8h11m-11 8h8"/></g>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 25l8-9h22l8 9v25H13z" fill="#f0b34f"/><path d="M13 30h38M27 30v9h10v-9M20 16l4 9m20-9-4 9"/><circle cx="32" cy="43" r="3" fill="#e98d48"/></g>
 </svg>

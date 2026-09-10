@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="dialogue system">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="10" fill="#4f91a2"/><path d="M32 12v8m0 24v8M12 32h8m24 0h8M18 18l6 6m16 16 6 6m0-28-6 6M24 40l-6 6"/><circle cx="32" cy="32" r="3" fill="#fff7df"/></g>
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 16h39v25H28l-10 9v-9h-7z" fill="#4f91a2"/><path d="M19 25h23m-23 8h16"/></g>
 </svg>

@@ -1,4 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="real time combat">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 48l30-30 4 4-30 30z" fill="#4f91a2"/><path d="M14 40l10 10M38 16l10 10"/><path d="M19 15l30 30"/></g>
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
+  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 48l29-29 4 4-29 29z" fill="#e98d48"/><path d="M14 39l11 11M38 16l11 11"/><circle cx="19" cy="19" r="7"/><path d="M19 15v5l4 2"/></g>
 </svg>

@@ -19,6 +19,13 @@ deterministic portrait-screen review matrix are documented in
 [docs/PA16_ASSET_MANIFEST.md](docs/PA16_ASSET_MANIFEST.md) and
 [docs/PA16_VISUAL_ACCEPTANCE.md](docs/PA16_VISUAL_ACCEPTANCE.md).
 
+PA.16B's final selective visual pass and Alpha RC1 device gate are documented in
+[docs/PA16B_FINAL_REPORT.md](docs/PA16B_FINAL_REPORT.md) and
+[docs/ALPHA_RC1_DEVICE_TEST.md](docs/ALPHA_RC1_DEVICE_TEST.md). Themes,
+technologies, features, era props and procedural covers are graded B or better
+in desktop visual QA; physical iPhone acceptance remains pending. Do not begin
+M4 until the recorded device gate is complete.
+
 ## Open it
 
 1. Install Godot 4.7 or newer.

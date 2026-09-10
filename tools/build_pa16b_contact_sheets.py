@@ -166,8 +166,8 @@ def draw_sheet(
             left = column * tile_w
             top = header_h + row * tile_h
             draw.rectangle((left, top, left + tile_w - 1, top + tile_h - 1), outline="#d1bea0")
-            label = asset_id if len(asset_id) <= 37 else asset_id[:34] + "…"
-            draw.text((left + 10, top + 8), label, font=font, fill=INK)
+            asset_label = asset_id if len(asset_id) <= 37 else asset_id[:34] + "…"
+            draw.text((left + 10, top + 8), asset_label, font=font, fill=INK)
             draw.text((left + 10, top + 26), source.suffix.lower()[1:].upper(), font=small_font, fill=MUTED_INK)
             x = left + 12
             preview_top = top + 50

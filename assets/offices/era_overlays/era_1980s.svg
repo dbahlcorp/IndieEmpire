@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" role="img" aria-label="era 1980s office technology">
-  <path d="M520 451c57-24 157-24 212 0" fill="#b88743" opacity=".12"/>
-  <g fill="#fff7df" stroke="#263c40" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="565" y="340" width="84" height="58" rx="5"/><path d="M578 353h58v32h-58zM607 398v20M585 418h45"/><rect x="665" y="369" width="38" height="24" rx="3"/></g>
-  <circle cx="719" cy="420" r="10" fill="#b88743"/><circle cx="690" cy="424" r="6" fill="#b88743" opacity=".7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 512" role="img" aria-label="era 1980s integrated office technology">
+  <g fill="#1e2d2f" opacity=".16" stroke="none"><ellipse cx="290" cy="365" rx="78" ry="14"/><ellipse cx="567" cy="202" rx="64" ry="9"/><ellipse cx="137" cy="416" rx="55" ry="10"/></g>
+  <g fill="#c8ad79" stroke="#8c6b3e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="252" y="299" width="62" height="45" rx="3"/><path d="M260 307h46v25h-46zM283 344v19M268 363h31"/><rect x="322" y="327" width="26" height="17" rx="2"/><circle cx="341" cy="337" r="2"/><rect x="538" y="154" width="34" height="42" rx="3"/><path d="M545 162h20v17h-20zM548 188h16"/><rect x="579" y="170" width="22" height="26" rx="3"/><rect x="104" y="384" width="20" height="25" rx="2"/><path d="M110 389h8m-8 6h8"/><path d="M134 397h32m-27-8h22"/></g>
+  <g fill="none" stroke="#fff7df" stroke-width="2" opacity=".55"><path d="M250 307l51 0M530 159h30M105 389h31"/></g>
 </svg>

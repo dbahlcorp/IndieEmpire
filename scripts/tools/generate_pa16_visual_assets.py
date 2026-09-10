@@ -190,9 +190,21 @@ def main() -> None:
     }
     families: dict[str, dict[str, str]] = {}
     families["genres"] = author_family("genres", data_ids("genres"), "assets/icons/genres", genres_existing)
-    families["themes"] = author_family("themes", data_ids("themes"), "assets/icons/themes")
-    families["technologies"] = author_family("technologies", data_ids("technologies"), "assets/icons/technologies")
-    families["features"] = author_family("features", data_ids("game_features"), "assets/icons/features")
+    # PA.16B final art is maintained by author_pa16b_final_assets.py. These
+    # mappings deliberately preserve every reviewed source when coverage is
+    # regenerated; the generic motif pass must never overwrite them.
+    families["themes"] = {
+        identifier: existing(f"assets/icons/themes/{identifier}.svg")
+        for identifier in data_ids("themes")
+    }
+    families["technologies"] = {
+        identifier: existing(f"assets/icons/technologies/{identifier}.svg")
+        for identifier in data_ids("technologies")
+    }
+    families["features"] = {
+        identifier: existing(f"assets/icons/features/{identifier}.svg")
+        for identifier in data_ids("game_features")
+    }
 
     families["platforms"] = dict(platforms_existing)
     for index, identifier in enumerate(data_ids("platforms")):
@@ -229,7 +241,10 @@ def main() -> None:
         for identifier in empties
     }
     eras = ["era_1980s", "era_1990s", "era_2000s", "era_2010s", "era_2020s"]
-    families["eras"] = {identifier: save(f"assets/offices/era_overlays/{identifier}.svg", era_svg(identifier, index)) for index, identifier in enumerate(eras)}
+    families["eras"] = {
+        identifier: existing(f"assets/offices/era_overlays/{identifier}.svg")
+        for identifier in eras
+    }
 
     milestones = [
         "first_game", "first_100k_sales", "first_employee", "first_office",
