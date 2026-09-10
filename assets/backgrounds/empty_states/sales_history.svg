@@ -1,6 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-label="sales history">
-  <path d="M24 101c24-14 121-18 146 0" fill="none" stroke="#4f91a2" stroke-width="5" stroke-linecap="round" opacity=".35"/>
-  <rect x="50" y="21" width="92" height="84" rx="18" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g transform="translate(64 31)" fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 49V27h12v22M26 49V16h15v33M41 49V31h9v18" fill="#4f91a2"/><path d="M10 49h44M31 22v4m0 7v4"/></g>
-  <circle cx="153" cy="31" r="8" fill="#e98d48"/><path d="M149 31h8M153 27v8" stroke="#fff7df" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-labelledby="title">
+  <title id="title">Blank sales history board</title>
+  <path d="M20 105h152" stroke="#263c40" stroke-width="5" stroke-linecap="round"/>
+  <path d="M32 22h128v78H32Z" fill="#fff7df" stroke="#315f65" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M48 36v49h97M48 73h97M48 60h97M48 47h97" fill="none" stroke="#b9d7db" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 5"/>
+  <path d="M55 81c15-2 22-1 31-9 11-10 18 4 29-6 9-8 16-8 24-9" fill="none" stroke="#4f91a2" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 6"/>
+  <circle cx="55" cy="81" r="4" fill="#e98d48"/>
+  <path d="M25 100h142" stroke="#b88743" stroke-width="5" stroke-linecap="round"/>
 </svg>

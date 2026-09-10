@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="dreamcube">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="15" width="30" height="27" rx="3" fill="#4f91a2"/><path d="M17 21h18v14H17zM16 51h31M26 42v9"/><rect x="44" y="22" width="9" height="25" rx="2" fill="#e98d48"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">DreamCube console</title>
+  <path d="M14 10h34l8 8v22H8V18Z" fill="#4f91a2" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M14 10 8 18h40l8-8Z" fill="#8fc8c3" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="32" cy="18" r="7" fill="#f8e8c8" stroke="#315f65" stroke-width="2"/>
+  <path d="M14 26h34v8H14Z" fill="#254a50"/>
+  <path d="M18 30h14" stroke="#e98d48" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="45" cy="30" r="2" fill="#f0b34f"/>
 </svg>

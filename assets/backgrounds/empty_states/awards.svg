@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-label="awards">
-  <path d="M24 101c24-14 121-18 146 0" fill="none" stroke="#4f91a2" stroke-width="5" stroke-linecap="round" opacity=".35"/>
-  <rect x="50" y="21" width="92" height="84" rx="18" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g transform="translate(64 31)" fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 43c20 3 31-10 36-27-20-1-35 9-36 27z" fill="#4f956f"/><path d="M17 47c8-10 17-17 29-25"/></g>
-  <circle cx="153" cy="31" r="8" fill="#e98d48"/><path d="M149 31h8M153 27v8" stroke="#fff7df" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-labelledby="title">
+  <title id="title">Empty trophy shelf</title>
+  <path d="M24 104h144" stroke="#263c40" stroke-width="5" stroke-linecap="round"/>
+  <path d="M34 42h124v59H34Z" fill="#f8e8c8" stroke="#315f65" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M47 55h98M47 79h98" stroke="#b88743" stroke-width="5" stroke-linecap="round"/>
+  <path d="M67 79V67m58 12V63" stroke="#617174" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="67" cy="61" r="5" fill="none" stroke="#e98d48" stroke-width="3" stroke-dasharray="3 4"/>
+  <path d="M119 54h12v9h-12Z" fill="none" stroke="#f0b34f" stroke-width="3" stroke-dasharray="4 3"/>
+  <path d="m154 34 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="#f0b34f"/>
 </svg>

@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="pocket dual">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 22h42l-5 29H16z" fill="#4f91a2"/><path d="M19 28h26v13H19zM25 17h14M22 47h20"/><circle cx="32" cy="34" r="4" fill="#e98d48"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">Pocket Dual handheld</title>
+  <path d="M15 4h34v18H15Z" fill="#4f91a2" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="20" y="8" width="24" height="10" rx="1" fill="#b9d7db"/>
+  <path d="M11 24h42l-3 20H14Z" fill="#e9e2cf" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="23" y="27" width="18" height="11" rx="1" fill="#8fc8c3"/>
+  <path d="M16 32h6m-3-3v6" stroke="#315f65" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="47" cy="31" r="2" fill="#e98d48"/>
+  <circle cx="44" cy="36" r="2" fill="#f0b34f"/>
 </svg>

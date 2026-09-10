@@ -1,6 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-label="research">
-  <path d="M24 101c24-14 121-18 146 0" fill="none" stroke="#4f91a2" stroke-width="5" stroke-linecap="round" opacity=".35"/>
-  <rect x="50" y="21" width="92" height="84" rx="18" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g transform="translate(64 31)" fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 49l25-31 4 4-25 31z" fill="#4f91a2"/><path d="M17 15l2 6 6 2-6 2-2 6-2-6-6-2 6-2zM45 39l1.5 4.5L51 45l-4.5 1.5L45 51l-1.5-4.5L39 45l4.5-1.5z" fill="#f0b34f"/></g>
-  <circle cx="153" cy="31" r="8" fill="#e98d48"/><path d="M149 31h8M153 27v8" stroke="#fff7df" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-labelledby="title">
+  <title id="title">Unfinished research blueprint</title>
+  <path d="M19 105h154" stroke="#263c40" stroke-width="5" stroke-linecap="round"/>
+  <path d="M27 35h119v66H27Z" fill="#4f91a2" stroke="#263c40" stroke-width="4" stroke-linejoin="round" transform="rotate(-2 86 68)"/>
+  <path d="M42 48h88M42 87h88M54 42v51m58-51v51" stroke="#b9d7db" stroke-width="2" stroke-dasharray="7 5"/>
+  <path d="M58 77c10-28 36-29 48-6 6 11 16 13 28 3" fill="none" stroke="#fff7df" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 6"/>
+  <path d="m142 27 22 18-36 44-13 3 4-13Z" fill="#f0b34f" stroke="#263c40" stroke-width="3" stroke-linejoin="round"/>
+  <path d="m152 35 5 4" stroke="#e98d48" stroke-width="4" stroke-linecap="round"/>
 </svg>

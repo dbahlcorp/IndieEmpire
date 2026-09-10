@@ -1,0 +1,61 @@
+{
+  "award_presentation": [
+    "award_presentation.png"
+  ],
+  "awards": [
+    "awards.png"
+  ],
+  "empty_states": [
+    "empty_states.png"
+  ],
+  "eras": [
+    "eras.png"
+  ],
+  "features": [
+    "features-01.png",
+    "features-02.png"
+  ],
+  "genres": [
+    "genres.png"
+  ],
+  "milestones": [
+    "milestones.png"
+  ],
+  "platforms": [
+    "platforms.png"
+  ],
+  "statuses": [
+    "statuses.png"
+  ],
+  "technologies": [
+    "technologies-01.png",
+    "technologies-02.png",
+    "technologies-03.png"
+  ],
+  "themes": [
+    "themes-01.png",
+    "themes-02.png",
+    "themes-03.png"
+  ],
+  "ui": [
+    "ui-01.png",
+    "ui-02.png"
+  ],
+  "ui_icons": [
+    "ui_icons-01.png",
+    "ui_icons-02.png"
+  ],
+  "employee_sprites": [
+    "employee_sprites.png"
+  ],
+  "office_props": [
+    "office_props-01.png",
+    "office_props-02.png"
+  ],
+  "office_paintings": [
+    "office_paintings.png"
+  ],
+  "branding": [
+    "branding.png"
+  ]
+}

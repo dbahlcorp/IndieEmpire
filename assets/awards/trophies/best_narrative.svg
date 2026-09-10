@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="best narrative">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12h26v12c0 10-5 17-13 20-8-3-13-10-13-20z" fill="#f0b34f"/><path d="M19 18h-8c0 10 5 15 12 15m22-15h8c0 10-5 15-12 15M27 44v7m-9 0h28"/><path d="M24 40c13-5 18-13 18-22-11 2-18 9-18 22zm0 0-5 8M29 34l10-10"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Best Narrative award</title>
+  <path d="M7 16c10-4 18-1 25 6v31c-7-7-15-10-25-6Zm50 0c-10-4-18-1-25 6v31c7-7 15-10 25-6Z" fill="#f8e8c8" stroke="#263c40" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M19 42c11-6 17-16 19-29 10 2 13 10 7 17-6 7-14 10-23 13Z" fill="#f0b34f" stroke="#263c40" stroke-width="3" stroke-linejoin="round"/>
+  <path d="m16 53 7-10" stroke="#315f65" stroke-width="4" stroke-linecap="round"/>
 </svg>

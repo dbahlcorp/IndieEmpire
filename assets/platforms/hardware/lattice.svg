@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="lattice">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 22h42l-5 29H16z" fill="#4f91a2"/><path d="M19 28h26v13H19zM25 17h14M22 47h20"/><circle cx="32" cy="34" r="4" fill="#e98d48"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">Lattice spatial game system</title>
+  <path d="m32 3 24 12v22L32 47 8 37V15Z" fill="#b9d7db" fill-opacity=".65" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M8 15 32 27l24-12M32 3v44M8 37l24-10 24 10M20 9l24 32M44 9 20 41" fill="none" stroke="#4f91a2" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="32" cy="27" r="5" fill="#e98d48" stroke="#263c40" stroke-width="2"/>
 </svg>

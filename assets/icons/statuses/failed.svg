@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="failed">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="27" cy="28" r="12" fill="#4f91a2"/><path d="M36 37l13 13"/><path d="M22 28h10M27 23v10"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Failed status</title>
+  <circle cx="32" cy="32" r="24" fill="#b94e48"/>
+  <path d="m21 21 22 22m0-22L21 43" stroke="#fff7df" stroke-width="6" stroke-linecap="round"/>
 </svg>

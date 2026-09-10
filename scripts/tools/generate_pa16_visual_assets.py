@@ -28,6 +28,19 @@ def save(relative: str, text: str) -> str:
     return "res://" + relative.replace("\\", "/")
 
 
+def existing(relative: str) -> str:
+    """Return a manifest path for art maintained outside this generator.
+
+    PA.16B selectively replaces weak generated assets with reviewed, hand-authored
+    SVGs. Keeping those mappings explicit prevents a coverage regeneration from
+    destroying approved production art.
+    """
+    path = ROOT / relative
+    if not path.exists():
+        raise FileNotFoundError(f"Expected hand-authored asset: {relative}")
+    return "res://" + relative.replace("\\", "/")
+
+
 def svg64(body: str, title: str, bg: str = PAPER) -> str:
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="{title}">
   <rect x="3" y="3" width="58" height="58" rx="15" fill="{bg}" stroke="{TEAL}" stroke-width="4"/>
@@ -160,8 +173,21 @@ def era_svg(identifier: str, index: int) -> str:
 
 
 def main() -> None:
-    genres_existing = {name: f"res://assets/ui/genres/{name}.svg" for name in ["action", "adventure", "rpg", "strategy", "simulation", "puzzle", "racing", "shooter"]}
-    platforms_existing = {name: f"res://assets/ui/platforms/{name}.svg" for name in ["microstar_64", "ibm_compatible", "famiclone", "pocket_play", "mega16", "playbox32"]}
+    legacy_genres = ["action", "adventure", "rpg", "strategy", "simulation", "puzzle", "racing", "shooter"]
+    pa16b_genres = ["battle_royale", "fighting", "horror", "immersive_vr", "mmo", "neural_sim", "sandbox"]
+    genres_existing = {
+        **{name: existing(f"assets/ui/genres/{name}.svg") for name in legacy_genres},
+        **{name: existing(f"assets/icons/genres/{name}.svg") for name in pa16b_genres},
+    }
+    legacy_platforms = ["microstar_64", "ibm_compatible", "famiclone", "pocket_play", "mega16", "playbox32"]
+    platforms_existing = {
+        **{name: existing(f"assets/ui/platforms/{name}.svg") for name in legacy_platforms},
+        **{
+            name: existing(f"assets/platforms/hardware/{name}.svg")
+            for name in data_ids("platforms")
+            if name not in legacy_platforms
+        },
+    }
     families: dict[str, dict[str, str]] = {}
     families["genres"] = author_family("genres", data_ids("genres"), "assets/icons/genres", genres_existing)
     families["themes"] = author_family("themes", data_ids("themes"), "assets/icons/themes")
@@ -186,25 +212,34 @@ def main() -> None:
         "deadline": "history",
     }
     families["ui"] = {identifier: save(f"assets/icons/ui/{identifier}.svg", svg64(MOTIFS[motif], identifier)) for identifier, motif in ui_motifs.items()}
-    statuses = {"locked": "mystery", "active": "code", "queued": "history", "complete": "nature", "warning": "combat", "failed": "mystery", "paused": "history", "trending": "city", "low_runway": "history", "financial_trouble": "vehicle", "critical": "combat", "insolvent": "mystery"}
-    families["statuses"] = {identifier: save(f"assets/icons/statuses/{identifier}.svg", svg64(MOTIFS[motif], identifier, CREAM)) for identifier, motif in statuses.items()}
+    statuses = ["locked", "active", "queued", "complete", "warning", "failed", "paused", "trending", "low_runway", "financial_trouble", "critical", "insolvent"]
+    families["statuses"] = {
+        identifier: existing(f"assets/icons/statuses/{identifier}.svg")
+        for identifier in statuses
+    }
 
-    families["awards"] = {}
-    for index, identifier in enumerate(data_ids("awards")):
-        families["awards"][identifier] = save(f"assets/awards/trophies/{identifier}.svg", award_svg(identifier, index))
+    families["awards"] = {
+        identifier: existing(f"assets/awards/trophies/{identifier}.svg")
+        for identifier in data_ids("awards")
+    }
 
     empties = ["games", "staff", "contracts", "finances", "records", "research", "franchises", "awards", "engines", "sales_history", "news"]
-    families["empty_states"] = {identifier: save(f"assets/backgrounds/empty_states/{identifier}.svg", empty_svg(identifier, index)) for index, identifier in enumerate(empties)}
+    families["empty_states"] = {
+        identifier: existing(f"assets/backgrounds/empty_states/{identifier}.svg")
+        for identifier in empties
+    }
     eras = ["era_1980s", "era_1990s", "era_2000s", "era_2010s", "era_2020s"]
     families["eras"] = {identifier: save(f"assets/offices/era_overlays/{identifier}.svg", era_svg(identifier, index)) for index, identifier in enumerate(eras)}
 
-    milestone_motifs = {
-        "first_game": "space", "first_100k_sales": "city", "first_employee": "person",
-        "first_office": "city", "first_1m_sales": "history", "first_8_review": "nature",
-        "first_9_review": "magic", "first_award": "sport", "first_goty": "sport",
-        "first_franchise": "world", "first_custom_engine": "machine", "ten_employees": "social",
+    milestones = [
+        "first_game", "first_100k_sales", "first_employee", "first_office",
+        "first_1m_sales", "first_8_review", "first_9_review", "first_award",
+        "first_goty", "first_franchise", "first_custom_engine", "ten_employees",
+    ]
+    families["milestones"] = {
+        identifier: existing(f"assets/icons/milestones/{identifier}.svg")
+        for identifier in milestones
     }
-    families["milestones"] = {identifier: save(f"assets/icons/milestones/{identifier}.svg", svg64(MOTIFS[motif], identifier.replace("_", " "))) for identifier, motif in milestone_motifs.items()}
     families["award_presentation"] = {
         "nominee": save("assets/awards/badges/nominee.svg", svg64(MOTIFS["magic"], "award nominee")),
         "winner": save("assets/awards/badges/winner.svg", award_svg("goty", 0)),

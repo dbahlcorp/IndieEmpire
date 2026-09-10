@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-label="finances">
-  <path d="M24 101c24-14 121-18 146 0" fill="none" stroke="#4f91a2" stroke-width="5" stroke-linecap="round" opacity=".35"/>
-  <rect x="50" y="21" width="92" height="84" rx="18" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g transform="translate(64 31)" fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="25" r="7" fill="#e98d48"/><circle cx="42" cy="28" r="6" fill="#4f91a2"/><path d="M11 48c2-10 9-14 16-14s14 4 16 14M36 39c8-2 14 2 17 9"/></g>
-  <circle cx="153" cy="31" r="8" fill="#e98d48"/><path d="M149 31h8M153 27v8" stroke="#fff7df" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-labelledby="title">
+  <title id="title">Empty cash drawer and ledger</title>
+  <path d="M20 105h152" stroke="#263c40" stroke-width="5" stroke-linecap="round"/>
+  <path d="M30 60h99v42H30Z" fill="#315f65" stroke="#263c40" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M40 70h79v21H40Z" fill="#f8e8c8" stroke="#263c40" stroke-width="3"/>
+  <circle cx="80" cy="81" r="5" fill="none" stroke="#617174" stroke-width="3" stroke-dasharray="3 3"/>
+  <path d="M126 27h38v64h-38Z" fill="#fff7df" stroke="#4f91a2" stroke-width="4" stroke-linejoin="round" transform="rotate(-4 145 59)"/>
+  <path d="M136 43h18m-18 10h18m-18 22h18" stroke="#617174" stroke-width="3" stroke-linecap="round"/>
+  <path d="M137 66h5v7h-5m8-12h5v12h-5m8-18h5v18h-5" fill="#e98d48"/>
 </svg>

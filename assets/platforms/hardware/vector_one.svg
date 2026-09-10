@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="vector one">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="15" width="30" height="27" rx="3" fill="#4f91a2"/><path d="M17 21h18v14H17zM16 51h31M26 42v9"/><rect x="44" y="22" width="9" height="25" rx="2" fill="#e98d48"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">Vector One angular console</title>
+  <path d="M7 35 18 8h39l-8 32H12Z" fill="#254a50" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="m18 8 12 9h25l2-9Z" fill="#4f91a2"/>
+  <path d="M18 25h24" stroke="#b9d7db" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M18 31h16" stroke="#617174" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="46" cy="31" r="3" fill="#e98d48"/>
 </svg>

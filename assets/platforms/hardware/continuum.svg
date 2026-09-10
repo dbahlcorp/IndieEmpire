@@ -1,4 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="continuum">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="10" width="32" height="44" rx="8" fill="#4f91a2"/><rect x="21" y="16" width="22" height="25" rx="2" fill="#fff7df"/><path d="M27 48h10M13 28h3m32 0h3"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">Continuum modular game system</title>
+  <rect x="13" y="5" width="38" height="32" rx="7" fill="#254a50" stroke="#263c40" stroke-width="2.5"/>
+  <rect x="19" y="9" width="26" height="24" rx="3" fill="#8fc8c3"/>
+  <path d="M4 12h12v27H4Z" fill="#e98d48" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M48 12h12v27H48Z" fill="#4f91a2" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M8 22h5m-2-3v6" stroke="#fff7df" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="54" cy="21" r="2" fill="#fff7df"/>
+  <path d="M22 43h20" stroke="#315f65" stroke-width="3" stroke-linecap="round"/>
 </svg>

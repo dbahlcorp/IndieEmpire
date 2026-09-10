@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="playbox64">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="10" width="32" height="44" rx="8" fill="#4f91a2"/><rect x="21" y="16" width="22" height="25" rx="2" fill="#fff7df"/><path d="M27 48h10M13 28h3m32 0h3"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">PlayBox 64 console</title>
+  <path d="M5 17 13 9h44l2 30H8Z" fill="#254a50" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M13 9h44l-8 8H5Z" fill="#4f91a2" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M16 23h29" stroke="#f8e8c8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M14 30h34" stroke="#617174" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="53" cy="30" r="3" fill="#e98d48"/>
 </svg>

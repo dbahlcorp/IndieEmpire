@@ -1,4 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="locked">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="27" cy="28" r="12" fill="#4f91a2"/><path d="M36 37l13 13"/><path d="M22 28h10M27 23v10"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Locked status</title>
+  <rect x="12" y="27" width="40" height="29" rx="8" fill="#315f65"/>
+  <path d="M21 27v-7c0-8 5-13 11-13s11 5 11 13v7" fill="none" stroke="#4f91a2" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="32" cy="40" r="4" fill="#fff7df"/>
+  <path d="M32 43v6" stroke="#fff7df" stroke-width="4" stroke-linecap="round"/>
 </svg>

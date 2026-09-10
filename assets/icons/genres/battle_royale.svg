@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="battle royale">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Battle royale genre</title>
   <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 48l30-30 4 4-30 30z" fill="#4f91a2"/><path d="M14 40l10 10M38 16l10 10"/><path d="M19 15l30 30"/></g>
+  <path d="M15 27C18 14 46 14 49 27L43 24 38 28 32 24 26 28 21 24Z" fill="#e98d48" stroke="#263c40" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M32 25v13" fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="32" cy="42" r="4" fill="#4f91a2" stroke="#263c40" stroke-width="3"/>
+  <path d="M23 48a15 15 0 0 0 18 0" fill="none" stroke="#315f65" stroke-width="3" stroke-linecap="round"/>
 </svg>

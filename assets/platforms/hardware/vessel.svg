@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="vessel">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="22" width="46" height="25" rx="7" fill="#e98d48"/><circle cx="21" cy="35" r="7" fill="#fff7df"/><path d="M17 35h8m-4-4v8M43 31h1m5 7h1"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">Vessel hybrid game system</title>
+  <path d="M15 26h34l6 18H9Z" fill="#254a50" stroke="#263c40" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect x="11" y="5" width="42" height="28" rx="6" fill="#4f91a2" stroke="#263c40" stroke-width="2.5"/>
+  <rect x="20" y="8" width="24" height="22" rx="2" fill="#b9d7db"/>
+  <path d="M14 19h5m-2-2v5" stroke="#fff7df" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="48" cy="16" r="2" fill="#f0b34f"/>
+  <circle cx="48" cy="23" r="2" fill="#e98d48"/>
 </svg>

@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="first employee">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="22" r="9" fill="#e98d48"/><path d="M15 51c2-13 9-19 17-19s15 6 17 19" fill="#4f91a2"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="first employee milestone">
+  <path d="M19 15h26l6 7v32H13V22z" fill="#f8e8c8" stroke="#263c40" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="32" cy="29" r="7" fill="#e98b49" stroke="#263c40" stroke-width="3"/>
+  <path d="M21 47c2-7 6-10 11-10s9 3 11 10" fill="#4f91a2" stroke="#263c40" stroke-width="3" stroke-linecap="round"/>
+  <path d="M25 15v-5h14v5" fill="none" stroke="#263c40" stroke-width="4" stroke-linejoin="round"/>
 </svg>

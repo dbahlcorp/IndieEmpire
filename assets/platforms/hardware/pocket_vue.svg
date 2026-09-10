@@ -1,4 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="pocket vue">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="15" width="30" height="27" rx="3" fill="#4f91a2"/><path d="M17 21h18v14H17zM16 51h31M26 42v9"/><rect x="44" y="22" width="9" height="25" rx="2" fill="#e98d48"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 48" role="img" aria-labelledby="title">
+  <title id="title">Pocket Vue widescreen handheld</title>
+  <path d="M5 14c0-4 3-7 7-7h40c4 0 7 3 7 7v23c0 4-3 7-7 7H12c-4 0-7-3-7-7Z" fill="#4f91a2" stroke="#263c40" stroke-width="2.5"/>
+  <rect x="18" y="11" width="28" height="29" rx="2" fill="#b9d7db"/>
+  <path d="M9 25h7m-3-3v7" stroke="#f8e8c8" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="52" cy="22" r="2.5" fill="#f0b34f"/>
+  <circle cx="50" cy="29" r="2.5" fill="#e98d48"/>
 </svg>

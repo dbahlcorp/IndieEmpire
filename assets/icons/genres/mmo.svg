@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="mmo">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">MMO genre</title>
   <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 40l6-13h27l6 13v8H12z" fill="#e98d48"/><circle cx="21" cy="48" r="5" fill="#fff7df"/><circle cx="44" cy="48" r="5" fill="#fff7df"/><path d="M19 40h28"/></g>
+  <circle cx="32" cy="31" r="15" fill="#4f91a2" stroke="#263c40" stroke-width="4"/>
+  <path d="M17 31h30M32 16c-7 8-7 22 0 30m0-30c7 8 7 22 0 30" fill="none" stroke="#fff7df" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="15" cy="19" r="5" fill="#e98d48" stroke="#263c40" stroke-width="3"/>
+  <circle cx="49" cy="18" r="5" fill="#f0b34f" stroke="#263c40" stroke-width="3"/>
+  <circle cx="49" cy="47" r="5" fill="#4f956f" stroke="#263c40" stroke-width="3"/>
 </svg>

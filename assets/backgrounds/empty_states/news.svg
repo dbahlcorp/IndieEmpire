@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-label="news">
-  <path d="M24 101c24-14 121-18 146 0" fill="none" stroke="#4f91a2" stroke-width="5" stroke-linecap="round" opacity=".35"/>
-  <rect x="50" y="21" width="92" height="84" rx="18" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g transform="translate(64 31)" fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="10" fill="#4f91a2"/><path d="M32 12v8m0 24v8M12 32h8m24 0h8M18 18l6 6m16 16 6 6m0-28-6 6M24 40l-6 6"/><circle cx="32" cy="32" r="3" fill="#fff7df"/></g>
-  <circle cx="153" cy="31" r="8" fill="#e98d48"/><path d="M149 31h8M153 27v8" stroke="#fff7df" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-labelledby="title">
+  <title id="title">Quiet newspaper stand</title>
+  <path d="M21 105h150" stroke="#263c40" stroke-width="5" stroke-linecap="round"/>
+  <path d="M39 38h112v63H39Z" fill="#315f65" stroke="#263c40" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M52 23h89v66H52Z" fill="#fff7df" stroke="#4f91a2" stroke-width="4" stroke-linejoin="round" transform="rotate(2 96 56)"/>
+  <path d="M64 37h65M64 47h40" stroke="#263c40" stroke-width="4" stroke-linecap="round"/>
+  <path d="M64 59h29v20H64Z" fill="#f8e8c8" stroke="#617174" stroke-width="3"/>
+  <path d="M101 61h27m-27 9h23m-23 9h18" stroke="#617174" stroke-width="3" stroke-linecap="round" stroke-dasharray="7 4"/>
+  <circle cx="137" cy="30" r="5" fill="#e98d48"/>
 </svg>

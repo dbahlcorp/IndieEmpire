@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="first custom engine">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="10" fill="#4f91a2"/><path d="M32 12v8m0 24v8M12 32h8m24 0h8M18 18l6 6m16 16 6 6m0-28-6 6M24 40l-6 6"/><circle cx="32" cy="32" r="3" fill="#fff7df"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="first custom engine milestone">
+  <path d="M28 8h8l2 8 7 3 7-4 5 6-5 7 1 8 7 4-3 8-9-1-6 5-1 8h-8l-2-8-7-3-7 4-5-6 5-7-1-8-7-4 3-8 9 1 6-5z" fill="#4f91a2" stroke="#263c40" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="32" cy="34" r="11" fill="#f3b54a" stroke="#263c40" stroke-width="4"/>
+  <path d="m29 24 9 8-6 3 3 9-10-12 6-2z" fill="#f8e8c8" stroke="#263c40" stroke-width="2" stroke-linejoin="round"/>
 </svg>

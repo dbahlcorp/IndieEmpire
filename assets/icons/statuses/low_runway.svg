@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="low_runway">
-  <rect x="3" y="3" width="58" height="58" rx="15" fill="#fff7df" stroke="#315f65" stroke-width="4"/>
-  <g fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M17 17h30v35H17z" fill="#f0b34f"/><path d="M24 17v35M30 25h11m-11 8h11m-11 8h8"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Low runway status</title>
+  <rect x="7" y="18" width="44" height="28" rx="7" fill="#e98d48"/>
+  <rect x="51" y="26" width="6" height="12" rx="2" fill="#e98d48"/>
+  <rect x="13" y="24" width="9" height="16" rx="3" fill="#fff7df"/>
 </svg>

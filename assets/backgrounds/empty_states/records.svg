@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-label="records">
-  <path d="M24 101c24-14 121-18 146 0" fill="none" stroke="#4f91a2" stroke-width="5" stroke-linecap="round" opacity=".35"/>
-  <rect x="50" y="21" width="92" height="84" rx="18" fill="#f8e8c8" stroke="#315f65" stroke-width="4"/>
-  <g transform="translate(64 31)" fill="none" stroke="#263c40" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="19" fill="#4f91a2"/><path d="M13 32h38M32 13c-10 10-10 28 0 38m0-38c10 10 10 28 0 38"/></g>
-  <circle cx="153" cy="31" r="8" fill="#e98d48"/><path d="M149 31h8M153 27v8" stroke="#fff7df" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 128" role="img" aria-labelledby="title">
+  <title id="title">Empty studio archive</title>
+  <path d="M24 105h144" stroke="#263c40" stroke-width="5" stroke-linecap="round"/>
+  <path d="M43 29h106v73H43Z" fill="#4f91a2" stroke="#263c40" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M50 37h92v26H50Zm0 32h92v26H50Z" fill="#f8e8c8" stroke="#315f65" stroke-width="3"/>
+  <path d="M84 45h24v9H84Zm0 32h24v9H84Z" fill="none" stroke="#617174" stroke-width="3" stroke-dasharray="5 3"/>
+  <circle cx="133" cy="50" r="3" fill="#e98d48"/>
+  <circle cx="133" cy="82" r="3" fill="#f0b34f"/>
+  <path d="M55 23h82" stroke="#b88743" stroke-width="5" stroke-linecap="round"/>
 </svg>
