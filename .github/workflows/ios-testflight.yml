@@ -74,12 +74,12 @@ jobs:
           unzip -q templates.tpz -d templates_extracted
           mv templates_extracted/templates/* "$tdir/"
 
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot/Godot.app/Contents/MacOS" >> "$GITHUB_PATH"
-
-      - name: Rename Godot binary
+      - name: Verify Godot installation
         run: |
-          ln -sf "$HOME/godot/Godot.app/Contents/MacOS/Godot" "$HOME/godot/Godot.app/Contents/MacOS/godot"
+          set -euo pipefail
+          godot_bin="$HOME/godot/Godot.app/Contents/MacOS/Godot"
+          test -x "$godot_bin" || { echo "::error::Godot executable not found at $godot_bin"; exit 1; }
+          "$godot_bin" --version
 
       - name: Inject Apple identifiers into export preset
         env:
@@ -103,16 +103,18 @@ jobs:
       - name: Import project
         run: |
           set -euo pipefail
-          godot --headless --path . --import || godot --headless --path . --import
+          godot_bin="$HOME/godot/Godot.app/Contents/MacOS/Godot"
+          "$godot_bin" --headless --path . --import || "$godot_bin" --headless --path . --import
 
       - name: Export Xcode project
         run: |
           set -euo pipefail
+          godot_bin="$HOME/godot/Godot.app/Contents/MacOS/Godot"
           rm -rf build/ios && mkdir -p build/ios
           # Godot treats this path as "<folder>/<project name>" and writes
           # <name>.xcodeproj plus sources into the folder; the exact bundle name
           # is not worth predicting, so locate it afterwards.
-          godot --headless --path . --export-release "${EXPORT_PRESET}" \
+          "$godot_bin" --headless --path . --export-release "${EXPORT_PRESET}" \
             "$(pwd)/build/ios/IndieEmpire"
           ls -la build/ios
           xcodeproj="$(find build/ios -maxdepth 2 -name '*.xcodeproj' -type d | head -1)"
