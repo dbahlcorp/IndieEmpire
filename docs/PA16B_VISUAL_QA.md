@@ -364,8 +364,9 @@ franchise palette/composition. Final grade: **B**.
 - the PA.16 coverage generator changed 0/155 reviewed assets on a protection rerun;
 - nine final contact sheets were reviewed at intended mobile sizes;
 - 100 before and 100 after covers were captured and reviewed;
-- 22/22 current application screens rendered at 430 × 932;
-- 72/72 root regression suites passed with 13,521 checks;
+- 22/22 current application screens plus 13 bottom-of-scroll views rendered at
+  430 × 932 with the real runtime theme and zero capture errors;
+- 72/72 root regression suites passed with 13,522 checks;
 - connected acceptance Phases A–D passed 56, 40, 14 and 68 checks;
 - physical-device review remains open.
 

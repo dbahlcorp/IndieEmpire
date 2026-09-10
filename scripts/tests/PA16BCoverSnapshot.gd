@@ -4,7 +4,9 @@ extends Node
 ## 2x its compact list size so both composition and thumbnail behavior can be
 ## reviewed without mutating simulation state.
 
-const DEFAULT_OUTPUT_DIR := "res://artifacts/pa16b-covers-before"
+# The historical before/after folders are review evidence. A routine regression
+# run must never replace either one unless the caller opts into that exact path.
+const DEFAULT_OUTPUT_DIR := "res://artifacts/pa16b-covers-current"
 const TITLES := [
     "STARFALL", "STARFALL II", "STARFALL III: ECHOES OF ORION",
     "THE LEGENDS OF THE LAST FRONTIER", "NEON TIDE", "IRON HARVEST",

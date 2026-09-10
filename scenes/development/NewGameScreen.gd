@@ -73,8 +73,8 @@ func _build_workflow_header() -> void:
     stages.name = "WorkflowStages"
     stages.add_theme_constant_override("separation", 6)
     for data in [
-        ["1  CONCEPT", "positive"], ["2  PRODUCTION", "info"],
-        ["3  GREENLIGHT", "info"], ["4  DEVELOPMENT", "info"]
+        ["1  CONCEPT", "positive"], ["2  BUILD", "info"],
+        ["3  REVIEW", "info"], ["4  DEVELOP", "info"]
     ]:
         var chip := UiBuilder.status_chip(str(data[0]), str(data[1]))
         chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -18,12 +18,12 @@ software failure. No physical-device result is claimed in this document.
 | Onboarding state, progressive disclosure and skip | PASS | `TutorialTest` (30 checks) |
 | Release reveal, skip and Reduced Motion | PASS | `ReleasePresentationTest` and `ReviewRevealTest` |
 | Audio settings, feedback routing and optional haptics | PASS | `AudioTest` (78 checks) |
-| Mobile Statistics calculations and layout | PASS | `StatisticsTest` (14 checks) |
+| Mobile Statistics calculations and layout | PASS | `StatisticsTest` (15 checks) |
 | Safe background pause and lifecycle save | PASS | `LifecycleTest` (10 checks) |
 | Save/load across connected career phases | PASS | Phase A–D and system persistence suites |
 | Content IDs, descriptions and prerequisites | PASS | `ContentValidationTest` (7,770 checks) |
 | PA.16B final visual families | PASS | 155 SVG audits, nine final contact sheets, 100-cover before/after audit |
-| Complete 430 × 932 visual fixture | PASS | 22/22 real-renderer application captures, 2026-09-10 |
+| Complete 430 × 932 visual fixture | PASS | 22/22 top views plus 13 bottom-scroll views, runtime theme, zero capture errors, 2026-09-10 |
 | Long-career economy does not compound or collapse | PASS | `EconomyPlateauTest` (12 checks) |
 | Financial recovery cannot defer insolvency forever | PASS | `CrisisEconomyTest` (7 checks) |
 

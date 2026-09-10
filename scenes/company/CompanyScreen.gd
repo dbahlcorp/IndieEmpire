@@ -55,18 +55,14 @@ func _culture() -> void:
     list.add_child(UiBuilder.label(
         "What the studio has become, from what it keeps doing.", 13, true))
 
-    var text := ""
     for value in CultureSimulator.VALUES:
         var id := str(value["id"])
         var score := CultureManager.value(id)
-        var filled := clampi(int(round(score / 10.0)), 0, 10)
-        text += "%-18s %s%s
-  %s
-" % [
-            str(value["name"]), "#".repeat(filled), ".".repeat(10 - filled),
-            CultureManager.label(id)
-        ]
-    list.add_child(UiBuilder.label(text.strip_edges(), 14))
+        list.add_child(UiBuilder.progress_meter(
+            str(value["name"]), int(round(score)), "morale"))
+        var meaning := UiBuilder.label(CultureManager.label(id), 12, true)
+        meaning.theme_type_variation = &"MutedLabel"
+        list.add_child(meaning)
 
     var recent := CultureManager.recent_shifts()
     if not recent.is_empty():

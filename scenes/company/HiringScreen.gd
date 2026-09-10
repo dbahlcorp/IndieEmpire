@@ -109,7 +109,9 @@ func _candidate_panel(candidate: Employee, expanded: bool) -> PanelContainer:
     for highlight in highlights:
         skill_items.append({"icon": "skills", "label": str(highlight["name"]),
             "value": str(highlight["value"])})
-    stack.add_child(UiBuilder.stat_grid(skill_items, 3))
+    # Three narrow cards split headings such as PROGRAMMING mid-word at the
+    # 430 px reference width. Two columns remain compact and phone-readable.
+    stack.add_child(UiBuilder.stat_grid(skill_items, 2))
     stack.add_child(UiBuilder.stat_grid([
         {"icon": "payroll", "label": "Salary", "value": "%s / mo" %
             Format.money_exact(candidate.salary)},

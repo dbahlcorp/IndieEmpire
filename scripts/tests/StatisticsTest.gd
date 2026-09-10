@@ -45,6 +45,10 @@ func _company_aggregates() -> void:
     flop.development_cost = 90000
     GameState.released_games.assign([hit, flop])
     check_equal(CompanyStats.biggest_loss(), flop, "biggest flop is measured by loss")
+    GameState.released_games.assign([hit])
+    check_equal(CompanyStats.biggest_loss(), null,
+        "a profitable catalogue does not invent a biggest flop")
+    GameState.released_games.assign([hit, flop])
     check_equal(CompanyStats.overview().size(), 6, "mobile overview has six headline cards")
 
 func _statistics_screen_is_mobile_ready() -> void:

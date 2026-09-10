@@ -329,6 +329,8 @@ func _begin_impact() -> void:
         var name_label := UiBuilder.label(str(row["label"]), 15)
         name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         var value_label := UiBuilder.label("", 17)
+        value_label.custom_minimum_size.x = 92
+        value_label.autowrap_mode = TextServer.AUTOWRAP_OFF
         value_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
         value_label.add_theme_color_override("font_color",
             ReleaseSummarySimulator.tone_color(str(row.get("tone", "flat"))))

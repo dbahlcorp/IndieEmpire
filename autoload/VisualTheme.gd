@@ -133,6 +133,7 @@ func _build_theme() -> Theme:
     theme.set_stylebox("normal", "LineEdit", _box(CREAM, OUTLINE, 12, 2))
     theme.set_stylebox("focus", "LineEdit", _box(Color.WHITE, ORANGE, 12, 3))
     theme.set_color("font_color", "LineEdit", INK)
+    theme.set_color("font_placeholder_color", "LineEdit", MUTED)
     theme.set_color("caret_color", "LineEdit", ORANGE_DARK)
     theme.set_stylebox("normal", "TextEdit", _box(CREAM, OUTLINE, 12, 2))
     theme.set_stylebox("focus", "TextEdit", _box(Color.WHITE, ORANGE, 12, 3))

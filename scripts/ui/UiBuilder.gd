@@ -287,7 +287,7 @@ static func meter(percent: float, width: int = 10) -> String:
 static func score_bar(score: float) -> String:
     ## A ten-point score as filled and empty blocks.
     var filled := clampi(int(round(score)), 0, 10)
-    return "#".repeat(filled) + ".".repeat(10 - filled)
+    return "●".repeat(filled) + "○".repeat(10 - filled)
 
 static func clear(container: Node) -> void:
     for child in container.get_children():

@@ -1,0 +1,902 @@
+[
+  {
+    "franchise": "starfall_series",
+    "genre": "action",
+    "index": 1,
+    "platform": "ibm_compatible",
+    "theme": "space",
+    "title": "STARFALL",
+    "year": 1985
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "puzzle",
+    "index": 2,
+    "platform": "pocket_play",
+    "theme": "detective",
+    "title": "STARFALL II",
+    "year": 1986
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "mmo",
+    "index": 3,
+    "platform": "dreamcube",
+    "theme": "crime",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 1987
+  },
+  {
+    "franchise": "",
+    "genre": "action",
+    "index": 4,
+    "platform": "pocket_dual",
+    "theme": "farming",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 1988
+  },
+  {
+    "franchise": "",
+    "genre": "puzzle",
+    "index": 5,
+    "platform": "vector_one",
+    "theme": "samurai",
+    "title": "NEON TIDE",
+    "year": 1989
+  },
+  {
+    "franchise": "",
+    "genre": "mmo",
+    "index": 6,
+    "platform": "lattice",
+    "theme": "arctic",
+    "title": "IRON HARVEST",
+    "year": 1990
+  },
+  {
+    "franchise": "",
+    "genre": "action",
+    "index": 7,
+    "platform": "pocket_vue",
+    "theme": "age_of_sail",
+    "title": "CITY OF GLASS",
+    "year": 1991
+  },
+  {
+    "franchise": "",
+    "genre": "puzzle",
+    "index": 8,
+    "platform": "microstar_64",
+    "theme": "virtual_worlds",
+    "title": "WILD SIGNAL",
+    "year": 1992
+  },
+  {
+    "franchise": "",
+    "genre": "mmo",
+    "index": 9,
+    "platform": "mega16",
+    "theme": "fantasy",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 1993
+  },
+  {
+    "franchise": "",
+    "genre": "action",
+    "index": 10,
+    "platform": "home_pc",
+    "theme": "history",
+    "title": "TINY KINGDOMS",
+    "year": 1994
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "racing",
+    "index": 11,
+    "platform": "nexus_hd",
+    "theme": "dinosaurs",
+    "title": "STARFALL II",
+    "year": 1995
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "sandbox",
+    "index": 12,
+    "platform": "helix_vr",
+    "theme": "city_building",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 1996
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "adventure",
+    "index": 13,
+    "platform": "ember",
+    "theme": "ancient_egypt",
+    "title": "STARFALL",
+    "year": 1997
+  },
+  {
+    "franchise": "",
+    "genre": "racing",
+    "index": 14,
+    "platform": "vessel",
+    "theme": "magic_academy",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 1998
+  },
+  {
+    "franchise": "",
+    "genre": "sandbox",
+    "index": 15,
+    "platform": "famiclone",
+    "theme": "cooking",
+    "title": "NEON TIDE",
+    "year": 1999
+  },
+  {
+    "franchise": "",
+    "genre": "adventure",
+    "index": 16,
+    "platform": "playbox32",
+    "theme": "hacking",
+    "title": "IRON HARVEST",
+    "year": 2000
+  },
+  {
+    "franchise": "",
+    "genre": "racing",
+    "index": 17,
+    "platform": "playbox64",
+    "theme": "military",
+    "title": "CITY OF GLASS",
+    "year": 2001
+  },
+  {
+    "franchise": "",
+    "genre": "sandbox",
+    "index": 18,
+    "platform": "palmscreen",
+    "theme": "espionage",
+    "title": "WILD SIGNAL",
+    "year": 2002
+  },
+  {
+    "franchise": "",
+    "genre": "adventure",
+    "index": 19,
+    "platform": "continuum",
+    "theme": "superheroes",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 2003
+  },
+  {
+    "franchise": "",
+    "genre": "racing",
+    "index": 20,
+    "platform": "optix_cd",
+    "theme": "medical",
+    "title": "TINY KINGDOMS",
+    "year": 2004
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "battle_royale",
+    "index": 21,
+    "platform": "ibm_compatible",
+    "theme": "vampires",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 2005
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "rpg",
+    "index": 22,
+    "platform": "pocket_play",
+    "theme": "heist",
+    "title": "STARFALL",
+    "year": 2006
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "shooter",
+    "index": 23,
+    "platform": "dreamcube",
+    "theme": "music_rhythm",
+    "title": "STARFALL II",
+    "year": 2007
+  },
+  {
+    "franchise": "",
+    "genre": "battle_royale",
+    "index": 24,
+    "platform": "pocket_dual",
+    "theme": "archaeology",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 2008
+  },
+  {
+    "franchise": "",
+    "genre": "rpg",
+    "index": 25,
+    "platform": "vector_one",
+    "theme": "horror",
+    "title": "NEON TIDE",
+    "year": 2009
+  },
+  {
+    "franchise": "",
+    "genre": "shooter",
+    "index": 26,
+    "platform": "lattice",
+    "theme": "cyberpunk",
+    "title": "IRON HARVEST",
+    "year": 2010
+  },
+  {
+    "franchise": "",
+    "genre": "battle_royale",
+    "index": 27,
+    "platform": "pocket_vue",
+    "theme": "survival",
+    "title": "CITY OF GLASS",
+    "year": 2011
+  },
+  {
+    "franchise": "",
+    "genre": "rpg",
+    "index": 28,
+    "platform": "microstar_64",
+    "theme": "business",
+    "title": "WILD SIGNAL",
+    "year": 2012
+  },
+  {
+    "franchise": "",
+    "genre": "shooter",
+    "index": 29,
+    "platform": "mega16",
+    "theme": "ghosts",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 2013
+  },
+  {
+    "franchise": "",
+    "genre": "battle_royale",
+    "index": 30,
+    "platform": "home_pc",
+    "theme": "mafia",
+    "title": "TINY KINGDOMS",
+    "year": 2014
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "strategy",
+    "index": 31,
+    "platform": "nexus_hd",
+    "theme": "wildlife",
+    "title": "STARFALL",
+    "year": 2015
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "fighting",
+    "index": 32,
+    "platform": "helix_vr",
+    "theme": "treasure_hunting",
+    "title": "STARFALL II",
+    "year": 2016
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "immersive_vr",
+    "index": 33,
+    "platform": "ember",
+    "theme": "pirates",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 2017
+  },
+  {
+    "franchise": "",
+    "genre": "strategy",
+    "index": 34,
+    "platform": "vessel",
+    "theme": "robots",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 2018
+  },
+  {
+    "franchise": "",
+    "genre": "fighting",
+    "index": 35,
+    "platform": "famiclone",
+    "theme": "post_apocalypse",
+    "title": "NEON TIDE",
+    "year": 2019
+  },
+  {
+    "franchise": "",
+    "genre": "immersive_vr",
+    "index": 36,
+    "platform": "playbox32",
+    "theme": "steampunk",
+    "title": "IRON HARVEST",
+    "year": 2020
+  },
+  {
+    "franchise": "",
+    "genre": "strategy",
+    "index": 37,
+    "platform": "playbox64",
+    "theme": "kaiju",
+    "title": "CITY OF GLASS",
+    "year": 2021
+  },
+  {
+    "franchise": "",
+    "genre": "fighting",
+    "index": 38,
+    "platform": "palmscreen",
+    "theme": "automotive",
+    "title": "WILD SIGNAL",
+    "year": 2022
+  },
+  {
+    "franchise": "",
+    "genre": "immersive_vr",
+    "index": 39,
+    "platform": "continuum",
+    "theme": "dragons",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 2023
+  },
+  {
+    "franchise": "",
+    "genre": "strategy",
+    "index": 40,
+    "platform": "optix_cd",
+    "theme": "theme_park",
+    "title": "TINY KINGDOMS",
+    "year": 2024
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "horror",
+    "index": 41,
+    "platform": "ibm_compatible",
+    "theme": "aliens",
+    "title": "STARFALL II",
+    "year": 2025
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "neural_sim",
+    "index": 42,
+    "platform": "pocket_play",
+    "theme": "racing_theme",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 1985
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "simulation",
+    "index": 43,
+    "platform": "dreamcube",
+    "theme": "zombies",
+    "title": "STARFALL",
+    "year": 1986
+  },
+  {
+    "franchise": "",
+    "genre": "horror",
+    "index": 44,
+    "platform": "pocket_dual",
+    "theme": "mythology",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 1987
+  },
+  {
+    "franchise": "",
+    "genre": "neural_sim",
+    "index": 45,
+    "platform": "vector_one",
+    "theme": "deep_sea",
+    "title": "NEON TIDE",
+    "year": 1988
+  },
+  {
+    "franchise": "",
+    "genre": "simulation",
+    "index": 46,
+    "platform": "lattice",
+    "theme": "aviation",
+    "title": "IRON HARVEST",
+    "year": 1989
+  },
+  {
+    "franchise": "",
+    "genre": "horror",
+    "index": 47,
+    "platform": "pocket_vue",
+    "theme": "fairy_tales",
+    "title": "CITY OF GLASS",
+    "year": 1990
+  },
+  {
+    "franchise": "",
+    "genre": "neural_sim",
+    "index": 48,
+    "platform": "microstar_64",
+    "theme": "occult",
+    "title": "WILD SIGNAL",
+    "year": 1991
+  },
+  {
+    "franchise": "",
+    "genre": "simulation",
+    "index": 49,
+    "platform": "mega16",
+    "theme": "western",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 1992
+  },
+  {
+    "franchise": "",
+    "genre": "horror",
+    "index": 50,
+    "platform": "home_pc",
+    "theme": "sports",
+    "title": "TINY KINGDOMS",
+    "year": 1993
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "action",
+    "index": 51,
+    "platform": "nexus_hd",
+    "theme": "time_travel",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 1994
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "puzzle",
+    "index": 52,
+    "platform": "helix_vr",
+    "theme": "vikings",
+    "title": "STARFALL",
+    "year": 1995
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "mmo",
+    "index": 53,
+    "platform": "ember",
+    "theme": "jungle",
+    "title": "STARFALL II",
+    "year": 1996
+  },
+  {
+    "franchise": "",
+    "genre": "action",
+    "index": 54,
+    "platform": "vessel",
+    "theme": "railways",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 1997
+  },
+  {
+    "franchise": "",
+    "genre": "puzzle",
+    "index": 55,
+    "platform": "famiclone",
+    "theme": "nuclear_wasteland",
+    "title": "NEON TIDE",
+    "year": 1998
+  },
+  {
+    "franchise": "",
+    "genre": "mmo",
+    "index": 56,
+    "platform": "playbox32",
+    "theme": "space",
+    "title": "IRON HARVEST",
+    "year": 1999
+  },
+  {
+    "franchise": "",
+    "genre": "action",
+    "index": 57,
+    "platform": "playbox64",
+    "theme": "detective",
+    "title": "CITY OF GLASS",
+    "year": 2000
+  },
+  {
+    "franchise": "",
+    "genre": "puzzle",
+    "index": 58,
+    "platform": "palmscreen",
+    "theme": "crime",
+    "title": "WILD SIGNAL",
+    "year": 2001
+  },
+  {
+    "franchise": "",
+    "genre": "mmo",
+    "index": 59,
+    "platform": "continuum",
+    "theme": "farming",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 2002
+  },
+  {
+    "franchise": "",
+    "genre": "action",
+    "index": 60,
+    "platform": "optix_cd",
+    "theme": "samurai",
+    "title": "TINY KINGDOMS",
+    "year": 2003
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "racing",
+    "index": 61,
+    "platform": "ibm_compatible",
+    "theme": "arctic",
+    "title": "STARFALL",
+    "year": 2004
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "sandbox",
+    "index": 62,
+    "platform": "pocket_play",
+    "theme": "age_of_sail",
+    "title": "STARFALL II",
+    "year": 2005
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "adventure",
+    "index": 63,
+    "platform": "dreamcube",
+    "theme": "virtual_worlds",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 2006
+  },
+  {
+    "franchise": "",
+    "genre": "racing",
+    "index": 64,
+    "platform": "pocket_dual",
+    "theme": "fantasy",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 2007
+  },
+  {
+    "franchise": "",
+    "genre": "sandbox",
+    "index": 65,
+    "platform": "vector_one",
+    "theme": "history",
+    "title": "NEON TIDE",
+    "year": 2008
+  },
+  {
+    "franchise": "",
+    "genre": "adventure",
+    "index": 66,
+    "platform": "lattice",
+    "theme": "dinosaurs",
+    "title": "IRON HARVEST",
+    "year": 2009
+  },
+  {
+    "franchise": "",
+    "genre": "racing",
+    "index": 67,
+    "platform": "pocket_vue",
+    "theme": "city_building",
+    "title": "CITY OF GLASS",
+    "year": 2010
+  },
+  {
+    "franchise": "",
+    "genre": "sandbox",
+    "index": 68,
+    "platform": "microstar_64",
+    "theme": "ancient_egypt",
+    "title": "WILD SIGNAL",
+    "year": 2011
+  },
+  {
+    "franchise": "",
+    "genre": "adventure",
+    "index": 69,
+    "platform": "mega16",
+    "theme": "magic_academy",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 2012
+  },
+  {
+    "franchise": "",
+    "genre": "racing",
+    "index": 70,
+    "platform": "home_pc",
+    "theme": "cooking",
+    "title": "TINY KINGDOMS",
+    "year": 2013
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "battle_royale",
+    "index": 71,
+    "platform": "nexus_hd",
+    "theme": "hacking",
+    "title": "STARFALL II",
+    "year": 2014
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "rpg",
+    "index": 72,
+    "platform": "helix_vr",
+    "theme": "military",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 2015
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "shooter",
+    "index": 73,
+    "platform": "ember",
+    "theme": "espionage",
+    "title": "STARFALL",
+    "year": 2016
+  },
+  {
+    "franchise": "",
+    "genre": "battle_royale",
+    "index": 74,
+    "platform": "vessel",
+    "theme": "superheroes",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 2017
+  },
+  {
+    "franchise": "",
+    "genre": "rpg",
+    "index": 75,
+    "platform": "famiclone",
+    "theme": "medical",
+    "title": "NEON TIDE",
+    "year": 2018
+  },
+  {
+    "franchise": "",
+    "genre": "shooter",
+    "index": 76,
+    "platform": "playbox32",
+    "theme": "vampires",
+    "title": "IRON HARVEST",
+    "year": 2019
+  },
+  {
+    "franchise": "",
+    "genre": "battle_royale",
+    "index": 77,
+    "platform": "playbox64",
+    "theme": "heist",
+    "title": "CITY OF GLASS",
+    "year": 2020
+  },
+  {
+    "franchise": "",
+    "genre": "rpg",
+    "index": 78,
+    "platform": "palmscreen",
+    "theme": "music_rhythm",
+    "title": "WILD SIGNAL",
+    "year": 2021
+  },
+  {
+    "franchise": "",
+    "genre": "shooter",
+    "index": 79,
+    "platform": "continuum",
+    "theme": "archaeology",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 2022
+  },
+  {
+    "franchise": "",
+    "genre": "battle_royale",
+    "index": 80,
+    "platform": "optix_cd",
+    "theme": "horror",
+    "title": "TINY KINGDOMS",
+    "year": 2023
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "strategy",
+    "index": 81,
+    "platform": "ibm_compatible",
+    "theme": "cyberpunk",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 2024
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "fighting",
+    "index": 82,
+    "platform": "pocket_play",
+    "theme": "survival",
+    "title": "STARFALL",
+    "year": 2025
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "immersive_vr",
+    "index": 83,
+    "platform": "dreamcube",
+    "theme": "business",
+    "title": "STARFALL II",
+    "year": 1985
+  },
+  {
+    "franchise": "",
+    "genre": "strategy",
+    "index": 84,
+    "platform": "pocket_dual",
+    "theme": "ghosts",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 1986
+  },
+  {
+    "franchise": "",
+    "genre": "fighting",
+    "index": 85,
+    "platform": "vector_one",
+    "theme": "mafia",
+    "title": "NEON TIDE",
+    "year": 1987
+  },
+  {
+    "franchise": "",
+    "genre": "immersive_vr",
+    "index": 86,
+    "platform": "lattice",
+    "theme": "wildlife",
+    "title": "IRON HARVEST",
+    "year": 1988
+  },
+  {
+    "franchise": "",
+    "genre": "strategy",
+    "index": 87,
+    "platform": "pocket_vue",
+    "theme": "treasure_hunting",
+    "title": "CITY OF GLASS",
+    "year": 1989
+  },
+  {
+    "franchise": "",
+    "genre": "fighting",
+    "index": 88,
+    "platform": "microstar_64",
+    "theme": "pirates",
+    "title": "WILD SIGNAL",
+    "year": 1990
+  },
+  {
+    "franchise": "",
+    "genre": "immersive_vr",
+    "index": 89,
+    "platform": "mega16",
+    "theme": "robots",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 1991
+  },
+  {
+    "franchise": "",
+    "genre": "strategy",
+    "index": 90,
+    "platform": "home_pc",
+    "theme": "post_apocalypse",
+    "title": "TINY KINGDOMS",
+    "year": 1992
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "horror",
+    "index": 91,
+    "platform": "nexus_hd",
+    "theme": "steampunk",
+    "title": "STARFALL",
+    "year": 1993
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "neural_sim",
+    "index": 92,
+    "platform": "helix_vr",
+    "theme": "kaiju",
+    "title": "STARFALL II",
+    "year": 1994
+  },
+  {
+    "franchise": "starfall_series",
+    "genre": "simulation",
+    "index": 93,
+    "platform": "ember",
+    "theme": "automotive",
+    "title": "STARFALL III: ECHOES OF ORION",
+    "year": 1995
+  },
+  {
+    "franchise": "",
+    "genre": "horror",
+    "index": 94,
+    "platform": "vessel",
+    "theme": "dragons",
+    "title": "THE LEGENDS OF THE LAST FRONTIER",
+    "year": 1996
+  },
+  {
+    "franchise": "",
+    "genre": "neural_sim",
+    "index": 95,
+    "platform": "famiclone",
+    "theme": "theme_park",
+    "title": "NEON TIDE",
+    "year": 1997
+  },
+  {
+    "franchise": "",
+    "genre": "simulation",
+    "index": 96,
+    "platform": "playbox32",
+    "theme": "aliens",
+    "title": "IRON HARVEST",
+    "year": 1998
+  },
+  {
+    "franchise": "",
+    "genre": "horror",
+    "index": 97,
+    "platform": "playbox64",
+    "theme": "racing_theme",
+    "title": "CITY OF GLASS",
+    "year": 1999
+  },
+  {
+    "franchise": "",
+    "genre": "neural_sim",
+    "index": 98,
+    "platform": "palmscreen",
+    "theme": "zombies",
+    "title": "WILD SIGNAL",
+    "year": 2000
+  },
+  {
+    "franchise": "",
+    "genre": "simulation",
+    "index": 99,
+    "platform": "continuum",
+    "theme": "mythology",
+    "title": "MIDNIGHT ARCHIVE",
+    "year": 2001
+  },
+  {
+    "franchise": "",
+    "genre": "horror",
+    "index": 100,
+    "platform": "optix_cd",
+    "theme": "deep_sea",
+    "title": "TINY KINGDOMS",
+    "year": 2002
+  }
+]

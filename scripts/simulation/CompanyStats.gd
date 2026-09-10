@@ -53,7 +53,7 @@ static func biggest_flop() -> GameProject:
 static func biggest_loss() -> GameProject:
     var worst: GameProject = null
     for game in GameState.released_games:
-        if worst == null or game.profit() < worst.profit():
+        if game.profit() < 0 and (worst == null or game.profit() < worst.profit()):
             worst = game
     return worst
 

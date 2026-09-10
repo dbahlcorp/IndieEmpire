@@ -4,7 +4,7 @@ extends Node
 ## actual application scenes at the portrait reference viewport rather than a
 ## separate mockup. Run with a renderer (not --headless) for meaningful PNGs.
 
-const OUTPUT_DIR := "res://artifacts/pa16-visual-validation"
+const DEFAULT_OUTPUT_DIR := "res://artifacts/pa16-visual-validation"
 const SCREENS := [
     {"name": "01-main-menu", "scene": "res://scenes/menu/MainMenuScreen.tscn"},
     {"name": "02-new-company-1985", "scene": "res://scenes/company/NewCompanyScreen.tscn"},
@@ -30,14 +30,24 @@ const SCREENS := [
     {"name": "22-game-over", "scene": "res://scenes/company/GameOverScreen.tscn"},
 ]
 
+var _output_dir := DEFAULT_OUTPUT_DIR
+var _bottom_output_dir := DEFAULT_OUTPUT_DIR + "/bottom-scroll"
+var _capture_errors := 0
+
 func _ready() -> void:
+    for argument in OS.get_cmdline_user_args():
+        if argument.begins_with("--output="):
+            _output_dir = argument.trim_prefix("--output=").trim_suffix("/")
+    _bottom_output_dir = _output_dir + "/bottom-scroll"
     _seed_fixture()
-    DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUTPUT_DIR))
+    DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
+    DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_bottom_output_dir))
     for fixture in SCREENS:
         _prepare_fixture(fixture)
         await _capture(str(fixture["scene"]), "%s.png" % str(fixture["name"]))
-    print("PA.16 visual snapshots written to %s" % ProjectSettings.globalize_path(OUTPUT_DIR))
-    get_tree().quit()
+    print("PA.16 visual snapshots written to %s (%d errors)" % [
+        ProjectSettings.globalize_path(_output_dir), _capture_errors])
+    get_tree().quit(_capture_errors)
 
 func _seed_fixture() -> void:
     GameState.start_company("Lantern Byte", "Alex Rivera", "normal")
@@ -93,7 +103,10 @@ func _seed_fixture() -> void:
     GameClock.set_paused(true)
 
 func _prepare_fixture(fixture: Dictionary) -> void:
-    Settings.reduced_motion = str(fixture.get("scene", "")).contains("ReleaseResultsScreen")
+    # Layout review needs the settled frame. Motion behavior has its own test
+    # coverage and snapshot; capturing five frames into a reveal made otherwise
+    # identical screens look randomly dimmed.
+    Settings.reduced_motion = true
     var active_staff := 10
     match str(fixture.get("office", "")):
         "bedroom": active_staff = 1
@@ -132,14 +145,51 @@ func _capture(scene_path: String, filename: String) -> void:
     add_child(viewport)
     var screen := load(scene_path).instantiate() as Control
     viewport.add_child(screen)
+    # These screens are embedded directly rather than entered through
+    # SceneTree.change_scene_to_file(), so VisualTheme's scene_changed hook does
+    # not run. Apply the same runtime styling explicitly or the fixture captures
+    # Godot's default white labels/buttons instead of the shipped presentation.
+    VisualTheme._style_scene(screen)
     await get_tree().process_frame
     if scene_path.ends_with("ReleaseResultsScreen.tscn"):
         screen.call("_skip_to_end")
     for frame in 5:
         await get_tree().process_frame
     var image := viewport.get_texture().get_image()
-    var output := ProjectSettings.globalize_path("%s/%s" % [OUTPUT_DIR, filename])
+    var output := ProjectSettings.globalize_path("%s/%s" % [_output_dir, filename])
     var error := image.save_png(output)
     print("snapshot %s (%s)" % [output, error_string(error)])
+    if error != OK:
+        _capture_errors += 1
+        push_error("Could not save visual snapshot %s: %s" % [output, error_string(error)])
+    await _capture_bottom(screen, filename, viewport)
     viewport.queue_free()
     await get_tree().process_frame
+
+func _capture_bottom(screen: Control, filename: String, viewport: SubViewport) -> void:
+    var scrolls := screen.find_children("*", "ScrollContainer", true, false)
+    var primary: ScrollContainer = null
+    var largest_area := 0.0
+    for candidate in scrolls:
+        var scroll := candidate as ScrollContainer
+        if scroll == null or not scroll.is_visible_in_tree():
+            continue
+        var bar := scroll.get_v_scroll_bar()
+        if bar.max_value <= bar.page + 1.0:
+            continue
+        var area := scroll.size.x * scroll.size.y
+        if area > largest_area:
+            largest_area = area
+            primary = scroll
+    if primary == null:
+        return
+    primary.scroll_vertical = int(primary.get_v_scroll_bar().max_value)
+    await get_tree().process_frame
+    await get_tree().process_frame
+    var image := viewport.get_texture().get_image()
+    var output := ProjectSettings.globalize_path("%s/%s" % [_bottom_output_dir, filename])
+    var error := image.save_png(output)
+    print("bottom snapshot %s (%s)" % [output, error_string(error)])
+    if error != OK:
+        _capture_errors += 1
+        push_error("Could not save bottom visual snapshot %s: %s" % [output, error_string(error)])

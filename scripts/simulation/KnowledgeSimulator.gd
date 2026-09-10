@@ -23,7 +23,7 @@ static func level_name(level: int) -> String:
 
 static func stars_label(level: int) -> String:
     var filled := clampi(level, 0, MAX_LEVEL)
-    return "*".repeat(filled) + ".".repeat(MAX_LEVEL - filled)
+    return "★".repeat(filled) + "☆".repeat(MAX_LEVEL - filled)
 
 static func quality_bonus(level: int) -> float:
     ## Experience helps, but never enough to guarantee a hit.
@@ -56,7 +56,7 @@ static func label_for(value: float) -> String:
 
 static func compatibility_label(theme_id: String, genre_id: String, shipments: int) -> String:
     if shipments <= 0:
-        return "???"
+        return "Unknown"
 
     var value := true_compatibility(theme_id, genre_id)
     if shipments < 3:

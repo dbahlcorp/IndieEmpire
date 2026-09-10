@@ -46,7 +46,7 @@ func platform_fit_label(platform_id: String, genre_id: String) -> String:
     ## the same machine, so this is tracked per pair.
     var shipments := platform_genre_shipments(platform_id, genre_id)
     if shipments <= 0:
-        return "???"
+        return "Unknown"
 
     var platform := DataManager.get_platform(platform_id)
     var audience: Dictionary = platform.get("audience", {})
