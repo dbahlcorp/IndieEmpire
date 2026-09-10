@@ -26,6 +26,10 @@ technologies, features, era props and procedural covers are graded B or better
 in desktop visual QA; physical iPhone acceptance remains pending. Do not begin
 M4 until the recorded device gate is complete.
 
+The iOS build path — Godot `iOS` export preset, portrait lock, and the
+Mac/Xcode/App Store Connect steps needed to get an Alpha RC1 build onto
+TestFlight — is documented in [docs/IOS_TESTFLIGHT.md](docs/IOS_TESTFLIGHT.md).
+
 ## Open it
 
 1. Install Godot 4.7 or newer.
