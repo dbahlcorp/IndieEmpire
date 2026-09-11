@@ -205,6 +205,11 @@ jobs:
           test -n "$ipa" || { echo "::error::no .ipa produced"; exit 1; }
           echo "IPA_PATH=$ipa" >> "$GITHUB_ENV"
 
+      - name: Validate packaged iPhone metadata
+        env:
+          BUNDLE_ID: ${{ vars.IOS_BUNDLE_ID }}
+        run: python3 ci/validate_ipa_metadata.py "$IPA_PATH" --bundle-id "$BUNDLE_ID"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:

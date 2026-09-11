@@ -60,7 +60,7 @@ def main() -> int:
         and tuple(int(part) for part in min_ios_version.split(".")) >= (16, 0),
         "minimum iOS version must be 16.0 or newer",
     )
-    require(ios("application/targeted_device_family") == "1", "release must remain iPhone-only")
+    require(ios("application/targeted_device_family") == "0", "release must remain iPhone-only")
     require(ios("architectures/arm64") == "true", "arm64 must be enabled")
     require(project.get(("display", "window/handheld/orientation")) == "portrait", "project must remain portrait")
     require(project.get(("application", "config/version")) == ios("application/short_version"), "project and iOS marketing versions differ")
