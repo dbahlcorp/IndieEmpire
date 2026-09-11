@@ -54,6 +54,12 @@ def main() -> int:
 
     require(preset.get(("preset.0", "platform")) == "iOS", "preset.0 must target iOS")
     require(ios("application/export_project_only") == "true", "iOS export must produce an Xcode project")
+    min_ios_version = ios("application/min_ios_version")
+    require(
+        re.fullmatch(r"[0-9]+(?:\.[0-9]+){0,2}", min_ios_version) is not None
+        and tuple(int(part) for part in min_ios_version.split(".")) >= (16, 0),
+        "minimum iOS version must be 16.0 or newer",
+    )
     require(ios("application/targeted_device_family") == "1", "release must remain iPhone-only")
     require(ios("architectures/arm64") == "true", "arm64 must be enabled")
     require(project.get(("display", "window/handheld/orientation")) == "portrait", "project must remain portrait")
