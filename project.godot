@@ -75,4 +75,5 @@ environment/defaults/default_clear_color=Color(0.913725, 0.823529, 0.666667, 1)
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
+textures/vram_compression/import_etc2_astc=true
 

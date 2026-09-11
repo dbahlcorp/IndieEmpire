@@ -58,6 +58,7 @@ def main() -> int:
     require(ios("architectures/arm64") == "true", "arm64 must be enabled")
     require(project.get(("display", "window/handheld/orientation")) == "portrait", "project must remain portrait")
     require(project.get(("application", "config/version")) == ios("application/short_version"), "project and iOS marketing versions differ")
+    require(project.get(("rendering", "textures/vram_compression/import_etc2_astc")) == "true", "iOS export requires ETC2/ASTC texture compression")
     require(re.fullmatch(r"[1-9][0-9]*(?:\.[0-9]+){0,2}", ios("application/version")) is not None, "iOS build number must contain one to three numeric components")
     require(ios("entitlements/increased_memory_limit") == "false", "increased-memory entitlement needs measured justification")
     require("ITSAppUsesNonExemptEncryption</key><false/>" in ios("application/additional_plist_content"), "export-compliance declaration is missing")
