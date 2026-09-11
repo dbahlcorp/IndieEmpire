@@ -188,6 +188,8 @@ jobs:
             archive
 
       - name: Export .ipa
+        env:
+          BUNDLE_ID: ${{ vars.IOS_BUNDLE_ID }}
         run: |
           set -euo pipefail
           sed \
