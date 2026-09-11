@@ -74,12 +74,17 @@ jobs:
           unzip -q templates.tpz -d templates_extracted
           mv templates_extracted/templates/* "$tdir/"
 
-      - name: Verify Godot installation
+      - name: Verify Godot and iOS template
         run: |
           set -euo pipefail
           godot_bin="$HOME/godot/Godot.app/Contents/MacOS/Godot"
           test -x "$godot_bin" || { echo "::error::Godot executable not found at $godot_bin"; exit 1; }
           "$godot_bin" --version
+          template_root="$HOME/Library/Application Support/Godot/export_templates"
+          ios_template="$(find "$template_root" -maxdepth 2 -name 'ios.zip' -type f | head -1)"
+          test -n "$ios_template" || { echo "::error::iOS export template not found under $template_root"; exit 1; }
+          echo "IOS_TEMPLATE=$ios_template" >> "$GITHUB_ENV"
+          ls -lh "$ios_template"
 
       - name: Inject Apple identifiers into export preset
         env:
@@ -90,12 +95,13 @@ jobs:
           test -n "$BUNDLE_ID" || { echo "::error::repo variable IOS_BUNDLE_ID is not set"; exit 1; }
           test -n "$TEAM_ID"   || { echo "::error::secret APPSTORE_TEAM_ID is not set"; exit 1; }
           /usr/bin/sed -i '' \
+            -e "s#^custom_template/release=.*#custom_template/release=\"${IOS_TEMPLATE}\"#" \
             -e "s#^application/bundle_identifier=.*#application/bundle_identifier=\"${BUNDLE_ID}\"#" \
             -e "s#^application/app_store_team_id=.*#application/app_store_team_id=\"${TEAM_ID}\"#" \
             -e 's#^application/name=.*#application/name="Indie Empire"#' \
             -e "s#^application/version=.*#application/version=\"${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}\"#" \
             export_presets.cfg
-          grep -E '^application/(bundle_identifier|app_store_team_id|name|version)=' export_presets.cfg
+          grep -E '^(custom_template/release|application/(bundle_identifier|app_store_team_id|name|version))=' export_presets.cfg
 
       - name: TestFlight preflight
         run: python3 ci/validate_ios_release.py --ci
